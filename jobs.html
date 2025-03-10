@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Dream Job</title>
+
+    <script src="filterJobs.js"></script>
+</head>
+<body style="background-color: #f0f0f0; font-family: Arial, sans-serif; margin: 0; padding: 0;">
+
+     <!-- navbar -->
+     <div style="background: linear-gradient(45deg, #6a0dad, #d653c9); padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <a href="file:///D:/Job_portal/JP.html#"> 
+            <div style="font-size: 24px; font-weight: bold; color: white; display: flex; align-items: center;">
+                <img src="images/Logo1.PNG" alt="Logo" style="height: 50px; margin-right: 5px;">
+                Hitaishi Careers
+            </div>
+        </a>
+    
+        <ul style="list-style: none; display: flex; margin-left: -80px; padding: 0;">
+            <li style="margin-right: 20px;"><a href="file:///D:/Job_portal/JP.html" style="text-decoration: none; color: white;">Home</a></li>
+            <li style="margin-right: 20px;"><a href="file:///D:/Job_portal/jobs.html" style="text-decoration: none; color: white;">Jobs</a></li>
+            <li style="margin-right: 20px; position: relative;">
+                <a href="#" style="text-decoration: none; color: white;">Service</a>
+                <ul style="width: 200px; list-style: none; padding: 10px; margin: 0; position: absolute; top: 100%; left: 0; background-color: #f0f0f0; border: 1px solid #ddd; display: none; box-shadow: 0 4px 6px rgba(244, 244, 244, 0.1);">
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Featured profile</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Profile highlighter</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Career Booster</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Resume Writing</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Resume builder</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Linkedin Makeover</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Mock interview</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Interview preparation</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Skill Assessment</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Degree Programs</a></li>
+                    <li style="margin: 0;"><a href="#" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Certification</a></li>
+                </ul>
+            </li>
+            <li style="margin-right: 20px;"><a href="#" style="text-decoration: none; color: white;">Post Jobs</a></li>
+            <li style="margin-right: 20px;"><a href="#" style="text-decoration: none; color: white;">Employers</a></li>
+            <li style="margin-right: 20px;"><a href="#" id="uploadResumeLink" style="text-decoration: none; color: white;">Upload Resume</a></li>
+        </ul>
+    
+        <!-- Buttons to Open Forms -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button style="padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer; background-color: #333; color: white;"
+                id="loginButton">Login</button>
+            <button style="padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer; background-color: orange; color: white;"
+                id="registerButton">Register</button>
+        </div>
+
+        <!-- Overlay Background -->
+        <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+
+            <!-- Login Form -->
+            <div id="loginForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; border-radius: 8px;">
+                <h2 style="margin: 0 0 20px; text-align: center;">Login</h2>
+                <form id="loginFormData" onsubmit="submitLogin(event)">
+                    <input type="email" id="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="password" id="password" placeholder="Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 10px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">Login</button>
+                </form>
+                <button id="closeLoginForm" style="margin-top: 10px; width: 100%; padding: 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registerForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; border-radius: 8px;">
+                <h2 style="margin: 0 0 20px; text-align: center;">Register</h2>
+                <form>
+                    <input type="text" placeholder="Full Name" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="password" placeholder="Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="password" placeholder="Confirm Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 10px; background-color: orange; color: white; border: none; border-radius: 5px; cursor: pointer;">Register</button>
+                </form>
+                <button id="closeRegisterForm" style="margin-top: 10px; width: 100%; padding: 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </div>
+            <!-- upload resume form -->
+            <div id="uploadResumeForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 10px; z-index: 1000; width: 300px;">
+                <h2 style="margin-bottom: 20px; color: green; text-align: center;">Upload Resume</h2>
+                <form>
+                    <input type="file" accept=".pdf,.doc,.docx" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 10px; background-color: green; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Submit</button>
+                </form>
+                <a href="#" id="closeUploadResumeForm" style="display: block; text-align: center; color: #333; margin-top: 10px; text-decoration: none; font-size: 14px;">Close</a>
+            </div>
+
+            <!-- JavaScript -->
+            <script>
+                const loginButton = document.getElementById('loginButton');
+                const registerButton = document.getElementById('registerButton');
+                const closeLoginForm = document.getElementById('closeLoginForm');
+                const closeRegisterForm = document.getElementById('closeRegisterForm');
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+                const overlay = document.getElementById('overlay');
+                const uploadResumeLink = document.getElementById('uploadResumeLink');
+                const uploadResumeForm = document.getElementById('uploadResumeForm');
+                const closeUploadResumeForm = document.getElementById('closeUploadResumeForm');
+
+
+                // Open Login Form
+                loginButton.addEventListener('click', () => {
+                    overlay.style.display = 'block';
+                    loginForm.style.display = 'block';
+                });
+
+                // Open Registration Form
+                registerButton.addEventListener('click', () => {
+                    overlay.style.display = 'block';
+                    registerForm.style.display = 'block';
+                });
+
+                // Close Login Form
+                closeLoginForm.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    loginForm.style.display = 'none';
+                });
+
+                // Show upload resume form
+                uploadResumeLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    uploadResumeForm.style.display = 'block';
+                    overlay.style.display = 'block';
+                });
+
+                // Hide upload resume form
+                closeUploadResumeForm.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    uploadResumeForm.style.display = 'none';
+                    overlay.style.display = 'none';
+                });
+
+                // Close Registration Form
+                closeRegisterForm.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    registerForm.style.display = 'none';
+                });
+
+                // Close forms by clicking on the overlay
+                overlay.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    loginForm.style.display = 'none';
+                    uploadResumeForm.style.display = 'none';
+                    registerForm.style.display = 'none';
+                });
+
+                // Simulate Login Validation
+                function submitLogin(event) {
+                    event.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+
+                    // Check for correct credentials (you can replace this with actual validation)
+                    if (email === 'banothnaveen@gmail.com' && password === 'Tej2142') {
+                        // Redirect to profile page (replace 'profile.html' with your actual profile page URL)
+                        window.location.href = 'profile.html'; 
+                    } else {
+                        alert('Invalid login credentials!');
+                    }
+                }
+            </script>
+    </div>
+    
+
+    <!-- Search bar -->
+    <div style="text-align: center; margin-left: 5%; margin-top: 20px; background-color: purple; height: 60px; width: 90%; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
+        <input type="text" placeholder="Job title or company name" 
+               style="width: 40%; padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <input type="text" placeholder="Location" 
+               style="width: 30%; padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <button style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
+            Search
+        </button>
+    </div>
+
+    <!-- Main Container -->
+    <div style="display: flex; width: 90%; margin: 20px auto; gap: 2%; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: #fff; border-radius: 10px;">
+
+        <!-- Left Side: Filters -->
+        <div style="width: 20%; background-color: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 15px;">
+
+            <!-- Posted Date -->
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Posted Date</h3>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="posted-date" value="today"> Today
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="posted-date" value="last-3-days"> Last 3 Days
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="posted-date" value="last-7-days"> Last 7 Days
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="posted-date" value="any-date"> Any Date
+                </label>
+            </div>
+
+            <!-- Employment Type -->
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Employment Type</h3>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="employment-type" value="full-time"> Full Time
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="employment-type" value="part-time"> Part Time
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="employment-type" value="contractual-role"> contractual-role
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="employment-type" value="third-party"> Third Party
+                </label>
+            </div>
+
+            <!-- Employer Type -->
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Employer Type</h3>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="employer-type" value="direct-hire"> Direct Hire
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="employer-type" value="recruiter"> Recruiter
+                </label>
+                
+            </div>
+
+            <!-- Work Settings -->
+            <div style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Work Settings</h3>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="work-settings" value="onsite"> Onsite
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="work-settings" value="hybrid"> hybrid
+                </label>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
+                    <input type="radio" name="work-settings" value="remote"> Remote
+                </label>
+            </div>
+
+        </div>
+
+        <!-- Right Side: Job Listings -->
+        <div style="width: 78%; padding: 15px;">
+            <div id="job-list-container" style="display: flex; flex-direction: column; gap: 15px;">
+                <!-- Job Cards -->
+                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Software Engineer</h4>
+                    <p style="margin: 5px 0; color: #777;">Hyderabad IN</p>
+                </div>
+                <div class="job-card" data-posted-date="last-3-days" data-employment-type="part-time" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Project Manager</h4>
+                    <p style="margin: 5px 0; color: #777;">Bangalore IN</p>
+                </div>
+                <div class="job-card" data-posted-date="last-7-days" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">UI/UX Designer</h4>
+                    <p style="margin: 5px 0; color: #777;">Mumbai IN</p>
+                </div>
+                <div class="job-card" data-posted-date="today" data-employment-type="contractual-role" data-employer-type="recruiter" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Data Scientist</h4>
+                    <p style="margin: 5px 0; color: #777;">Chennai IN</p>
+                </div>
+                <div class="job-card" data-posted-date="last-3-days" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Backend Developer</h4>
+                    <p style="margin: 5px 0; color: #777;">Pune IN</p>
+                </div>
+                <div class="job-card" data-posted-date="last-7-days" data-employment-type="part-time" data-employer-type="recruiter" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Marketing Specialist</h4>
+                    <p style="margin: 5px 0; color: #777;">Delhi IN</p>
+                </div>
+                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Business Analyst</h4>
+                    <p style="margin: 5px 0; color: #777;">Kolkata IN</p>
+                </div>
+                <div class="job-card" data-posted-date="last-3-days" data-employment-type="contractual-role" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">DevOps Engineer</h4>
+                    <p style="margin: 5px 0; color: #777;">Ahmedabad IN</p>
+                </div>
+                <div class="job-card" data-posted-date="last-7-days" data-employment-type="part-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Product Manager</h4>
+                    <p style="margin: 5px 0; color: #777;">Noida IN</p>
+                </div>
+                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="recruiter" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Mobile App Developer</h4>
+                    <p style="margin: 5px 0; color: #777;">Lucknow IN</p>
+                </div>
+                <div class="job-card" data-posted-date="last-7-days" data-employment-type="third-party" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+                    <h4 style="margin: 0; font-size: 18px;">Mobile App Developer</h4>
+                    <p style="margin: 5px 0; color: #777;">Hyderabad IN</p>
+                </div>
+                
+            </div>
+            <div id="no-jobs-message" style="display: none; color: red; font-size: 16px; text-align: center; margin-top: 20px;">No Jobs Available</div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const jobCards = document.querySelectorAll(".job-card");
+            const filters = {
+                "posted-date": null,
+                "employment-type": null,
+                "employer-type": null,
+                "work-settings": null,
+            };
+
+            const applyFilters = () => {
+                let hasVisibleJobs = false;
+
+                jobCards.forEach((card) => {
+                    const matchesPostedDate = !filters["posted-date"] || card.dataset.postedDate === filters["posted-date"];
+                    const matchesEmploymentType = !filters["employment-type"] || card.dataset.employmentType === filters["employment-type"];
+                    const matchesEmployerType = !filters["employer-type"] || card.dataset.employerType === filters["employer-type"];
+                    const matchesWorkSetting = !filters["work-settings"] || card.dataset.workSetting === filters["work-settings"];
+
+                    if (matchesPostedDate && matchesEmploymentType && matchesEmployerType && matchesWorkSetting) {
+                        card.style.display = "block";
+                        hasVisibleJobs = true;
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+
+                const noJobsMessage = document.getElementById("no-jobs-message");
+                noJobsMessage.style.display = hasVisibleJobs ? "none" : "block";
+            };
+
+            const filterInputs = document.querySelectorAll("input[type='radio']");
+            filterInputs.forEach((input) => {
+                input.addEventListener("change", (event) => {
+                    const { name, value } = event.target;
+                    filters[name] = value === "any-date" ? null : value;
+                    applyFilters();
+                });
+            });
+
+            // Show all jobs on initial page load
+            jobCards.forEach((card) => {
+                card.style.display = "block";
+            });
+        });
+    </script>
+
+
+
+
+
+</body>
+</html>
