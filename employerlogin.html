@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Your Dream Job</title>
-
-    <script src="filterJobs.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employer Login - Hitaishi Careers</title>
 </head>
-<body style="background-color: #f0f0f0; font-family: Arial, sans-serif; margin: 0; padding: 0;">
+<body style="margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(to right, #e6f0ff, #ffffff);">
+
+
+
+
+
 
       <!-- navbar -->
     <div style="max-width: 100%; width: 100%; background: linear-gradient(45deg, #6a0dad, #d653c9); padding: 10px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; z-index: 999;">
@@ -161,189 +164,39 @@
                 }
             </script>
     </div>
-    
 
-    <!-- Search bar -->
-    <div style="text-align: center; margin-left: 5%; margin-top: 90px; background-color: purple; height: 60px; width: 90%; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
-        <input type="text" placeholder="Job title or company name" 
-               style="width: 40%; padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <input type="text" placeholder="Location" 
-               style="width: 30%; padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <button style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
-            Search
-        </button>
+
+
+
+
+
+  <div style="max-width:400px; margin: 90px auto 30px auto ; padding:30px;background:#ffffff;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.1);">
+    <h2 style="text-align:center;color:#004080;margin-bottom:10px;font-size:26px;">Employer Login</h2>
+    <p style="text-align:center;color:#666;margin-bottom:25px;">Welcome back to Hitaishi Careers</p>
+
+    <form style="display:flex;flex-direction:column;gap:20px;">
+      <input type="email" placeholder="Registered Email" name="email" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;" />
+
+      <input type="password" placeholder="Password" name="password" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;" />
+
+      <button type="submit"
+        style="padding:14px;background:#004080;color:white;border:none;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;transition:background 0.3s;">
+        Login
+      </button>
+    </form>
+
+    <div style="text-align:center;margin-top:15px;">
+      <a href="#" style="font-size:14px;color:#004080;text-decoration:none;">Forgot Password?</a>
     </div>
 
-    <!-- Main Container -->
-    <div style="display: flex; width: 90%; margin: 20px auto; gap: 2%; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: #fff; border-radius: 10px;">
+    <p style="text-align:center;margin-top:20px;font-size:14px;color:#333;">
+      Don't have an account? <a href="employerRegistration.html" style="color:#004080;text-decoration:none;font-weight:500;">Register Here</a>
+    </p>
+  </div>
 
-        <!-- Left Side: Filters -->
-        <div style="width: 20%; background-color: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 15px;">
 
-            <!-- Posted Date -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Posted Date</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="today"> Today
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="last-3-days"> Last 3 Days
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="last-7-days"> Last 7 Days
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="any-date"> Any Date
-                </label>
-            </div>
-
-            <!-- Employment Type -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Employment Type</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="full-time"> Full Time
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="part-time"> Part Time
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="contractual-role"> contractual-role
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="third-party"> Third Party
-                </label>
-            </div>
-
-            <!-- Employer Type -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Employer Type</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employer-type" value="direct-hire"> Direct Hire
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employer-type" value="recruiter"> Recruiter
-                </label>
-                
-            </div>
-
-            <!-- Work Settings -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Work Settings</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="work-settings" value="onsite"> Onsite
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="work-settings" value="hybrid"> hybrid
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="work-settings" value="remote"> Remote
-                </label>
-            </div>
-
-        </div>
-
-        <!-- Right Side: Job Listings -->
-        <div style="width: 78%; padding: 15px;">
-            <div id="job-list-container" style="display: flex; flex-direction: column; gap: 15px;">
-                <!-- Job Cards -->
-                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Software Engineer</h4>
-                    <p style="margin: 5px 0; color: #777;">Hyderabad IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-3-days" data-employment-type="part-time" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Project Manager</h4>
-                    <p style="margin: 5px 0; color: #777;">Bangalore IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">UI/UX Designer</h4>
-                    <p style="margin: 5px 0; color: #777;">Mumbai IN</p>
-                </div>
-                <div class="job-card" data-posted-date="today" data-employment-type="contractual-role" data-employer-type="recruiter" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Data Scientist</h4>
-                    <p style="margin: 5px 0; color: #777;">Chennai IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-3-days" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Backend Developer</h4>
-                    <p style="margin: 5px 0; color: #777;">Pune IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="part-time" data-employer-type="recruiter" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Marketing Specialist</h4>
-                    <p style="margin: 5px 0; color: #777;">Delhi IN</p>
-                </div>
-                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Business Analyst</h4>
-                    <p style="margin: 5px 0; color: #777;">Kolkata IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-3-days" data-employment-type="contractual-role" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">DevOps Engineer</h4>
-                    <p style="margin: 5px 0; color: #777;">Ahmedabad IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="part-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Product Manager</h4>
-                    <p style="margin: 5px 0; color: #777;">Noida IN</p>
-                </div>
-                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="recruiter" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Mobile App Developer</h4>
-                    <p style="margin: 5px 0; color: #777;">Lucknow IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="third-party" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Mobile App Developer</h4>
-                    <p style="margin: 5px 0; color: #777;">Hyderabad IN</p>
-                </div>
-                
-            </div>
-            <div id="no-jobs-message" style="display: none; color: red; font-size: 16px; text-align: center; margin-top: 20px;">No Jobs Available</div>
-        </div>
-
-    </div>
-
-    <!-- JavaScript -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const jobCards = document.querySelectorAll(".job-card");
-            const filters = {
-                "posted-date": null,
-                "employment-type": null,
-                "employer-type": null,
-                "work-settings": null,
-            };
-
-            const applyFilters = () => {
-                let hasVisibleJobs = false;
-
-                jobCards.forEach((card) => {
-                    const matchesPostedDate = !filters["posted-date"] || card.dataset.postedDate === filters["posted-date"];
-                    const matchesEmploymentType = !filters["employment-type"] || card.dataset.employmentType === filters["employment-type"];
-                    const matchesEmployerType = !filters["employer-type"] || card.dataset.employerType === filters["employer-type"];
-                    const matchesWorkSetting = !filters["work-settings"] || card.dataset.workSetting === filters["work-settings"];
-
-                    if (matchesPostedDate && matchesEmploymentType && matchesEmployerType && matchesWorkSetting) {
-                        card.style.display = "block";
-                        hasVisibleJobs = true;
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-
-                const noJobsMessage = document.getElementById("no-jobs-message");
-                noJobsMessage.style.display = hasVisibleJobs ? "none" : "block";
-            };
-
-            const filterInputs = document.querySelectorAll("input[type='radio']");
-            filterInputs.forEach((input) => {
-                input.addEventListener("change", (event) => {
-                    const { name, value } = event.target;
-                    filters[name] = value === "any-date" ? null : value;
-                    applyFilters();
-                });
-            });
-
-            // Show all jobs on initial page load
-            jobCards.forEach((card) => {
-                card.style.display = "block";
-            });
-        });
-    </script>
 
 <footer style="background-color: #1a1a1a; color: #fff; padding: 20px;">
         <div style="display: flex; justify-content: space-between;">
@@ -563,11 +416,12 @@
                 dynamicSection.innerHTML = sections[section] || "<p style='color: #fff;'>Content not available.</p>";
             }
         </script>
-    </footer>
+</footer>
 
 
 
-        <script>
+
+    <script>
         // JavaScript to handle dropdown menu hover effect
         const dropdowns = document.querySelectorAll("ul > li");
     
@@ -585,8 +439,6 @@
 
         
     </script>
-
-
 
 
 </body>

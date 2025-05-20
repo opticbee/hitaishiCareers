@@ -3,11 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Your Dream Job</title>
-
-    <script src="filterJobs.js"></script>
+    <title>Career Booster | Accelerate Your Job Hunt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --secondary: #10b981;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --success: #10b981;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            color: var(--dark);
+            line-height: 1.6;
+            background-color: var(--light);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        section {
+            padding: 80px 0;
+        }
+        
+        h1, h2, h3, h4 {
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+        }
+        
+        h2 {
+            font-size: 2.2rem;
+            text-align: center;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+        }
+        
+        h4 {
+            font-size: 1.2rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            color: var(--gray);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-outline {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .text-primary {
+            color: var(--primary);
+        }
+        
+        .text-success {
+            color: var(--success);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 100px 0 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-image {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 50%;
+            max-width: 600px;
+            z-index: 1;
+        }
+        
+        /* Benefits Section */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .benefit-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        
+        .benefit-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            background: #dbeafe;
+            width: 80px;
+            height: 80px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        /* Comparison Section */
+        .comparison {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-top: 40px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 16px 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .comparison-table thead th {
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .comparison-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .comparison-table .feature {
+            font-weight: 600;
+        }
+        
+        .check-icon {
+            color: var(--success);
+            font-size: 1.2rem;
+        }
+        
+        .cross-icon {
+            color: #ef4444;
+            font-size: 1.2rem;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .testimonial-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .testimonial-quote {
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .testimonial-quote::before {
+            content: '"';
+            font-size: 3rem;
+            color: var(--light-gray);
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            z-index: 0;
+        }
+        
+        .testimonial-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .testimonial-author img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 3px solid var(--primary-light);
+        }
+        
+        .author-info h4 {
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .pricing-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pricing-card.popular {
+            border: 2px solid var(--primary);
+        }
+        
+        .popular-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: var(--secondary);
+            color: var(--white);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 20px 0;
+        }
+        
+        .price span {
+            font-size: 1rem;
+            color: var(--gray);
+            font-weight: normal;
+        }
+        
+        .pricing-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .pricing-features li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .pricing-features li i {
+            margin-right: 10px;
+            color: var(--success);
+            margin-top: 3px;
+        }
+        
+        /* FAQ */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            margin-top: 40px;
+        }
+        
+        .faq-item {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 20px;
+        }
+        
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .faq-answer {
+            color: var(--gray);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .faq-answer.active {
+            max-height: 500px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: var(--white);
+            padding: 60px 0 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col h3 {
+            color: var(--white);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-col p, .footer-col a {
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-col a:hover {
+            color: var(--white);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--primary);
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 30px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .hero-image {
+                position: static;
+                width: 100%;
+                margin-top: 40px;
+                max-width: 100%;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+                text-align: center;
+            }
+            
+            section {
+                padding: 60px 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .hero {
+                padding: 80px 0 40px;
+            }
+            
+            .comparison {
+                padding: 20px;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 12px 15px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            animation: fadeIn 0.6s ease forwards;
+            opacity: 0;
+        }
+        
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .delay-3 {
+            animation-delay: 0.6s;
+        }
+    </style>
 </head>
-<body style="background-color: #f0f0f0; font-family: Arial, sans-serif; margin: 0; padding: 0;">
+<body>
+
+
 
       <!-- navbar -->
     <div style="max-width: 100%; width: 100%; background: linear-gradient(45deg, #6a0dad, #d653c9); padding: 10px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; z-index: 999;">
@@ -161,191 +667,323 @@
                 }
             </script>
     </div>
-    
 
-    <!-- Search bar -->
-    <div style="text-align: center; margin-left: 5%; margin-top: 90px; background-color: purple; height: 60px; width: 90%; display: flex; align-items: center; justify-content: center; border-radius: 5px;">
-        <input type="text" placeholder="Job title or company name" 
-               style="width: 40%; padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <input type="text" placeholder="Location" 
-               style="width: 30%; padding: 10px; margin-right: 10px; border: 1px solid #ccc; border-radius: 4px;">
-        <button style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; border-radius: 4px; cursor: pointer;">
-            Search
-        </button>
-    </div>
 
-    <!-- Main Container -->
-    <div style="display: flex; width: 90%; margin: 20px auto; gap: 2%; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); background-color: #fff; border-radius: 10px;">
 
-        <!-- Left Side: Filters -->
-        <div style="width: 20%; background-color: #fff; border: 1px solid #ccc; border-radius: 10px; padding: 15px;">
 
-            <!-- Posted Date -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Posted Date</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="today"> Today
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="last-3-days"> Last 3 Days
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="last-7-days"> Last 7 Days
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="posted-date" value="any-date"> Any Date
-                </label>
+
+
+
+    <!-- Hero Section -->
+    <section class="hero" style="margin-top: 68px;">
+        <div class="container" style="display: flex; gap: 50px;">
+            <div class="hero-content animate">
+                <h1>Accelerate Your Job Hunt with Career Booster</h1>
+                <p style="font-size: 1.2rem; margin-bottom: 30px;">Stand out. Get noticed. Get hired faster.</p>
+                <a href="#pricing" class="btn btn-primary">Boost My Career Now</a>
             </div>
+            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Confident professional getting job offers" style="height: 300px; width: auto;">        </div>
+    </section>
 
-            <!-- Employment Type -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Employment Type</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="full-time"> Full Time
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="part-time"> Part Time
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="contractual-role"> contractual-role
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employment-type" value="third-party"> Third Party
-                </label>
-            </div>
-
-            <!-- Employer Type -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Employer Type</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employer-type" value="direct-hire"> Direct Hire
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="employer-type" value="recruiter"> Recruiter
-                </label>
-                
-            </div>
-
-            <!-- Work Settings -->
-            <div style="margin-bottom: 20px;">
-                <h3 style="margin-bottom: 10px; font-size: 16px; color: #333;">Work Settings</h3>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="work-settings" value="onsite"> Onsite
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="work-settings" value="hybrid"> hybrid
-                </label>
-                <label style="display: block; margin-bottom: 8px; font-size: 14px; color: #555;">
-                    <input type="radio" name="work-settings" value="remote"> Remote
-                </label>
-            </div>
-
+    <!-- Benefits Section -->
+    <section class="container">
+        <div class="animate">
+            <h2>Why Choose Career Booster?</h2>
+            <p class="text-center">Our premium features are designed to give you the competitive edge in today's job market</p>
         </div>
+        
+        <div class="benefits-grid">
+            <div class="benefit-card animate delay-1">
+                <div class="benefit-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3>Featured Profile</h3>
+                <p>Get premium placement at the top of recruiter search results with our Featured Profile badge.</p>
+            </div>
+            
+            <div class="benefit-card animate delay-2">
+                <div class="benefit-icon">
+                    <i class="fas fa-highlighter"></i>
+                </div>
+                <h3>Profile Highlighter</h3>
+                <p>Make your profile stand out in listings with special highlighting that draws recruiter attention.</p>
+            </div>
+            
+            <div class="benefit-card animate delay-1">
+                <div class="benefit-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <h3>Professional Resume Rewrite</h3>
+                <p>Our experts will optimize your resume to pass ATS systems and impress recruiters.</p>
+            </div>
+            
+            <div class="benefit-card animate delay-2">
+                <div class="benefit-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h3>Priority Job Matching</h3>
+                <p>Get early access to the best jobs with personalized alerts before other candidates.</p>
+            </div>
+            
+            <div class="benefit-card animate delay-1">
+                <div class="benefit-icon">
+                    <i class="fas fa-certificate"></i>
+                </div>
+                <h3>Skill Certifications</h3>
+                <p>Validate your skills with our recognized certifications to build credibility.</p>
+            </div>
+            
+            <div class="benefit-card animate delay-2">
+                <div class="benefit-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h3>Recruiter Connect</h3>
+                <p>Get direct support from our career experts to connect with top recruiters.</p>
+            </div>
+        </div>
+    </section>
 
-        <!-- Right Side: Job Listings -->
-        <div style="width: 78%; padding: 15px;">
-            <div id="job-list-container" style="display: flex; flex-direction: column; gap: 15px;">
-                <!-- Job Cards -->
-                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Software Engineer</h4>
-                    <p style="margin: 5px 0; color: #777;">Hyderabad IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-3-days" data-employment-type="part-time" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Project Manager</h4>
-                    <p style="margin: 5px 0; color: #777;">Bangalore IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">UI/UX Designer</h4>
-                    <p style="margin: 5px 0; color: #777;">Mumbai IN</p>
-                </div>
-                <div class="job-card" data-posted-date="today" data-employment-type="contractual-role" data-employer-type="recruiter" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Data Scientist</h4>
-                    <p style="margin: 5px 0; color: #777;">Chennai IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-3-days" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Backend Developer</h4>
-                    <p style="margin: 5px 0; color: #777;">Pune IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="part-time" data-employer-type="recruiter" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Marketing Specialist</h4>
-                    <p style="margin: 5px 0; color: #777;">Delhi IN</p>
-                </div>
-                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Business Analyst</h4>
-                    <p style="margin: 5px 0; color: #777;">Kolkata IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-3-days" data-employment-type="contractual-role" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">DevOps Engineer</h4>
-                    <p style="margin: 5px 0; color: #777;">Ahmedabad IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="part-time" data-employer-type="direct-hire" data-work-setting="onsite" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Product Manager</h4>
-                    <p style="margin: 5px 0; color: #777;">Noida IN</p>
-                </div>
-                <div class="job-card" data-posted-date="today" data-employment-type="full-time" data-employer-type="recruiter" data-work-setting="hybrid" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Mobile App Developer</h4>
-                    <p style="margin: 5px 0; color: #777;">Lucknow IN</p>
-                </div>
-                <div class="job-card" data-posted-date="last-7-days" data-employment-type="third-party" data-employer-type="recruiter" data-work-setting="remote" style="padding: 15px; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-                    <h4 style="margin: 0; font-size: 18px;">Mobile App Developer</h4>
-                    <p style="margin: 5px 0; color: #777;">Hyderabad IN</p>
+    <!-- Comparison Section -->
+    <section class="container">
+        <div class="animate">
+            <h2>Career Booster vs Normal Profile</h2>
+            <p class="text-center">See how Career Booster gives you the advantage in your job search</p>
+        </div>
+        
+        <div class="comparison animate delay-1">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Normal Profile</th>
+                        <th>Career Booster</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="feature">Top Placement in Search</td>
+                        <td><i class="fas fa-times cross-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature">Profile Highlighting</td>
+                        <td><i class="fas fa-times cross-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature">Professional Resume Review</td>
+                        <td><i class="fas fa-times cross-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                    <tr>
+                        <td class="feature">Priority Job Alerts</td>
+                        <td>Basic</td>
+                        <td><i class="fas fa-check check-icon"></i> Premium</td>
+                    </tr>
+                    <tr>
+                        <td class="feature">Average Profile Views</td>
+                        <td>Standard</td>
+                        <td>3-5x More</td>
+                    </tr>
+                    <tr>
+                        <td class="feature">Recruiter Support</td>
+                        <td><i class="fas fa-times cross-icon"></i></td>
+                        <td><i class="fas fa-check check-icon"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="animate">
+                <h2>Success Stories</h2>
+                <p class="text-center">Hear from professionals who accelerated their career with our booster</p>
+            </div>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial-card animate delay-1">
+                    <div class="testimonial-content">
+                        <div class="testimonial-quote">
+                            I activated Career Booster and got interview calls from 5 top companies in 10 days! The profile highlighting made all the difference.
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Ankit">
+                            <div class="author-info">
+                                <h4>Ankit Sharma</h4>
+                                <p>Data Analyst at TechCorp</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
+                <div class="testimonial-card animate delay-2">
+                    <div class="testimonial-content">
+                        <div class="testimonial-quote">
+                            The professional resume rewrite was worth it alone - I started getting responses immediately after updating my profile. Landed my dream job in 3 weeks!
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Priya">
+                            <div class="author-info">
+                                <h4>Priya Patel</h4>
+                                <p>Marketing Manager at BrandWorks</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card animate delay-3">
+                    <div class="testimonial-content">
+                        <div class="testimonial-quote">
+                            As a career switcher, I needed every advantage. Career Booster got my profile in front of the right recruiters and helped me transition smoothly.
+                        </div>
+                        <div class="testimonial-author">
+                            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="Rahul">
+                            <div class="author-info">
+                                <h4>Rahul Verma</h4>
+                                <p>UX Designer at DesignHub</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div id="no-jobs-message" style="display: none; color: red; font-size: 16px; text-align: center; margin-top: 20px;">No Jobs Available</div>
         </div>
+    </section>
 
-    </div>
+    <!-- Pricing Section -->
+    <section class="container" id="pricing">
+        <div class="animate">
+            <h2>Simple, Transparent Pricing</h2>
+            <p class="text-center">Choose the plan that fits your job search timeline</p>
+        </div>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card animate delay-1">
+                <h3>1 Week</h3>
+                <div class="price">₹499</div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Featured Profile</li>
+                    <li><i class="fas fa-check"></i> Profile Highlighter</li>
+                    <li><i class="fas fa-check"></i> Basic Resume Review</li>
+                    <li><i class="fas fa-check"></i> Priority Job Alerts</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%;">Get Started</a>
+            </div>
+            
+            <div class="pricing-card animate delay-2">
+                <h3>1 Month</h3>
+                <div class="price">₹1,499</div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Everything in Weekly</li>
+                    <li><i class="fas fa-check"></i> Professional Resume Rewrite</li>
+                    <li><i class="fas fa-check"></i> 2 Skill Certifications</li>
+                    <li><i class="fas fa-check"></i> Basic Recruiter Support</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%;">Get Started</a>
+            </div>
+            
+            <div class="pricing-card popular animate delay-3">
+                <div class="popular-badge">Best Value</div>
+                <h3>3 Months</h3>
+                <div class="price">₹3,499 <span>Save ₹1,498</span></div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Everything in Monthly</li>
+                    <li><i class="fas fa-check"></i> Premium Resume Rewrite</li>
+                    <li><i class="fas fa-check"></i> 5 Skill Certifications</li>
+                    <li><i class="fas fa-check"></i> Premium Recruiter Support</li>
+                    <li><i class="fas fa-check"></i> Interview Preparation</li>
+                </ul>
+                <a href="#" class="btn btn-primary" style="width: 100%;">Most Popular</a>
+            </div>
+            
+            <div class="pricing-card animate delay-2">
+                <h3>6 Months</h3>
+                <div class="price">₹5,999 <span>Save ₹3,997</span></div>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Everything in 3 Months</li>
+                    <li><i class="fas fa-check"></i> Unlimited Resume Reviews</li>
+                    <li><i class="fas fa-check"></i> 10 Skill Certifications</li>
+                    <li><i class="fas fa-check"></i> Dedicated Career Coach</li>
+                    <li><i class="fas fa-check"></i> LinkedIn Profile Optimization</li>
+                </ul>
+                <a href="#" class="btn btn-outline" style="width: 100%;">Get Started</a>
+            </div>
+        </div>
+    </section>
 
-    <!-- JavaScript -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const jobCards = document.querySelectorAll(".job-card");
-            const filters = {
-                "posted-date": null,
-                "employment-type": null,
-                "employer-type": null,
-                "work-settings": null,
-            };
+    <!-- FAQ Section -->
+    <section class="container">
+        <div class="animate">
+            <h2>Frequently Asked Questions</h2>
+            <p class="text-center">Find answers to common questions about Career Booster</p>
+        </div>
+        
+        <div class="faq-container">
+            <div class="faq-item animate delay-1">
+                <div class="faq-question">
+                    <span>Is Career Booster guaranteed to get me a job?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>While we can't guarantee employment (that depends on your qualifications and interview performance), Career Booster significantly increases your visibility and chances. On average, users receive 3-5x more interview requests compared to normal profiles.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item animate delay-2">
+                <div class="faq-question">
+                    <span>Can I cancel my Career Booster anytime?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! You can cancel anytime through your account settings. If you cancel during an active period, you'll retain access until the end of your current billing cycle.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item animate delay-1">
+                <div class="faq-question">
+                    <span>How quickly will I see results?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Most users see increased profile views within 24-48 hours. The exact timing depends on when recruiters in your field are actively searching. We recommend keeping Career Booster active for at least 2 weeks for optimal results.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item animate delay-2">
+                <div class="faq-question">
+                    <span>Do I need to update my profile separately?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Career Booster enhances your existing profile. For best results, we recommend ensuring your profile is complete before activating. Our professional resume rewrite service (included in monthly+ plans) will help optimize your content.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item animate delay-1">
+                <div class="faq-question">
+                    <span>Is there a free trial available?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We don't offer free trials, but we have a 7-day money-back guarantee if you're not satisfied with the results. Just contact our support team within 7 days of purchase.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            const applyFilters = () => {
-                let hasVisibleJobs = false;
+    <!-- Final CTA -->
+    <section style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white; text-align: center; padding: 80px 0;">
+        <div class="container">
+            <h2 class="animate" style="color: white;">Ready to Accelerate Your Job Search?</h2>
+            <p class="animate delay-1" style="color: rgba(255, 255, 255, 0.9); max-width: 600px; margin: 0 auto 30px;">Join thousands of professionals who landed their dream jobs faster with Career Booster.</p>
+            <a href="#pricing" class="btn btn-primary animate delay-2" style="background: white; color: var(--primary); font-weight: 600; padding: 15px 40px; font-size: 1.1rem;">Boost My Career Now</a>
+        </div>
+    </section>
 
-                jobCards.forEach((card) => {
-                    const matchesPostedDate = !filters["posted-date"] || card.dataset.postedDate === filters["posted-date"];
-                    const matchesEmploymentType = !filters["employment-type"] || card.dataset.employmentType === filters["employment-type"];
-                    const matchesEmployerType = !filters["employer-type"] || card.dataset.employerType === filters["employer-type"];
-                    const matchesWorkSetting = !filters["work-settings"] || card.dataset.workSetting === filters["work-settings"];
-
-                    if (matchesPostedDate && matchesEmploymentType && matchesEmployerType && matchesWorkSetting) {
-                        card.style.display = "block";
-                        hasVisibleJobs = true;
-                    } else {
-                        card.style.display = "none";
-                    }
-                });
-
-                const noJobsMessage = document.getElementById("no-jobs-message");
-                noJobsMessage.style.display = hasVisibleJobs ? "none" : "block";
-            };
-
-            const filterInputs = document.querySelectorAll("input[type='radio']");
-            filterInputs.forEach((input) => {
-                input.addEventListener("change", (event) => {
-                    const { name, value } = event.target;
-                    filters[name] = value === "any-date" ? null : value;
-                    applyFilters();
-                });
-            });
-
-            // Show all jobs on initial page load
-            jobCards.forEach((card) => {
-                card.style.display = "block";
-            });
-        });
-    </script>
-
-<footer style="background-color: #1a1a1a; color: #fff; padding: 20px;">
+    <!-- Footer -->
+     <footer style="background-color: #1a1a1a; color: #fff; padding: 20px;">
         <div style="display: flex; justify-content: space-between;">
             <!-- Left Side Links -->
             <div style="margin-left: 10%; width: 30%;" id="left-links">
@@ -565,10 +1203,44 @@
         </script>
     </footer>
 
+    <script>
+        // Simple animation trigger on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const animateElements = document.querySelectorAll('.animate');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            animateElements.forEach(el => {
+                el.style.opacity = 0;
+                observer.observe(el);
+            });
+            
+            // FAQ toggle functionality
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    const icon = question.querySelector('i');
+                    
+                    answer.classList.toggle('active');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+            });
+        });
 
 
-        <script>
-        // JavaScript to handle dropdown menu hover effect
+
+
+
+
+
         const dropdowns = document.querySelectorAll("ul > li");
     
         dropdowns.forEach((dropdown) => {
@@ -583,11 +1255,7 @@
         });
 
 
-        
+  
     </script>
-
-
-
-
 </body>
 </html>

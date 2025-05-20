@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Employer Registration - Hitaishi Careers</title>
+</head>
+<body style="margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(to right, #e6f0ff, #ffffff);">
+
+
+
+        <!-- navbar -->
+    <div style="max-width: 100%; width: 100%; background: linear-gradient(45deg, #6a0dad, #d653c9); padding: 10px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; z-index: 999;">
+        <a href="JP.html"> 
+            <div style="font-size: 24px; font-weight: bold; color: white; display: flex; align-items: center;">
+                <img src="images/Logo1.PNG" alt="Logo" style="height: 50px; margin-right: 5px;">
+                Hitaishi Careers
+            </div>
+        </a>
+    
+        <ul style="list-style: none; display: flex; margin-left: -80px; padding: 0;">
+            <li style="margin-right: 20px;"><a href="JP.html" style="text-decoration: none; color: white;">Home</a></li>
+            <li style="margin-right: 20px;"><a href="jobs.html" style="text-decoration: none; color: white;">Jobs</a></li>
+            <li style="margin-right: 20px; position: relative;">
+                <a href="#" style="text-decoration: none; color: white;">Service</a>
+                <ul style="width: 200px; list-style: none; padding: 10px; margin: 0; position: absolute; top: 100%; left: 0; background-color: #f0f0f0; border: 1px solid #ddd; display: none; box-shadow: 0 4px 6px rgba(244, 244, 244, 0.1);">
+                    <li style="margin: 0;"><a href="featuredprofile.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Featured profile</a></li>
+                    <li style="margin: 0;"><a href="featuredprofile.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Profile highlighter</a></li>
+                    <li style="margin: 0;"><a href="careerbooster.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Career Booster</a></li>
+                    <li style="margin: 0;"><a href="resumebuild.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Resume Writing</a></li>
+                    <li style="margin: 0;"><a href="resumebuild.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Resume builder</a></li>
+                    <li style="margin: 0;"><a href="network.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Linkedin Makeover</a></li>
+                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Mock interview</a></li>
+                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Interview preparation</a></li>
+                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Skill Assessment</a></li>
+                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Degree Programs</a></li>
+                </ul>
+            </li>
+            <li style="margin-right: 20px;"><a href="employerlogin.html" style="text-decoration: none; color: white;">Post Jobs</a></li>
+            <li style="margin-right: 20px;"><a href="employer.html" style="text-decoration: none; color: white;">Employers</a></li>
+            <li style="margin-right: 20px;"><a href="#" id="uploadResumeLink" style="text-decoration: none; color: white;">Upload Resume</a></li>
+        </ul>
+    
+        <!-- Buttons to Open Forms -->
+        <div style="text-align: center; margin-top: 20px;">
+            <button style="padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer; background-color: #333; color: white;"
+                id="loginButton">Login</button>
+            <button style="padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer; background-color: orange; color: white;"
+                id="registerButton">Register</button>
+        </div>
+
+        <!-- Overlay Background -->
+        <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+
+            <!-- Login Form -->
+            <div id="loginForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; border-radius: 8px;">
+                <h2 style="margin: 0 0 20px; text-align: center;">Login</h2>
+                <form id="loginFormData" onsubmit="submitLogin(event)">
+                    <input type="email" id="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="password" id="password" placeholder="Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 10px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">Login</button>
+                </form>
+                <button id="closeLoginForm" style="margin-top: 10px; width: 100%; padding: 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="registerForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; border-radius: 8px;">
+                <h2 style="margin: 0 0 20px; text-align: center;">Register</h2>
+                <form>
+                    <input type="text" placeholder="Full Name" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="password" placeholder="Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <input type="password" placeholder="Confirm Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 10px; background-color: orange; color: white; border: none; border-radius: 5px; cursor: pointer;">Register</button>
+                </form>
+                <button id="closeRegisterForm" style="margin-top: 10px; width: 100%; padding: 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+            </div>
+            <!-- upload resume form -->
+            <div id="uploadResumeForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 10px; z-index: 1000; width: 300px;">
+                <h2 style="margin-bottom: 20px; color: green; text-align: center;">Upload Resume</h2>
+                <form>
+                    <input type="file" accept=".pdf,.doc,.docx" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+                    <button type="submit" style="width: 100%; padding: 10px; background-color: green; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Submit</button>
+                </form>
+                <a href="#" id="closeUploadResumeForm" style="display: block; text-align: center; color: #333; margin-top: 10px; text-decoration: none; font-size: 14px;">Close</a>
+            </div>
+
+            <!-- JavaScript -->
+            <script>
+                const loginButton = document.getElementById('loginButton');
+                const registerButton = document.getElementById('registerButton');
+                const closeLoginForm = document.getElementById('closeLoginForm');
+                const closeRegisterForm = document.getElementById('closeRegisterForm');
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+                const overlay = document.getElementById('overlay');
+                const uploadResumeLink = document.getElementById('uploadResumeLink');
+                const uploadResumeForm = document.getElementById('uploadResumeForm');
+                const closeUploadResumeForm = document.getElementById('closeUploadResumeForm');
+
+
+                // Open Login Form
+                loginButton.addEventListener('click', () => {
+                    overlay.style.display = 'block';
+                    loginForm.style.display = 'block';
+                });
+
+                // Open Registration Form
+                registerButton.addEventListener('click', () => {
+                    overlay.style.display = 'block';
+                    registerForm.style.display = 'block';
+                });
+
+                // Close Login Form
+                closeLoginForm.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    loginForm.style.display = 'none';
+                });
+
+                // Show upload resume form
+                uploadResumeLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    uploadResumeForm.style.display = 'block';
+                    overlay.style.display = 'block';
+                });
+
+                // Hide upload resume form
+                closeUploadResumeForm.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    uploadResumeForm.style.display = 'none';
+                    overlay.style.display = 'none';
+                });
+
+                // Close Registration Form
+                closeRegisterForm.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    registerForm.style.display = 'none';
+                });
+
+                // Close forms by clicking on the overlay
+                overlay.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    loginForm.style.display = 'none';
+                    uploadResumeForm.style.display = 'none';
+                    registerForm.style.display = 'none';
+                });
+
+                // Simulate Login Validation
+                function submitLogin(event) {
+                    event.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+
+                    // Check for correct credentials (you can replace this with actual validation)
+                    if (email === 'banothnaveen@gmail.com' && password === 'Tej2142') {
+                        // Redirect to profile page (replace 'profile.html' with your actual profile page URL)
+                        window.location.href = 'profile.html'; 
+                    } else {
+                        alert('Invalid login credentials!');
+                    }
+                }
+            </script>
+    </div>
+
+
+  <div style="max-width:750px;margin:90px auto;padding:30px;background:#ffffff;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.1);">
+    <h2 style="text-align:center;color:#004080;margin-bottom:10px;font-size:28px;">Register Your Company</h2>
+    <p style="text-align:center;color:#666;margin-bottom:30px;">Join Hitaishi Careers and start hiring top talent today.</p>
+
+    <form style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <input type="text" placeholder="Company Name" name="company" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="text" placeholder="Industry Type" name="industry" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="email" placeholder="Company Email" name="email" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="tel" placeholder="Phone Number" name="phone" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="text" placeholder="Alternate Phone" name="alt_phone"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="text" placeholder="HR Contact Name" name="hr_name"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="text" placeholder="Company Address" name="address" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;grid-column:span 2;" />
+
+      <input type="text" placeholder="City" name="city"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="text" placeholder="State" name="state"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="text" placeholder="Pincode" name="pincode"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="url" placeholder="Website URL" name="website"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="text" placeholder="LinkedIn Profile (Optional)" name="linkedin"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <textarea placeholder="Company Description" name="description" rows="4"
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;resize:none;grid-column:span 2;"></textarea>
+
+      <input type="password" placeholder="Set Password" name="password" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <input type="password" placeholder="Confirm Password" name="confirm_password" required
+        style="padding:12px 15px;border:1px solid #ccc;border-radius:8px;font-size:16px;width:100%;" />
+
+      <button type="submit"
+        style="grid-column:span 2;padding:14px;background:#004080;color:white;border:none;border-radius:8px;font-size:18px;font-weight:bold;cursor:pointer;transition:background 0.3s;">
+        Register Company
+      </button>
+    </form>
+
+    <p style="text-align:center;margin-top:20px;font-size:14px;color:#333;">
+      Already have an account? <a href="employerlogin.html" style="color:#004080;text-decoration:none;font-weight:500;">Login here</a>
+    </p>
+  </div>
+
+  <style>
+    @media (max-width: 700px) {
+      form {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+
+
+    <script>
+        // JavaScript to handle dropdown menu hover effect
+        const dropdowns = document.querySelectorAll("ul > li");
+    
+        dropdowns.forEach((dropdown) => {
+            dropdown.addEventListener("mouseenter", () => {
+                const submenu = dropdown.querySelector("ul");
+                if (submenu) submenu.style.display = "block";
+            });
+            dropdown.addEventListener("mouseleave", () => {
+                const submenu = dropdown.querySelector("ul");
+                if (submenu) submenu.style.display = "none";
+            });
+        });
+
+
+        
+    </script>
+
+</body>
+</html>
