@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Text Section</title>
+    
+</head>
+<body>
+<section class="animated-section">
+
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .animated-section {
+            max-width: 800px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            line-height: 1.6;
+        }
+
+        /* Initially hide the text */
+        .animated-text span {
+            opacity: 0;
+            transition: opacity 0.1s ease-in-out; /* Smooth transition for each word */
+        }
+    </style>
+
+        <h2>Unlock Your Career Potential with AI-Powered Job Applications</h2>
+        <p class="animated-text"></p>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textElement = document.querySelector('.animated-text');
+            const fullText = "In today's competitive job market, leveraging artificial intelligence can significantly enhance your job search strategy. AI tools are revolutionizing how candidates apply for positions, offering unprecedented efficiency and insights. From intelligent resume optimization and personalized cover letter generation to identifying best-fit roles and even preparing for interviews, AI can be your powerful ally. Embrace the future of job hunting and let AI empower you to showcase your unique skills and experiences effectively, increasing your chances of becoming a successful career job holder or achieving a brighter professional future.";
+
+            // Split the text into words
+            const words = fullText.split(' ');
+
+            let index = 0;
+
+            function revealWord() {
+                if (index < words.length) {
+                    const wordSpan = document.createElement('span');
+                    wordSpan.textContent = words[index] + ' '; // Add a space after each word
+                    textElement.appendChild(wordSpan);
+
+                    // Trigger reflow to apply opacity: 0 before setting to 1
+                    // This is a common trick to force the browser to apply the initial style
+                    wordSpan.offsetWidth; 
+                    wordSpan.style.opacity = 1;
+
+                    index++;
+                    setTimeout(revealWord, 70); // Adjust this value to change animation speed (milliseconds per word)
+                }
+            }
+
+            revealWord();
+        });
+    </script>
+</section>
+
+    
+</body>
+</html>
