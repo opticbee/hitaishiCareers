@@ -1,79 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Text Section</title>
-    
+  <meta charset="UTF-8">
+  <title>Auto Translate by Country</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .location {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .note {
+      margin-top: 40px;
+      font-style: italic;
+      color: #999;
+    }
+  </style>
 </head>
 <body>
-<section class="animated-section">
 
-  <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            padding: 20px;
-            box-sizing: border-box;
+  <h1>Welcome to Our Global Website!</h1>
+
+  <p>
+    This site automatically translates content to match your location. Whether you're in India, the USA, or Saudi Arabia, the language will adjust accordingly to enhance your browsing experience.
+  </p>
+
+  <p>
+    Using intelligent location detection and Google Translate, we aim to make this website accessible for everyone, everywhere.
+  </p>
+
+  <div class="location" id="user-location">Detecting your location...</div>
+
+  <div class="note">
+    This demo uses IP-based geolocation and Google Translate to deliver content in Hindi, Arabic, or English.
+  </div>
+
+  <!-- Google Translate Element (Hidden) -->
+  <div id="google_translate_element" style="display:none;"></div>
+
+  <!-- Google Translate Script -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement(
+        {
+          pageLanguage: 'en',
+          includedLanguages: 'en,hi,ar',
+          layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+        },
+        'google_translate_element'
+      );
+    }
+  </script>
+
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- Location Detection and Auto-Translation -->
+  
+  
+ <script>
+  const countryLangMap = {
+    IN: 'hi', // India -> Hindi
+    US: 'en', // United States -> English
+    SA: 'ar'  // Saudi Arabia -> Arabic
+  };
+
+  fetch('https://ipapi.co/json/')
+    .then(response => response.json())
+    .then(data => {
+      const countryCode = data.country_code;
+      const city = data.city;
+      const region = data.region;
+      const country = data.country_name;
+
+      document.getElementById('user-location').textContent =
+        `You are visiting from ${city}, ${region}, ${country}.`;
+
+      const targetLang = countryLangMap[countryCode] || 'en';
+
+      const observer = new MutationObserver(() => {
+        const select = document.querySelector('.goog-te-combo');
+        if (select && select.length > 1) {
+          select.value = targetLang;
+          select.dispatchEvent(new Event('change'));
+          observer.disconnect(); // Stop observing once done
         }
+      });
 
-        .animated-section {
-            max-width: 800px;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            line-height: 1.6;
-        }
-
-        /* Initially hide the text */
-        .animated-text span {
-            opacity: 0;
-            transition: opacity 0.1s ease-in-out; /* Smooth transition for each word */
-        }
-    </style>
-
-        <h2>Unlock Your Career Potential with AI-Powered Job Applications</h2>
-        <p class="animated-text"></p>
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+    })
+    .catch(() => {
+      document.getElementById('user-location').textContent =
+        'Unable to detect location. Default language applied.';
+    });
+</script>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const textElement = document.querySelector('.animated-text');
-            const fullText = "In today's competitive job market, leveraging artificial intelligence can significantly enhance your job search strategy. AI tools are revolutionizing how candidates apply for positions, offering unprecedented efficiency and insights. From intelligent resume optimization and personalized cover letter generation to identifying best-fit roles and even preparing for interviews, AI can be your powerful ally. Embrace the future of job hunting and let AI empower you to showcase your unique skills and experiences effectively, increasing your chances of becoming a successful career job holder or achieving a brighter professional future.";
-
-            // Split the text into words
-            const words = fullText.split(' ');
-
-            let index = 0;
-
-            function revealWord() {
-                if (index < words.length) {
-                    const wordSpan = document.createElement('span');
-                    wordSpan.textContent = words[index] + ' '; // Add a space after each word
-                    textElement.appendChild(wordSpan);
-
-                    // Trigger reflow to apply opacity: 0 before setting to 1
-                    // This is a common trick to force the browser to apply the initial style
-                    wordSpan.offsetWidth; 
-                    wordSpan.style.opacity = 1;
-
-                    index++;
-                    setTimeout(revealWord, 70); // Adjust this value to change animation speed (milliseconds per word)
-                }
-            }
-
-            revealWord();
-        });
-    </script>
-</section>
-
-    
 </body>
 </html>

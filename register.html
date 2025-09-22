@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Account - Hitaishi Careers</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary-color: #6a0dad;
+      --secondary-color: #d653c9;
+      --light-gray: #f8f9fa;
+    }
+    
+    body {
+      background-color: var(--light-gray);
+    }
+    
+    .register-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    .register-card {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    
+    .register-promo {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .register-promo h1 {
+        font-weight: 700;
+    }
+    
+    .promo-feature i {
+        background-color: rgba(255, 255, 255, 0.2);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .form-section {
+      padding: 3rem;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(106, 13, 173, 0.25);
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      padding: 0.75rem;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background-color: #5a0a9d;
+      border-color: #5a0a9d;
+    }
+
+    .btn-google {
+        border-color: #ddd;
+        font-weight: 500;
+    }
+
+    .profile-pic-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 1.5rem;
+    }
+
+    .profile-pic {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .upload-button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 32px;
+        height: 32px;
+        background-color: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        border: 2px solid white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .upload-button:hover {
+        background-color: #5a0a9d;
+    }
+
+    #fileUpload {
+        display: none;
+    }
+
+    .password-toggle {
+        cursor: pointer;
+    }
+
+    @media (max-width: 991.98px) {
+        .register-promo {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .form-section {
+            padding: 2rem;
+        }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container register-container">
+    <div class="card register-card w-100">
+      <div class="row g-0">
+        <!-- Left Side: Promotional Content -->
+        <div class="col-lg-5 register-promo">
+          <div class="text-center text-lg-start">
+            <a href="index.html">
+                <img src="images/Logo1.PNG" alt="Hitaishi Careers Logo" height="50" class="mb-4">
+            </a>
+            <h1 class="mb-3">Start your journey with us.</h1>
+            <p class="lead mb-4">Discover millions of jobs and career opportunities.</p>
+            
+            <div class="d-flex align-items-center mb-3 promo-feature">
+              <i class="fas fa-briefcase fa-lg me-3"></i>
+              <span>Find jobs that match your skills</span>
+            </div>
+            <div class="d-flex align-items-center mb-3 promo-feature">
+              <i class="fas fa-building fa-lg me-3"></i>
+              <span>Connect with top companies</span>
+            </div>
+            <div class="d-flex align-items-center promo-feature">
+              <i class="fas fa-rocket fa-lg me-3"></i>
+              <span>Accelerate your career growth</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Registration Form -->
+        <div class="col-lg-7 form-section">
+          <h2 class="fw-bold mb-4 text-center">Create an account</h2>
+          <form id="registrationForm">
+            
+            <!-- Profile Picture Upload -->
+            <div class="profile-pic-wrapper">
+                <img class="profile-pic" id="profilePic" src="https://placehold.co/120x120/EFEFEF/AAAAAA?text=Photo" alt="Profile Picture">
+                <div class="upload-button" id="uploadBtn">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <input class="form-control" type="file" id="fileUpload" accept="image/*">
+            </div>
+
+            <!-- Full Name -->
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="fullName" placeholder="Enter your full name" required>
+              <label for="fullName">Full Name</label>
+            </div>
+            
+            <!-- Email -->
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="email" placeholder="name@example.com" required>
+              <label for="email">Email address</label>
+            </div>
+            
+            <!-- Password -->
+            <div class="input-group mb-3">
+              <div class="form-floating">
+                  <input type="password" class="form-control" id="password" placeholder="Password" required>
+                  <label for="password">Password</label>
+              </div>
+              <span class="input-group-text password-toggle" id="togglePassword">
+                  <i class="fas fa-eye-slash"></i>
+              </span>
+            </div>
+
+            <!-- Mobile Number -->
+            <div class="input-group mb-3">
+              <span class="input-group-text">+91</span>
+              <div class="form-floating">
+                <input type="tel" class="form-control" id="mobileNumber" placeholder="Mobile Number" pattern="[0-9]{10}" required>
+                <label for="mobileNumber">Mobile Number</label>
+              </div>
+            </div>
+            
+            <!-- Terms and Conditions -->
+            <div class="form-check mb-4">
+              <input class="form-check-input" type="checkbox" value="" id="termsCheck" required>
+              <label class="form-check-label" for="termsCheck">
+                I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+              </label>
+            </div>
+            
+            <!-- Register Button -->
+            <div class="d-grid mb-3">
+              <button type="submit" class="btn btn-primary">Register Now</button>
+            </div>
+
+            <!-- Separator -->
+            <div class="text-center my-3">
+                <span class="text-muted">OR</span>
+            </div>
+            
+            <!-- Google Sign-In -->
+            <div class="d-grid mb-3">
+              <button type="button" id="googleSignInButton" class="btn btn-light btn-google border">
+                  <img src="https://www.google.com/images/icons/material/product/2x/btn_google_light_normal_ios.svg" alt="Google icon" height="20" class="me-2"> Continue with Google
+              </button>
+            </div>
+
+            <!-- Login Link -->
+            <p class="text-center text-muted">Already have an account? <a href="#">Login</a></p>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // This script handles the non-Firebase form elements like image preview and password toggle.
+    document.addEventListener('DOMContentLoaded', function() {
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileUpload = document.getElementById('fileUpload');
+        const profilePic = document.getElementById('profilePic');
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        // Trigger file input click on button click
+        uploadBtn.addEventListener('click', function() {
+            fileUpload.click();
+        });
+
+        // Handle file selection and preview
+        fileUpload.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePic.setAttribute('src', e.target.result);
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Toggle password visibility
+        togglePassword.addEventListener('click', function() {
+            const icon = this.querySelector('i');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // Traditional form submission (preventing default to allow Firebase to handle auth)
+        const registrationForm = document.getElementById('registrationForm');
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // In a real application, you would handle email/password registration here
+            // using Firebase's `createUserWithEmailAndPassword` method.
+            alert('Email/Password registration not yet implemented. Please use Google Sign-In.');
+        });
+    });
+  </script>
+
+  <!-- Firebase Authentication Script -->
+  <script type="module">
+    // Your Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBLoi7_CtYn_oil59Yj_fuxy9FxJzfW__E",
+      authDomain: "hitaishicareers.firebaseapp.com",
+      projectId: "hitaishicareers",
+      storageBucket: "hitaishicareers.appspot.com",
+      messagingSenderId: "922753251364",
+      appId: "1:922753251364:web:5e33c8fc3fc8a8b573c0b1",
+      measurementId: "G-NR7QNMWF79"
+    };
+
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // DOM Elements
+    const googleSignInButton = document.getElementById('googleSignInButton');
+
+    // Handle Google Sign-In
+    const handleSignIn = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            // Create or update user document in Firestore
+            const userRef = doc(db, "users", user.uid);
+            await setDoc(userRef, {
+                uid: user.uid,
+                displayName: user.displayName,
+                email: user.email,
+                photoURL: user.photoURL,
+                phoneNumber: user.phoneNumber || null
+            }, { merge: true });
+
+            // Redirect to the home page after successful login
+            window.location.href = 'index.html';
+
+        } catch (error) {
+            console.error("Authentication Error:", error);
+            alert("An error occurred during sign-in. Please try again.");
+        }
+    };
+
+    // Event Listener for the Google Sign-In button
+    googleSignInButton.addEventListener('click', handleSignIn);
+  </script>
+</body>
+</html>

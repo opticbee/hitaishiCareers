@@ -1,51 +1,26 @@
 const express = require('express');
-const mysql = require('mysql');
-const bodyParser = require('body-parser');
-const cors = require('cors'); // Add this line
+const session = require('express-session');
+const authRoutes = require('./routes');
+const db = require('./db');
 
 const app = express();
 const port = 3000;
 
-// MySQL connection
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '2142',
-    database: 'job_portal'
-});
-
-db.connect((err) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Connected to MySQL Database.');
-});
-
 // Middleware
-app.use(cors()); // Add this line
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(session({
+    secret: 'your_secret_key', // Replace with a strong secret
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
 
-// Route to handle registration
-app.post('/register', (req, res) => {
-    const { fullName, email, password } = req.body;
+// Connect to the database
+db.connect();
 
-    if (!fullName || !email || !password) {
-        return res.status(400).send('All fields are required.');
-    }
+// Routes
+app.use('/api', authRoutes);
 
-    const user = { fullName, email, password };
-    const sql = 'INSERT INTO users SET ?';
-
-    db.query(sql, user, (err, result) => {
-        if (err) {
-            return res.status(500).send('Error saving user to database.');
-        }
-        res.send('User registered successfully.');
-    });
-});
-
-// Start the server
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });

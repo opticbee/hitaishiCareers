@@ -695,6 +695,47 @@
     </script>
     
 
-    
+    <div id="google_translate_element" style="display: none;"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement(
+      {
+        pageLanguage: 'en',
+        includedLanguages: 'en,hi,fr,es,de,zh,ar',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+      },
+      'google_translate_element'
+    );
+  }
+</script>
+
+<script type="text/javascript"
+  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+</script>
+
+<script>
+  function fireTranslation(lang) {
+    const select = document.querySelector('.goog-te-combo');
+    if (select) {
+      select.value = lang;
+      select.dispatchEvent(new Event('change'));
+    }
+  }
+
+  window.addEventListener('load', () => {
+    const userLang = navigator.language || navigator.userLanguage; // e.g., "fr-FR"
+    const langCode = userLang.split('-')[0]; // e.g., "fr"
+    const supportedLangs = ['en', 'hi', 'fr', 'es', 'de', 'zh', 'ar'];
+
+    if (supportedLangs.includes(langCode) && langCode !== 'en') {
+      setTimeout(() => {
+        fireTranslation(langCode);
+      }, 2000); // Wait for Translate dropdown to load
+    }
+  });
+</script>
+
+
 </body>
 </html>
