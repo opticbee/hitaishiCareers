@@ -6,6 +6,7 @@ const path = require('path');
 
 // Import API routes from routes folder
 const registerRoute = require('./routes/register');
+const authRoute = require('./routes/auth'); // Import the new auth route
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,6 +35,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // --- API Routes ---
 // All registration-related routes handled here
 app.use('/api', registerRoute);
+app.use('/api/auth', authRoute); // Use the new auth routes
 
 // --- Frontend Routes ---
 // Serve homepage (index.html) at root
