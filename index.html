@@ -1,201 +1,503 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Hitaishi Careers - Find your dream job with our comprehensive job portal. Browse thousands of opportunities across industries and locations.">
+  <meta name="google-site-verification" content="ecK9HDw6S5jsd7eJqgOV2nZxTFDyixUowUjAVTJ0_tU" />
+
+  <meta name="description" content="Hitaishi Careers - Find your dream job with our comprehensive job portal.">
   <meta name="keywords" content="jobs, career, employment, hiring, job search, Hitaishi Careers">
   <title>Hitaishi Careers - Find Your Dream Job</title>
   
+  <!-- Open Graph / Facebook -->
+  <meta name="author" content="Hitaishi Careers">
+  <meta property="og:title" content="Hitaishi Careers - WinJob.in">
+  <meta property="og:description" content="Find your dream job on WinJob.in - Hitaishi Careers.">
+  <meta property="og:url" content="https://www.winjob.in">
+  <meta property="og:site_name" content="WinJob">
+  <meta property="og:image" content="https://winjob.in/images/logo.png">
+  <meta property="og:type" content="website">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WinJob | Hitaishi Careers - Find Jobs & Get Hired">
+  <meta name="twitter:description" content="Search and apply for jobs with WinJob by Hitaishi Careers. Find your dream job today.">
+  <meta name="twitter:image" content="https://winjob.in/images/Logo1.png">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://winjob.in">
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://winjob.in/images/favicon.ico" type="image/x-icon">
+
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="images/Logo.PNG" type="image/x-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Structured Data / Schema.org -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "WinJob - Hitaishi Careers",
+      "url": "https://winjob.in",
+      "logo": "https://winjob.in/images/logo.png",
+      "sameAs": [
+        "https://www.facebook.com/YourPage",
+        "https://www.linkedin.com/company/YourPage",
+        "https://twitter.com/YourPage",
+        "https://instagram.com/YourPage"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+91-XXXXXXXXXX",
+        "contactType": "Customer Support",
+        "areaServed": "IN",
+        "availableLanguage": "en"
+      }
+    }
+  </script>
   
+  <!-- Custom CSS -->
   <style>
-    :root {
-      --primary-color: #6a0dad;
-      --secondary-color: #d653c9;
-      --accent-color: #ff6b00;
-    }
-    
-    .bg-gradient-primary {
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
-    }
-    
-    .btn-primary {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
-    }
-    
-    .btn-primary:hover {
-      background-color: #5a0a9d;
-      border-color: #5a0a9d;
-    }
-    
-    .btn-accent {
-      background-color: var(--accent-color);
-      border-color: var(--accent-color);
-      color: white;
-    }
-    
-    .btn-accent:hover {
-      background-color: #e05a00;
-      border-color: #e05a00;
-      color: white;
-    }
-    
-    .category-box, .skill-box, .location-box, 
-    .industry-box, .function-box, .role-box, 
-    .company-box {
-      transition: all 0.3s ease;
-    }
-    
-    .category-box:hover, .skill-box:hover, .location-box:hover, 
-    .industry-box:hover, .function-box:hover, .role-box:hover, 
-    .company-box:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .navbar-nav .nav-link {
-      color: white !important;
-      padding: 0.5rem 1rem;
-    }
-    
-    .navbar-nav .nav-link:hover {
-      color: #ffcc00 !important;
-    }
-    
-    .dropdown-menu {
-      border: none;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-    
-    .service-card {
-      transition: transform 0.3s ease;
-      height: 100%;
-    }
-    
-    .service-card:hover {
-      transform: translateY(-10px);
-    }
-    
-    .job-card {
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .job-card:hover {
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    
-    .marquee-container {
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .marquee-content {
-      display: flex;
-      animation: marquee 30s linear infinite;
-      white-space: nowrap;
-    }
-    
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-    
-    .company-logo-scroll {
-      animation: scrollLogos 45s linear infinite;
-    }
-    
-    @keyframes scrollLogos {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-    
-    footer {
-      background-color: #1a1a1a;
-    }
-    
-    footer a {
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    
-    footer a:hover {
-      color: var(--secondary-color) !important;
-    }
-    
-    /* Animation for category boxes */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
+      :root {
+        --primary-color: #6a0dad;
+        --secondary-color: #d653c9;
+        --accent-color: #ff6b00;
+        --light-bg: #f9f7ff;
+        --dark-text: #333333;
+        --light-text: #6c757d;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      
+      body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--dark-text);
+        /* Added padding to prevent content from being hidden by the fixed navbar */
+        padding-top: 70px; 
       }
-    }
-    
-    .animate-fade-in-up {
-      animation: fadeInUp 0.5s ease forwards;
-    }
-
-    /* Styles for the "Continue with Google" popup */
-    #google-auth-popup {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1050;
-        width: 360px;
-        background-color: white;
+      
+      .bg-gradient-primary {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+      }
+      
+      .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        font-weight: 500;
+        padding: 10px 24px;
+      }
+      
+      .btn-primary:hover {
+        background-color: #5a0a9d;
+        border-color: #5a0a9d;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(106, 13, 173, 0.3);
+      }
+      
+      .btn-accent {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: white;
+        font-weight: 500;
+      }
+      
+      .btn-accent:hover {
+        background-color: #e05a00;
+        border-color: #e05a00;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(255, 107, 0, 0.3);
+      }
+      
+      .category-box, .skill-box, .location-box, 
+      .industry-box, .function-box, .role-box, 
+      .company-box {
+        transition: all 0.3s ease;
+        border-radius: 10px;
+      }
+      
+      .category-box:hover, .skill-box:hover, .location-box:hover, 
+      .industry-box:hover, .function-box:hover, .role-box:hover, 
+      .company-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      }
+      
+      .navbar-nav .nav-link {
+        color: white !important;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        position: relative;
+      }
+      
+      .navbar-nav .nav-link:hover {
+        color: #ffcc00 !important;
+      }
+      
+      .navbar-nav .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background-color: #ffcc00;
+        transition: all 0.3s ease;
+      }
+      
+      .navbar-nav .nav-link:hover::after {
+        width: 80%;
+        left: 10%;
+      }
+      
+      .dropdown-menu {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        padding: 10px 0;
+      }
+      
+      .dropdown-item {
+        padding: 8px 20px;
+        transition: all 0.2s ease;
+      }
+      
+      .dropdown-item:hover {
+        background-color: rgba(106, 13, 173, 0.1);
+        color: var(--primary-color);
+      }
+      
+      .service-card {
+        transition: transform 0.3s ease;
+        height: 100%;
+        border-radius: 15px;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+      
+      .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+      }
+      
+      .service-card .card-body {
+        padding: 30px 20px;
+      }
+      
+      .job-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
         border-radius: 12px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        padding: 24px;
-        display: none; /* Hidden by default */
-        flex-direction: column;
+        overflow: hidden;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        height: 100%;
+      }
+      
+      .job-card:hover {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+      }
+      
+      .job-card .card-body {
+        padding: 25px;
+      }
+      
+      .job-card .badge {
+        font-size: 0.7rem;
+        padding: 5px 10px;
+      }
+      
+      .marquee-container {
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .marquee-content {
+        display: flex;
+        animation: marquee 30s linear infinite;
+        white-space: nowrap;
+      }
+      
+      @keyframes marquee {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+      }
+      
+      .company-logo-scroll {
+        animation: scrollLogos 45s linear infinite;
+        display: flex;
         align-items: center;
-        text-align: center;
-        animation: slideIn 0.5s ease-out;
-    }
-
-    @keyframes slideIn {
+      }
+      
+      @keyframes scrollLogos {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+      }
+      
+      footer {
+        background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+      }
+      
+      footer a {
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+      
+      footer a:hover {
+        color: var(--secondary-color) !important;
+      }
+      
+      /* Animation for category boxes */
+      @keyframes fadeInUp {
         from {
-            opacity: 0;
-            transform: translateY(-20px);
+          opacity: 0;
+          transform: translateY(50px);
         }
         to {
-            opacity: 1;
-            transform: translateY(0);
+          opacity: 1;
+          transform: translateY(0);
         }
-    }
-
-    #google-auth-popup.show {
-        display: flex;
-    }
-    
-    #popup-close-btn {
+      }
+      
+      .animate-fade-in-up {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+      
+      /* Hero Section Styles */
+      .hero-section {
+        background: linear-gradient(135deg, var(--light-bg) 0%, #ffffff 100%);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .hero-section::before {
+        content: '';
         position: absolute;
-        top: 15px;
-        right: 15px;
-        background: none;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        background: rgba(106, 13, 173, 0.05);
+        top: -150px;
+        right: -150px;
+      }
+      
+      .hero-section::after {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 107, 0, 0.05);
+        bottom: -100px;
+        left: -100px;
+      }
+      
+      .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
+      }
+      
+      .search-form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        padding: 15px;
+        margin-top: 30px;
+      }
+      
+      .search-form-card .form-control, 
+      .search-form-card .form-select {
         border: none;
-        font-size: 1.5rem;
-        color: #9ca3af;
-        cursor: pointer;
-    }
+        background: transparent;
+        padding-left: 0;
+      }
+      
+      .search-form-card .form-control:focus, 
+      .search-form-card .form-select:focus {
+        box-shadow: none;
+      }
+      
+      .divider {
+        width: 1px;
+        height: 40px;
+        background: #e0e0e0;
+      }
+      
+      /* Section Headings */
+      .section-heading {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        position: relative;
+      }
+      
+      .section-heading::after {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+      }
+      
+      /* Tab Styles */
+      .nav-pills .nav-link {
+        color: var(--dark-text);
+        border-radius: 30px;
+        padding: 10px 20px;
+        margin: 0 5px;
+        transition: all 0.3s ease;
+      }
+      
+      .nav-pills .nav-link.active {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+      }
+      
+      .nav-pills .nav-link:not(.active):hover {
+        background-color: rgba(106, 13, 173, 0.1);
+      }
+      
+      /* Stats Section */
+      .stats-section {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+      }
+      
+      .stat-item {
+        text-align: center;
+      }
+      
+      .stat-number {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      
+      .stat-label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+      
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        body {
+            padding-top: 60px; /* Adjust navbar padding for smaller screens */
+        }
+        .hero-title {
+          font-size: 2.5rem;
+        }
+        
+        .section-heading {
+          font-size: 2rem;
+        }
+        
+        .search-form-card {
+          border-radius: 15px;
+          padding: 10px;
+        }
+        
+        .divider {
+          display: none;
+        }
+      }
+
+      /* Styles for the "Continue with Google" popup */
+      #google-auth-popup {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 1050;
+          width: 90%;
+          max-width: 400px;
+          background-color: white;
+          border-radius: 15px;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+          padding: 30px;
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          animation: slideIn 0.5s ease-out;
+      }
+
+      @keyframes slideIn {
+          from {
+              opacity: 0;
+              transform: translate(-50%, -60%);
+          }
+          to {
+              opacity: 1;
+              transform: translate(-50%, -50%);
+          }
+      }
+
+      #google-auth-popup.show {
+          display: flex;
+      }
+      
+      #popup-close-btn {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          color: #9ca3af;
+          cursor: pointer;
+          transition: color 0.3s ease;
+      }
+      
+      #popup-close-btn:hover {
+          color: var(--dark-text);
+      }
+      
+      /* Backdrop for popup */
+      .popup-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 1040;
+          display: none;
+      }
+      
+      .popup-backdrop.show {
+          display: block;
+      }
   </style>
+
 </head>
 
 <body>
+  <!-- Backdrop for popup -->
+  <div class="popup-backdrop" id="popupBackdrop"></div>
+
   <!-- "Continue with Google" Popup -->
   <div id="google-auth-popup">
       <button id="popup-close-btn">&times;</button>
+      <div class="mb-4">
+        <img src="images/logo.png" alt="Hitaishi Careers" height="50">
+      </div>
       <h3 class="fw-bold mb-3 text-dark">Sign in to Hitaishi Careers</h3>
       <p class="text-muted mb-4">Continue with your Google account to get started.</p>
       
@@ -208,15 +510,16 @@
       <button id="googleSignInButton" class="btn btn-outline-secondary w-100">
           <i class="fab fa-google me-2"></i>Sign in with Google
       </button>
+      
+      <p class="text-muted mt-3 small">By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
   </div>
-
 
   <!-- Header/Navbar -->
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary fixed-top py-2">
       <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="index.html">
-          <img src="images/Logo1.PNG" alt="Hitaishi Careers Logo" height="40" class="me-2">
+          <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
           <span class="fw-bold">Hitaishi Careers</span>
         </a>
         
@@ -227,7 +530,7 @@
         <div class="collapse navbar-collapse" id="navbarContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link" href="index.html">Home</a>
+              <a class="nav-link active" href="index.html">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="jobs.html">Jobs</a>
@@ -286,89 +589,142 @@
   </header>
 
   <!-- Hero Search Section -->
-  <section class="bg-gradient-primary text-white py-5" style="margin-top: 76px;">
-    <div class="container py-4">
+  <section class="hero-section py-5">
+    <div class="container position-relative z-1">
       <div class="row align-items-center">
-        <div class="col-lg-5 mb-4 mb-lg-0">
-          <h1 class="fw-bold mb-3">Find Your Dream Job Now</h1>
-          <p class="lead">Thousands of jobs waiting for you. Start your career journey today.</p>
+        <!-- Left side content -->
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <h1 class="hero-title">Find Your Dream Job Today</h1>
+          <p class="lead mb-4">Discover over 800,000 job opportunities from top companies. Your perfect career match is just a search away.</p>
+          
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              <span>Verified Companies</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              <span>Quick Applications</span>
+            </div>
+            <div class="d-flex align-items-center">
+              <i class="fas fa-check-circle text-success me-2"></i>
+              <span>Career Guidance</span>
+            </div>
+          </div>
+          
+          <div class="d-flex flex-wrap gap-2">
+            <a href="jobs.html" class="btn btn-primary">Browse Jobs</a>
+            <a href="employer.html" class="btn btn-outline-primary">For Employers</a>
+          </div>
         </div>
         
-        <div class="col-lg-7">
-          <div class="card shadow">
-            <div class="card-body p-4">
-              <form>
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <label for="keywordSearch" class="form-label">What are you looking for?</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-search"></i></span>
-                      <input type="text" class="form-control" id="keywordSearch" placeholder="Job title, skills, or company">
-                    </div>
-                  </div>
-                  
-                  <div class="col-md-6">
-                    <label for="locationSearch" class="form-label">Where?</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                      <select class="form-select" id="locationSearch">
-                        <option value="">Select Location</option>
-                        <option value="hyderabad">Hyderabad</option>
-                        <option value="bangalore">Bangalore</option>
-                        <option value="delhi">Delhi</option>
-                        <option value="mumbai">Mumbai</option>
-                        <option value="pune">Pune</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div class="col-md-4">
-                    <label for="experienceSelect" class="form-label">Experience</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                      <select class="form-select" id="experienceSelect">
-                        <option value="">Experience Level</option>
-                        <option value="0-1">0-1 years</option>
-                        <option value="1-3">1-3 years</option>
-                        <option value="3-5">3-5 years</option>
-                        <option value="5+">5+ years</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div class="col-md-4">
-                    <label for="countrySelect" class="form-label">Country</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="fas fa-globe"></i></span>
-                      <select class="form-select" id="countrySelect">
-                        <option value="">Select Country</option>
-                        <option value="India">India</option>
-                        <option value="USA">USA</option>
-                        <option value="UK">UK</option>
-                        <option value="Australia">Australia</option>
-                        <option value="Canada">Canada</option>
-                        <option value="Japan">Japan</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  <div class="col-md-4">
-                    <label class="form-label d-block">&nbsp;</label>
-                    <button type="submit" class="btn btn-primary w-100">Search Jobs</button>
-                  </div>
-                </div>
-              </form>
-            </div>
+        <!-- Right side image -->
+        <div class="col-lg-6 text-center">
+          <img src="images/bg-hero-removebg-preview.png" alt="A professional celebrating success" class="img-fluid rounded-3">
+        </div>
+      </div>
+      
+      <!-- Search Form Card -->
+      <form id="jobSearchForm" action="https://www.winjobs.in/jobs" method="GET" class="row g-2 mt-5 shadow-lg rounded-3 lign-items-center">
+        <!-- Keyword Input -->
+        <div class="col-md-3">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-search text-muted ms-3 me-3"></i>
+            <input type="text" id="keywordSearch" name="q" class="form-control border-0"
+              placeholder="Skills, Company or Job Title">
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="col-md-2">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-briefcase text-muted ms-3 me-3"></i>
+            <select id="experienceSelect" name="experience" class="form-select border-0">
+              <option value="">Experience</option>
+              <option value="0-1">0-1 years</option>
+              <option value="1-3">1-3 years</option>
+              <option value="3-5">3-5 years</option>
+              <option value="5+">5+ years</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Country -->
+        <div class="col-md-2">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-globe text-muted ms-3 me-3"></i>
+            <select id="countrySelect" name="country" class="form-select border-0">
+              <option value="">Country</option>
+              <option value="India">India</option>
+              <option value="USA">USA</option>
+              <option value="UK">UK</option>
+              <option value="Australia">Australia</option>
+              <option value="Canada">Canada</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Location -->
+        <div class="col-md-2">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-map-marker-alt text-muted ms-3 me-3"></i>
+            <select id="locationSelect" name="location" class="form-select border-0" disabled>
+              <option value="">Location</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Search Button -->
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-primary w-100 py-3">
+            <i class="fas fa-search me-2"></i>Search
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section py-5">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-3 col-6 mb-4 mb-md-0">
+          <div class="stat-item">
+            <div class="stat-number">800K+</div>
+            <div class="stat-label">Job Openings</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4 mb-md-0">
+          <div class="stat-item">
+            <div class="stat-number">50K+</div>
+            <div class="stat-label">Companies</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-item">
+            <div class="stat-number">5M+</div>
+            <div class="stat-label">Job Seekers</div>
+          </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-item">
+            <div class="stat-number">95%</div>
+            <div class="stat-label">Success Rate</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Job Filters Section -->
-  <section class="py-4 bg-light">
+  <!-- Job Listings Section -->
+  <section class="py-5 ">
     <div class="container">
-      <div class="row g-3 align-items-center">
+      <h2 class="section-heading">Latest Job Openings</h2>
+      <p class="text-center text-muted mb-5">Discover new opportunities that match your skills and interests</p>
+      
+      <!-- Job Filters -->
+      <div class="row g-3 align-items-center mb-4">
         <div class="col-md-9">
           <div class="row g-2">
             <div class="col-sm-6 col-md-3">
@@ -413,14 +769,8 @@
           <button id="search-jobs" class="btn btn-primary w-100">Apply Filters</button>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Job Listings Section -->
-  <section class="py-5">
-    <div class="container">
-      <h2 class="text-center mb-4">Latest Job Openings</h2>
       
+      <!-- Job Cards -->
       <div id="job-list-container" class="row g-4">
         <p id="placeholder-message" class="text-center text-muted my-5">Use the filters above to find relevant job opportunities.</p>
         
@@ -438,9 +788,15 @@
               <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Hyderabad, IN</p>
               <p class="card-text"><i class="fas fa-building me-2"></i>TechCorp</p>
               <p class="card-text"><i class="fas fa-rupee-sign me-2"></i>₹6,00,000/year</p>
+              <div class="mt-3">
+                <span class="badge bg-light text-dark me-1">Java</span>
+                <span class="badge bg-light text-dark me-1">Spring Boot</span>
+                <span class="badge bg-light text-dark">MySQL</span>
+              </div>
             </div>
-            <div class="card-footer bg-transparent">
+            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
               <small class="text-muted">Posted today</small>
+              <a href="#" class="btn btn-sm btn-primary">Apply Now</a>
             </div>
           </div>
         </div>
@@ -458,32 +814,408 @@
               <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Bangalore, IN</p>
               <p class="card-text"><i class="fas fa-building me-2"></i>Innovate Solutions</p>
               <p class="card-text"><i class="fas fa-rupee-sign me-2"></i>₹4,00,000/year</p>
+              <div class="mt-3">
+                <span class="badge bg-light text-dark me-1">Project Management</span>
+                <span class="badge bg-light text-dark me-1">Agile</span>
+                <span class="badge bg-light text-dark">Scrum</span>
+              </div>
             </div>
-            <div class="card-footer bg-transparent">
+            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
               <small class="text-muted">Posted 2 days ago</small>
+              <a href="#" class="btn btn-sm btn-primary">Apply Now</a>
             </div>
           </div>
         </div>
+        
+        <!-- Additional job cards would go here -->
       </div>
       
-      <div class="text-center mt-4">
-        <a href="jobs.html" class="btn btn-outline-primary">View All Jobs</a>
+      <div class="text-center mt-5">
+        <a href="jobs.html" class="btn btn-outline-primary btn-lg">View All Jobs</a>
       </div>
     </div>
   </section>
 
+<!-- Find the Perfect Job for YOU Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-5">Find the Perfect Job for YOU</h2>
+    
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="card pj-service-card h-100 text-center">
+          <div class="card-body">
+            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/boost.svg" alt="Highlight Profile" class="img-fluid mb-3" style="height: 80px;">
+            <h5 class="card-title"><a href="network.html#industry" class="text-decoration-none text-dark">Highlight</a></h5>
+            <p class="card-text">Stand out to employers with a highlighted profile</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg-3">
+        <div class="card pj-service-card h-100 text-center">
+          <div class="card-body">
+            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Interview Preparation" class="img-fluid mb-3" style="height: 80px;">
+            <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Prep</a></h5>
+            <p class="card-text">Up your interview success rate with our preparation resources</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg-3">
+        <div class="card pj-service-card h-100 text-center">
+          <div class="card-body">
+            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/skill-assessment.svg" alt="Learn Skills" class="img-fluid mb-3" style="height: 80px;">
+            <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Learn</a></h5>
+            <p class="card-text">Upskill to get ahead in your career</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-6 col-lg-3">
+        <div class="card pj-service-card h-100 text-center">
+          <div class="card-body">
+            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Network" class="img-fluid mb-3" style="height: 80px;">
+            <h5 class="card-title"><a href="network.html" class="text-decoration-none text-dark">Network</a></h5>
+            <p class="card-text">Grow with peers & mentors in your industry</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Categories Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">Popular Categories</h2>
+    
+    <div class="row g-4">
+      <!-- Initial 6 categories -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center">
+          <div class="card-body">
+            <img src="https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" alt="Banking" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Banking</h6>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center">
+          <div class="card-body">
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/046/596/525/small_2x/work-from-home-logo-vector.jpg" alt="Work From Home" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Work From Home</h6>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=123787&format=png" alt="HR" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">HR</h6>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=70641&format=png" alt="Sales" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Sales</h6>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=22447&format=png" alt="Accounting" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Accounting</h6>
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center">
+          <div class="card-body">
+            <img src="https://image.shutterstock.com/image-vector/customer-service-icon-user-laptop-260nw-520867126.jpg" alt="Customer Support" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Customer Support</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-4" id="viewMoreButton">
+      <button class="btn btn-primary" id="toggleCategories">View More Categories</button>
+    </div>
+    
+    <div class="collapse mt-4" id="moreCategories">
+      <div class="row g-4">
+        <!-- Additional 6 categories -->
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="pc-category-box card h-100 text-center">
+            <div class="card-body">
+              <img src="https://img.icons8.com/?size=100&id=98963&format=png" alt="Marketing" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Marketing</h6>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="pc-category-box card h-100 text-center">
+            <div class="card-body">
+              <img src="https://img.icons8.com/?size=100&id=59878&format=png" alt="IT" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">IT</h6>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="pc-category-box card h-100 text-center">
+            <div class="card-body">
+              <img src="https://img.icons8.com/?size=100&id=98960&format=png" alt="Engineering" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Engineering</h6>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="pc-category-box card h-100 text-center">
+            <div class="card-body">
+              <img src="https://img.icons8.com/?size=100&id=59892&format=png" alt="Healthcare" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Healthcare</h6>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="pc-category-box card h-100 text-center">
+            <div class="card-body">
+              <img src="https://img.icons8.com/?size=100&id=59885&format=png" alt="Education" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Education</h6>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-6 col-md-4 col-lg-2">
+          <div class="pc-category-box card h-100 text-center">
+            <div class="card-body">
+              <img src="https://img.icons8.com/?size=100&id=59895&format=png" alt="Design" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Design</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+    /* Perfect Job (pj) Section Styles */
+    .pj-service-card {
+      transition: transform 0.3s ease;
+      height: 100%;
+    }
+    
+    .pj-service-card:hover {
+      transform: translateY(-10px);
+    }
+    
+    /* Popular Categories (pc) Section Styles */
+    .pc-category-box {
+      transition: all 0.3s ease;
+    }
+    
+    .pc-category-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Animation for category boxes */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .pc-category-box {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+  </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleButton = document.getElementById('toggleCategories');
+      const moreCategories = document.getElementById('moreCategories');
+      const viewMoreButton = document.getElementById('viewMoreButton');
+      
+      toggleButton.addEventListener('click', function() {
+        // Show the additional categories
+        moreCategories.classList.add('show');
+        
+        // Hide the button after a short delay to allow the collapse animation
+        setTimeout(function() {
+          viewMoreButton.style.display = 'none';
+        }, 300);
+      });
+    });
+  </script>
+</section>
+
+<!-- Browse By Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4">Browse Jobs By</h2>
+    
+    <ul class="nav nav-pills justify-content-center mb-4" id="browseTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab">Skills</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="location-tab" data-bs-toggle="pill" data-bs-target="#location" type="button" role="tab">Location</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="industry-tab" data-bs-toggle="pill" data-bs-target="#industry" type="button" role="tab">Industry</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="functions-tab" data-bs-toggle="pill" data-bs-target="#functions" type="button" role="tab">Functions</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="roles-tab" data-bs-toggle="pill" data-bs-target="#roles" type="button" role="tab">Roles</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="company-tab" data-bs-toggle="pill" data-bs-target="#company" type="button" role="tab">Company</button>
+      </li>
+    </ul>
+    
+    <div class="tab-content" id="browseTabContent">
+      <div class="tab-pane fade show active" id="skills" role="tabpanel">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#" class="skill-box btn btn-outline-secondary">Python</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">SQL</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">Sales</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">Java</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">NodeJs</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">C++</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">MySQL</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">PHP</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">Communication</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">JavaScript</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">AWS</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">Git</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">Negotiation</a>
+          <a href="#" class="skill-box btn btn-outline-secondary">Excel</a>
+        </div>
+      </div>
+      
+      <div class="tab-pane fade" id="location" role="tabpanel">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#" class="location-box btn btn-outline-secondary">Bengaluru / Bangalore</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Hyderabad / Secunderabad</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Mumbai</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Pune</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Chennai</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Gurgaon / Gurugram</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Delhi</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Noida</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Ahmedabad</a>
+          <a href="#" class="location-box btn btn-outline-secondary">Kolkata</a>
+        </div>
+      </div>
+      
+      <div class="tab-pane fade" id="industry" role="tabpanel">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Hardware & Networking</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Software</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Banking/Accounting/Financial Services</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Hospitals/Healthcare/Diagnostics</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Banking</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Information Technology</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Insurance</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Software</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Entertainment/Media/Publishing</a>
+          <a href="#" class="industry-box btn btn-outline-secondary">Finance</a>
+        </div>
+      </div>
+      
+      <div class="tab-pane fade" id="functions" role="tabpanel">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#" class="function-box btn btn-outline-secondary">Technology</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Sales</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Finance</a>
+          <a href="#" class="function-box btn btn-outline-secondary">IT</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Engineering</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Education</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Healthcare</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Business Support and Management</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Marketing</a>
+          <a href="#" class="function-box btn btn-outline-secondary">Software Development</a>
+        </div>
+      </div>
+      
+      <div class="tab-pane fade" id="roles" role="tabpanel">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#" class="role-box btn btn-outline-secondary">Fresher</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Software Engineer/Programmer</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Team Leader/Technical Leader</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Software Developer</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Business Analyst</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Technical Support Executive</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Sales Executive</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Project Leader/Project Manager</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Accountant</a>
+          <a href="#" class="role-box btn btn-outline-secondary">Customer Service Executive (Voice)</a>
+        </div>
+      </div>
+      
+      <div class="tab-pane fade" id="company" role="tabpanel">
+        <div class="d-flex flex-wrap gap-2">
+          <a href="#" class="company-box btn btn-outline-secondary">Axis Bank</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Kotak Mahindra Bank Limited</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Accenture Services Pvt Ltd</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Infosys Limited</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Genpact</a>
+          <a href="#" class="company-box btn btn-outline-secondary">myGwork - LGBTQ+ Business Community</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Robotics Technologies</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Mount Talent Consulting</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Tata Capital</a>
+          <a href="#" class="company-box btn btn-outline-secondary">PwC India</a>
+          <a href="#" class="company-box btn btn-outline-secondary">RARR Technologies</a>
+          <a href="#" class="company-box btn btn-outline-secondary">WSP in India</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Capital Placement Services</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Cadila Pharmaceuticals Limited</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Turfng</a>
+          <a href="#" class="company-box btn btn-outline-secondary">EXL IT Service Management</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Mycityband</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Coders Brain</a>
+          <a href="#" class="company-box btn btn-outline-secondary">Global Act</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
   <!-- Services Section -->
-  <section class="py-5 bg-light">
+  <section class="py-5">
     <div class="container">
-      <h2 class="text-center mb-5">Find the Perfect Job for YOU</h2>
+      <h2 class="section-heading">Career Services</h2>
+      <p class="text-center text-muted mb-5">Enhance your job search with our comprehensive career services</p>
       
       <div class="row g-4">
         <div class="col-md-6 col-lg-3">
           <div class="card service-card h-100 text-center">
             <div class="card-body">
-              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/boost.svg" alt="Highlight Profile" class="img-fluid mb-3" style="height: 80px;">
-              <h5 class="card-title"><a href="network.html#industry" class="text-decoration-none text-dark">Highlight</a></h5>
-              <p class="card-text">Stand out to employers with a highlighted profile</p>
+              <div class="mb-4">
+                <i class="fas fa-star fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title"><a href="network.html#industry" class="text-decoration-none text-dark">Profile Highlight</a></h5>
+              <p class="card-text">Stand out to employers with a highlighted profile that gets noticed</p>
+              <a href="featuredprofile.html" class="btn btn-sm btn-outline-primary mt-2">Learn More</a>
             </div>
           </div>
         </div>
@@ -491,9 +1223,12 @@
         <div class="col-md-6 col-lg-3">
           <div class="card service-card h-100 text-center">
             <div class="card-body">
-              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Interview Preparation" class="img-fluid mb-3" style="height: 80px;">
-              <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Prep</a></h5>
+              <div class="mb-4">
+                <i class="fas fa-comments fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Interview Prep</a></h5>
               <p class="card-text">Up your interview success rate with our preparation resources</p>
+              <a href="preparation.html" class="btn btn-sm btn-outline-primary mt-2">Learn More</a>
             </div>
           </div>
         </div>
@@ -501,9 +1236,12 @@
         <div class="col-md-6 col-lg-3">
           <div class="card service-card h-100 text-center">
             <div class="card-body">
-              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/skill-assessment.svg" alt="Learn Skills" class="img-fluid mb-3" style="height: 80px;">
-              <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Learn</a></h5>
-              <p class="card-text">Upskill to get ahead in your career</p>
+              <div class="mb-4">
+                <i class="fas fa-graduation-cap fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Skill Development</a></h5>
+              <p class="card-text">Upskill to get ahead in your career with our learning resources</p>
+              <a href="preparation.html" class="btn btn-sm btn-outline-primary mt-2">Learn More</a>
             </div>
           </div>
         </div>
@@ -511,9 +1249,12 @@
         <div class="col-md-6 col-lg-3">
           <div class="card service-card h-100 text-center">
             <div class="card-body">
-              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Network" class="img-fluid mb-3" style="height: 80px;">
-              <h5 class="card-title"><a href="network.html" class="text-decoration-none text-dark">Network</a></h5>
-              <p class="card-text">Grow with peers & mentors in your industry</p>
+              <div class="mb-4">
+                <i class="fas fa-users fa-3x text-primary"></i>
+              </div>
+              <h5 class="card-title"><a href="network.html" class="text-decoration-none text-dark">Professional Network</a></h5>
+              <p class="card-text">Grow with peers & mentors in your industry through our network</p>
+              <a href="network.html" class="btn btn-sm btn-outline-primary mt-2">Learn More</a>
             </div>
           </div>
         </div>
@@ -522,265 +1263,100 @@
   </section>
 
   <!-- Featured Companies Section -->
-  <section class="py-5">
+  <section class="py-5 bg-light">
     <div class="container">
-      <h2 class="text-center mb-4">Featured Companies</h2>
+      <h2 class="section-heading">Featured Companies</h2>
+      <p class="text-center text-muted mb-5">Join thousands of job seekers who found their dream jobs at these top companies</p>
       
-      <div class="marquee-container border-top border-bottom border-dark py-3">
+      <div class="marquee-container border-top border-bottom border-dark py-4">
         <div class="d-flex company-logo-scroll">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTPAWYqoR1E-YMPwd869I0X2WuToOjTrPXgQ&s" alt="Tata Consultancy" class="mx-4" style="height: 40px;">
-          <img src="https://e7.pngegg.com/pngimages/26/116/png-clipart-netflix-logo-netflix-television-show-streaming-media-film-netflix-logo-television-text-thumbnail.png" alt="Netflix" class="mx-4" style="height: 40px;">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNP6_NeBNaCXMhAHRXpIspKXobbgeUqg0Bjw&s" alt="Synechron" class="mx-4" style="height: 40px;">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBVYmljDqiMRbhQWUeRKBP-4Ab1vGqvJiP1w&s" alt="Ultratech" class="mx-4" style="height: 40px;">
-          <img src="https://w7.pngwing.com/pngs/22/865/png-transparent-ericsson-japan-k-k-telecommunication-logo-business-business-blue-text-people.png" alt="Ericsson" class="mx-4" style="height: 40px;">
-          <img src="https://w7.pngwing.com/pngs/563/912/png-transparent-infosys-technologies-hd-logo.png" alt="Infosys" class="mx-4" style="height: 40px;">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6_pqkKO_6EK46pZbsahQ5c3HeAHqpan1FSQ&s" alt="Cyient" class="mx-4" style="height: 40px;">
-          <img src="https://w7.pngwing.com/pngs/12/684/png-transparent-wipro-hd-logo.png" alt="Wipro" class="mx-4" style="height: 40px;">
-        </div>
-      </div>
-      
-      <div class="text-center mt-4">
-        <a href="employer.html" class="btn btn-outline-primary">View All Companies</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Popular Categories Section -->
-  <section class="py-5 bg-light">
-    <div class="container">
-      <h2 class="text-center mb-5">Popular Categories</h2>
-      
-      <div class="row g-4">
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="category-box card h-100 text-center animate-fade-in-up">
-            <div class="card-body">
-              <img src="https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" alt="Banking" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Banking</h6>
-            </div>
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTPAWYqoR1E-YMPwd869I0X2WuToOjTrPXgQ&s" alt="Tata Consultancy" style="height: 40px;">
           </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="category-box card h-100 text-center animate-fade-in-up">
-            <div class="card-body">
-              <img src="https://static.vecteezy.com/system/resources/thumbnails/046/596/525/small_2x/work-from-home-logo-vector.jpg" alt="Work From Home" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Work From Home</h6>
-            </div>
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://e7.pngegg.com/pngimages/26/116/png-clipart-netflix-logo-netflix-television-show-streaming-media-film-netflix-logo-television-text-thumbnail.png" alt="Netflix" style="height: 40px;">
           </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="category-box card h-100 text-center animate-fade-in-up">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=123787&format=png" alt="HR" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">HR</h6>
-            </div>
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNP6_NeBNaCXMhAHRXpIspKXobbgeUqg0Bjw&s" alt="Synechron" style="height: 40px;">
           </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="category-box card h-100 text-center animate-fade-in-up">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=70641&format=png" alt="Sales" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Sales</h6>
-            </div>
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBVYmljDqiMRbhQWUeRKBP-4Ab1vGqvJiP1w&s" alt="Ultratech" style="height: 40px;">
           </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="category-box card h-100 text-center animate-fade-in-up">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=22447&format=png" alt="Accounting" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Accounting</h6>
-            </div>
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTPAWYqoR1E-YMPwd869I0X2WuToOjTrPXgQ&s" alt="Tata Consultancy" style="height: 40px;">
           </div>
-        </div>
-        
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="category-box card h-100 text-center animate-fade-in-up">
-            <div class="card-body">
-              <img src="https://image.shutterstock.com/image-vector/customer-service-icon-user-laptop-260nw-520867126.jpg" alt="Customer Support" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Customer Support</h6>
-            </div>
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://e7.pngegg.com/pngimages/26/116/png-clipart-netflix-logo-netflix-television-show-streaming-media-film-netflix-logo-television-text-thumbnail.png" alt="Netflix" style="height: 40px;">
           </div>
-        </div>
-      </div>
-      
-      <div class="text-center mt-4">
-        <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#moreCategories">View More Categories</button>
-      </div>
-      
-      <div class="collapse mt-4" id="moreCategories">
-        <div class="row g-4">
-          <!-- Additional categories would go here -->
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNP6_NeBNaCXMhAHRXpIspKXobbgeUqg0Bjw&s" alt="Synechron" style="height: 40px;">
+          </div>
+          <div class="mx-4 d-flex align-items-center">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBVYmljDqiMRbhQWUeRKBP-4Ab1vGqvJiP1w&s" alt="Ultratech" style="height: 40px;">
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Trending Skills & Job Titles -->
+  <!-- Testimonials Section -->
   <section class="py-5">
     <div class="container">
+      <h2 class="section-heading">Success Stories</h2>
+      <p class="text-center text-muted mb-5">Hear from job seekers who found their dream jobs through Hitaishi Careers</p>
+      
       <div class="row g-4">
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title mb-4">Trending Skills</h4>
-              <div class="marquee-container bg-light p-3 rounded">
-                <div class="marquee-content">
-                  <span class="badge bg-light text-dark mx-2">Accounting Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Analytics Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Animation Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Architecture Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Banking Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">BPO Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Data Science Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Java Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Marketing Jobs</span>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <div class="mb-3">
+                <i class="fas fa-quote-left fa-2x text-primary opacity-25"></i>
+              </div>
+              <p class="card-text mb-4">"Hitaishi Careers helped me land my dream job at a top tech company. The interview preparation resources were invaluable!"</p>
+              <div class="d-flex align-items-center justify-content-center">
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Priya Sharma" class="rounded-circle me-3" width="50" height="50">
+                <div class="text-start">
+                  <h6 class="mb-0">Niharika Sunkara</h6>
+                  <small class="text-muted">Software Engineer at TechCorp</small>
                 </div>
               </div>
             </div>
           </div>
         </div>
         
-        <div class="col-lg-6">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title mb-4">Trending Job Titles</h4>
-              <div class="marquee-container bg-light p-3 rounded">
-                <div class="marquee-content">
-                  <span class="badge bg-light text-dark mx-2">Business Analyst Jobs</span>
-                  <span class="badge bg-light text-dark mx-2">Digital Marketing Head</span>
-                  <span class="badge bg-light text-dark mx-2">Engineering Manager</span>
-                  <span class="badge bg-light text-dark mx-2">HR Head</span>
-                  <span class="badge bg-light text-dark mx-2">Marketing Head</span>
-                  <span class="badge bg-light text-dark mx-2">Marketing Manager</span>
-                  <span class="badge bg-light text-dark mx-2">Product Manager</span>
-                  <span class="badge bg-light text-dark mx-2">VP Business Development</span>
-                  <span class="badge bg-light text-dark mx-2">VP Finance</span>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <div class="mb-3">
+                <i class="fas fa-quote-left fa-2x text-primary opacity-25"></i>
+              </div>
+              <p class="card-text mb-4">"The resume building service transformed my CV. I started getting interview calls within a week of updating my profile!"</p>
+              <div class="d-flex align-items-center justify-content-center">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Raj Patel" class="rounded-circle me-3" width="50" height="50">
+                <div class="text-start">
+                  <h6 class="mb-0">Nagaraju Pindi</h6>
+                  <small class="text-muted">Marketing Manager at Innovate Solutions</small>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Browse By Section -->
-  <section class="py-5 bg-light">
-    <div class="container">
-      <h2 class="text-center mb-4">Browse Jobs By</h2>
-      
-      <ul class="nav nav-pills justify-content-center mb-4" id="browseTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab">Skills</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="location-tab" data-bs-toggle="pill" data-bs-target="#location" type="button" role="tab">Location</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="industry-tab" data-bs-toggle="pill" data-bs-target="#industry" type="button" role="tab">Industry</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="functions-tab" data-bs-toggle="pill" data-bs-target="#functions" type="button" role="tab">Functions</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="roles-tab" data-bs-toggle="pill" data-bs-target="#roles" type="button" role="tab">Roles</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="company-tab" data-bs-toggle="pill" data-bs-target="#company" type="button" role="tab">Company</button>
-        </li>
-      </ul>
-      
-      <div class="tab-content" id="browseTabContent">
-        <div class="tab-pane fade show active" id="skills" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="skill-box btn btn-outline-secondary">Python</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">SQL</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Sales</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Java</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Communication</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">JavaScript</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">AWS</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Git</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Negotiation</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Excel</a>
-          </div>
-        </div>
         
-        <div class="tab-pane fade" id="location" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="location-box btn btn-outline-secondary">Bengaluru / Bangalore</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Hyderabad / Secunderabad</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Mumbai</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Pune</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Chennai</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Gurgaon / Gurugram</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Delhi</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Noida</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Ahmedabad</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Kolkata</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="industry" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Hardware & Networking</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Software</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Banking/Accounting/Financial Services</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Hospitals/Healthcare/Diagnostics</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Banking</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Information Technology</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Insurance</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Software</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Entertainment/Media/Publishing</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Finance</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="functions" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="function-box btn btn-outline-secondary">Technology</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Sales</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Finance</a>
-            <a href="#" class="function-box btn btn-outline-secondary">IT</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Engineering</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Education</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Healthcare</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Business Support and Management</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Marketing</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Software Development</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="roles" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="role-box btn btn-outline-secondary">Fresher</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Software Engineer/Programmer</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Team Leader/Technical Leader</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Software Developer</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Business Analyst</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Technical Support Executive</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Sales Executive</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Project Leader/Project Manager</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Accountant</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Customer Service Executive (Voice)</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="company" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="company-box btn btn-outline-secondary">Tata Consultancy Services</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Infosys</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Wipro</a>
-            <a href="#" class="company-box btn btn-outline-secondary">HCL Technologies</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Tech Mahindra</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Accenture</a>
-            <a href="#" class="company-box btn btn-outline-secondary">IBM</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Capgemini</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Cognizant</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Larsen & Toubro</a>
+        <div class="col-md-4">
+          <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body text-center p-4">
+              <div class="mb-3">
+                <i class="fas fa-quote-left fa-2x text-primary opacity-25"></i>
+              </div>
+              <p class="card-text mb-4">"As a recent graduate, I was struggling to find opportunities. Hitaishi Careers connected me with entry-level positions perfect for my skills."</p>
+              <div class="d-flex align-items-center justify-content-center">
+                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Anjali Verma" class="rounded-circle me-3" width="50" height="50">
+                <div class="text-start">
+                  <h6 class="mb-0">Fathima SK</h6>
+                  <small class="text-muted">Junior Analyst at DataPro</small>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -791,59 +1367,72 @@
   <footer class="text-white py-5">
     <div class="container">
       <div class="row g-4">
-        <div class="col-lg-3 col-md-6">
-          <h5 class="mb-4">About Us</h5>
-          <p>Hitaishi Careers is a leading job portal connecting job seekers with employers across various industries.</p>
-          <div class="d-flex gap-3 mt-3">
-            <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+        <div class="col-lg-4 col-md-6">
+          <div class="mb-4">
+            <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
+            <span class="fw-bold fs-4">Hitaishi Careers</span>
+          </div>
+          <p class="mb-4">Connecting talented professionals with their dream jobs since 2022. Our mission is to make job searching efficient and effective for everyone.</p>
+          <div class="d-flex gap-3">
+            <a href="#" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+            <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
+            <a href="#" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
+            <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
           </div>
         </div>
         
-        <div class="col-lg-3 col-md-6">
-          <h5 class="mb-4">For Job Seekers</h5>
+        <div class="col-lg-2 col-md-6">
+          <h5 class="mb-4">Quick Links</h5>
           <ul class="list-unstyled">
-            <li><a href="#" class="text-white text-decoration-none">Browse Jobs</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Browse Categories</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Submit Resume</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Career Advice</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Search Tips</a></li>
+            <li class="mb-2"><a href="index.html" class="text-white-50">Home</a></li>
+            <li class="mb-2"><a href="jobs.html" class="text-white-50">Browse Jobs</a></li>
+            <li class="mb-2"><a href="employer.html" class="text-white-50">For Employers</a></li>
+            <li class="mb-2"><a href="#" class="text-white-50">About Us</a></li>
+            <li class="mb-2"><a href="#" class="text-white-50">Contact</a></li>
           </ul>
         </div>
         
         <div class="col-lg-3 col-md-6">
-          <h5 class="mb-4">For Employers</h5>
+          <h5 class="mb-4">Job Seeker Resources</h5>
           <ul class="list-unstyled">
-            <li><a href="#" class="text-white text-decoration-none">Post a Job</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Browse Resumes</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Recruitment Solutions</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Pricing Plans</a></li>
-            <li><a href="#" class="text-white text-decoration-none">Employer Login</a></li>
+            <li class="mb-2"><a href="resumebuild.html" class="text-white-50">Resume Builder</a></li>
+            <li class="mb-2"><a href="preparation.html" class="text-white-50">Interview Tips</a></li>
+            <li class="mb-2"><a href="careerbooster.html" class="text-white-50">Career Advice</a></li>
+            <li class="mb-2"><a href="#" class="text-white-50">Salary Calculator</a></li>
+            <li class="mb-2"><a href="#" class="text-white-50">Blog</a></li>
           </ul>
         </div>
         
         <div class="col-lg-3 col-md-6">
           <h5 class="mb-4">Contact Us</h5>
-          <address>
-            <p><i class="fas fa-map-marker-alt me-2"></i> 123 Main Street, Hyderabad, TS 500001</p>
-            <p><i class="fas fa-phone-alt me-2"></i> +91 9876543210</p>
-            <p><i class="fas fa-envelope me-2"></i> info@hitaishicareers.com</p>
-          </address>
+          <ul class="list-unstyled">
+            <li class="mb-3 d-flex align-items-start">
+              <i class="fas fa-map-marker-alt me-3 mt-1"></i>
+              <span class="text-white-50">985 pragathi nagar, Pragathi Nagar, Hyderabad, TS 500090</span>
+            </li>
+            <li class="mb-3 d-flex align-items-center">
+              <i class="fas fa-phone me-3"></i>
+              <a href="tel:+919876543210" class="text-white-50">+91 99087 93602</a>,  
+              <a href="tel:+919876543210" class="text-white-50">+91 87901 70525</a>
+            </li>
+            <li class="mb-3 d-flex align-items-center">
+              <i class="fas fa-envelope me-3"></i>
+              <a href="mailto:info@hitashicareers.com" class="text-white-50">info@hitashicareers.com</a>
+            </li>
+          </ul>
         </div>
       </div>
       
-      <hr class="my-4">
+      <hr class="my-5">
       
-      <div class="row">
-        <div class="col-md-6">
-          <p class="mb-0">&copy; 2023 Hitaishi Careers. All rights reserved.</p>
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <p class="mb-0">&copy; 2025 Hitaishi Careers. All rights reserved.</p>
         </div>
-        <div class="col-md-6 text-md-end">
-          <a href="#" class="text-white text-decoration-none me-3">Privacy Policy</a>
-          <a href="#" class="text-white text-decoration-none me-3">Terms of Service</a>
-          <a href="#" class="text-white text-decoration-none">Cookie Policy</a>
+        <div class="col-md-6 text-center text-md-end">
+          <a href="#" class="text-white-50 me-3">Privacy Policy</a>
+          <a href="#" class="text-white-50 me-3">Terms of Service</a>
+          <a href="#" class="text-white-50">Cookie Policy</a>
         </div>
       </div>
     </div>
@@ -852,144 +1441,275 @@
   <!-- Bootstrap JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   
-  <script type="module">
-    // Your Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBLoi7_CtYn_oil59Yj_fuxy9FxJzfW__E",
-      authDomain: "hitaishicareers.firebaseapp.com",
-      projectId: "hitaishicareers",
-      storageBucket: "hitaishicareers.appspot.com",
-      messagingSenderId: "922753251364",
-      appId: "1:922753251364:web:5e33c8fc3fc8a8b573c0b1",
-      measurementId: "G-NR7QNMWF79"
-    };
-
-    // Import Firebase modules
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-
-    // DOM Elements
-    const authPopup = document.getElementById('google-auth-popup');
-    const closePopupBtn = document.getElementById('popup-close-btn');
-    const continueAsButton = document.getElementById('continueAsButton');
-    const googleSignInButton = document.getElementById('googleSignInButton');
-    const profileIcon = document.getElementById('profile-icon');
-    const profileAvatar = document.getElementById('profile-avatar');
-    const profileMenu = document.getElementById('profile-menu');
-    const uploadResumeLink = document.getElementById('uploadResumeLink');
-
-    // Show or hide the popup based on login state
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is signed in, so hide the popup and update the navbar
-            authPopup.classList.remove('show');
-            updateNavbar(user);
-        } else {
-            // User is not signed in, check local storage for a previous user
-            const lastUser = JSON.parse(localStorage.getItem('lastKnownUser'));
-            if (lastUser) {
-                continueAsButton.innerHTML = `<img src="${lastUser.photoURL}" class="rounded-circle me-2" width="24" height="24"> Continue as ${lastUser.displayName}`;
-                continueAsButton.classList.remove('d-none');
-                googleSignInButton.classList.add('d-none'); // Hide generic button
-            } else {
-                continueAsButton.classList.add('d-none');
-                googleSignInButton.classList.remove('d-none');
-            }
-            // Show the sign-in popup for non-logged-in users
-            authPopup.classList.add('show');
-            updateNavbar(null);
+  <script>
+    // Google Authentication Popup Logic
+    document.addEventListener('DOMContentLoaded', function() {
+      const uploadResumeLink = document.getElementById('uploadResumeLink');
+      const googleAuthPopup = document.getElementById('google-auth-popup');
+      const popupBackdrop = document.getElementById('popupBackdrop');
+      const popupCloseBtn = document.getElementById('popup-close-btn');
+      const continueAsButton = document.getElementById('continueAsButton');
+      const googleSignInButton = document.getElementById('googleSignInButton');
+      const profileIcon = document.getElementById('profile-icon');
+      const profileAvatar = document.getElementById('profile-avatar');
+      const profileMenu = document.getElementById('profile-menu');
+      const profileDropdown = document.querySelector('#profileDropdown');
+      
+      // Simulate user data (in a real app, this would come from authentication)
+      let userData = null;
+      
+      // Check if user is logged in (simulated with localStorage)
+      function checkUserStatus() {
+        const savedUser = localStorage.getItem('hitaishiUser');
+        if (savedUser) {
+          userData = JSON.parse(savedUser);
+          updateProfileUI();
         }
+      }
+      
+      // Update profile UI based on user status
+      function updateProfileUI() {
+        if (userData) {
+          // User is logged in
+          profileIcon.classList.add('d-none');
+          profileAvatar.classList.remove('d-none');
+          profileAvatar.src = userData.avatar || 'https://randomuser.me/api/portraits/men/75.jpg';
+          profileAvatar.alt = userData.name;
+          
+          // Update profile menu
+          profileMenu.innerHTML = `
+            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
+            <li><a class="dropdown-item" href="myjobs.html"><i class="fas fa-briefcase me-2"></i>My Jobs</a></li>
+            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+          `;
+          
+          // Add logout functionality
+          document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('hitaishiUser');
+            userData = null;
+            updateProfileUI();
+            window.location.reload();
+          });
+        } else {
+          // User is not logged in
+          profileIcon.classList.remove('d-none');
+          profileAvatar.classList.add('d-none');
+          
+          // Update profile menu
+          profileMenu.innerHTML = `
+            <li><a class="dropdown-item" href="#" id="showAuthPopup"><i class="fas fa-sign-in-alt me-2"></i>Sign In</a></li>
+            <li><a class="dropdown-item" href="employerlogin.html"><i class="fas fa-user-tie me-2"></i>Employer Login</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="help.html"><i class="fas fa-question-circle me-2"></i>Help Center</a></li>
+          `;
+          
+          // Add event listener for sign in option
+          document.getElementById('showAuthPopup').addEventListener('click', function(e) {
+            e.preventDefault();
+            showAuthPopup();
+          });
+        }
+      }
+      
+      // Show authentication popup
+      function showAuthPopup() {
+        googleAuthPopup.classList.add('show');
+        popupBackdrop.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // If we have a previous user, show the "Continue as" button
+        const previousUser = localStorage.getItem('hitaishiPreviousUser');
+        if (previousUser) {
+          const prevUserData = JSON.parse(previousUser);
+          continueAsButton.classList.remove('d-none');
+          continueAsButton.innerHTML = `
+            <img src="${prevUserData.avatar}" alt="${prevUserData.name}" class="rounded-circle me-2" width="20" height="20">
+            Continue as ${prevUserData.name}
+          `;
+        } else {
+          continueAsButton.classList.add('d-none');
+        }
+      }
+      
+      // Hide authentication popup
+      function hideAuthPopup() {
+        googleAuthPopup.classList.remove('show');
+        popupBackdrop.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+      
+      // Simulate Google authentication
+      function simulateGoogleAuth() {
+        // In a real app, this would be the Google OAuth flow
+        // For demo purposes, we'll simulate a successful login
+        
+        // Generate random user data
+        const randomUserId = Math.floor(Math.random() * 100) + 1;
+        const isMale = Math.random() > 0.5;
+        const userName = isMale ? 
+          ['Raj', 'Amit', 'Suresh', 'Vikram', 'Arjun'][Math.floor(Math.random() * 5)] :
+          ['Priya', 'Anjali', 'Neha', 'Sonia', 'Deepa'][Math.floor(Math.random() * 5)];
+        
+        userData = {
+          id: randomUserId,
+          name: userName + ' ' + ['Sharma', 'Patel', 'Verma', 'Singh', 'Kumar'][Math.floor(Math.random() * 5)],
+          email: userName.toLowerCase() + randomUserId + '@example.com',
+          avatar: `https://randomuser.me/api/portraits/${isMale ? 'men' : 'women'}/${randomUserId}.jpg`
+        };
+        
+        // Save user data
+        localStorage.setItem('hitaishiUser', JSON.stringify(userData));
+        localStorage.setItem('hitaishiPreviousUser', JSON.stringify(userData));
+        
+        // Update UI
+        updateProfileUI();
+        
+        // Hide popup
+        hideAuthPopup();
+        
+        // Show success message
+        alert(`Welcome back, ${userData.name}! You are now signed in.`);
+      }
+      
+      // Event Listeners
+      uploadResumeLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        showAuthPopup();
+      });
+      
+      popupCloseBtn.addEventListener('click', hideAuthPopup);
+      popupBackdrop.addEventListener('click', hideAuthPopup);
+      
+      googleSignInButton.addEventListener('click', simulateGoogleAuth);
+      
+      continueAsButton.addEventListener('click', function() {
+        const previousUser = localStorage.getItem('hitaishiPreviousUser');
+        if (previousUser) {
+          userData = JSON.parse(previousUser);
+          localStorage.setItem('hitaishiUser', previousUser);
+          updateProfileUI();
+          hideAuthPopup();
+          alert(`Welcome back, ${userData.name}!`);
+        }
+      });
+      
+      // Close popup when pressing Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          hideAuthPopup();
+        }
+      });
+      
+      // Initialize user status
+      checkUserStatus();
+      
+      // Job Search Form Logic
+      const jobSearchForm = document.getElementById('jobSearchForm');
+      const countrySelect = document.getElementById('countrySelect');
+      const locationSelect = document.getElementById('locationSelect');
+      
+      // Location data based on country
+      const locationData = {
+        'India': ['Hyderabad', 'Bangalore', 'Mumbai', 'Delhi', 'Chennai', 'Pune', 'Kolkata'],
+        'USA': ['New York', 'San Francisco', 'Chicago', 'Los Angeles', 'Seattle', 'Austin'],
+        'UK': ['London', 'Manchester', 'Birmingham', 'Edinburgh', 'Glasgow'],
+        'Australia': ['Sydney', 'Melbourne', 'Brisbane', 'Perth', 'Adelaide'],
+        'Canada': ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa']
+      };
+      
+      // Update locations when country changes
+      countrySelect.addEventListener('change', function() {
+        const selectedCountry = this.value;
+        
+        if (selectedCountry && locationData[selectedCountry]) {
+          locationSelect.disabled = false;
+          locationSelect.innerHTML = '<option value="">Select Location</option>';
+          
+          locationData[selectedCountry].forEach(location => {
+            const option = document.createElement('option');
+            option.value = location;
+            option.textContent = location;
+            locationSelect.appendChild(option);
+          });
+        } else {
+          locationSelect.disabled = true;
+          locationSelect.innerHTML = '<option value="">Location</option>';
+        }
+      });
+      
+      // Job Filtering Logic
+      const searchJobsButton = document.getElementById('search-jobs');
+      const jobCards = document.querySelectorAll('.job-card');
+      const placeholderMessage = document.getElementById('placeholder-message');
+      
+      searchJobsButton.addEventListener('click', function() {
+        const postedDate = document.getElementById('posted-date').value;
+        const employmentType = document.getElementById('employment-type').value;
+        const employerType = document.getElementById('employer-type').value;
+        const workSetting = document.getElementById('work-settings').value;
+        
+        let hasVisibleJobs = false;
+        
+        jobCards.forEach(card => {
+          const cardPostedDate = card.getAttribute('data-posted-date');
+          const cardEmploymentType = card.getAttribute('data-employment-type');
+          const cardEmployerType = card.getAttribute('data-employer-type');
+          const cardWorkSetting = card.getAttribute('data-work-setting');
+          
+          const matchesPostedDate = !postedDate || cardPostedDate === postedDate;
+          const matchesEmploymentType = !employmentType || cardEmploymentType === employmentType;
+          const matchesEmployerType = !employerType || cardEmployerType === employerType;
+          const matchesWorkSetting = !workSetting || cardWorkSetting === workSetting;
+          
+          if (matchesPostedDate && matchesEmploymentType && matchesEmployerType && matchesWorkSetting) {
+            card.style.display = 'block';
+            hasVisibleJobs = true;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        
+        // Show/hide placeholder message
+        if (hasVisibleJobs) {
+          placeholderMessage.style.display = 'none';
+        } else {
+          placeholderMessage.style.display = 'block';
+          placeholderMessage.textContent = 'No jobs match your current filters. Try adjusting your criteria.';
+        }
+      });
+      
+      // Initialize with some jobs visible
+      window.addEventListener('load', function() {
+        // Show first two job cards by default
+        if (jobCards.length >= 2) {
+          jobCards[0].style.display = 'block';
+          jobCards[1].style.display = 'block';
+          placeholderMessage.style.display = 'none';
+        }
+      });
+      
+      // Add animation to elements when they come into view
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      };
+      
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in-up');
+          }
+        });
+      }, observerOptions);
+      
+      // Observe elements for animation
+      document.querySelectorAll('.service-card, .job-card, .stat-item').forEach(el => {
+        observer.observe(el);
+      });
     });
-
-    // Handle Google Sign-In
-    const handleSignIn = async () => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            
-            // Store user info in localStorage for the "Continue as" feature
-            localStorage.setItem('lastKnownUser', JSON.stringify({
-                displayName: user.displayName,
-                photoURL: user.photoURL
-            }));
-
-            // Create or update user document in Firestore
-            const userRef = doc(db, "users", user.uid);
-            await setDoc(userRef, {
-                uid: user.uid,
-                displayName: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL,
-                phoneNumber: user.phoneNumber || null // Add phone number if available
-            }, { merge: true }); // Use merge to avoid overwriting existing fields
-
-        } catch (error) {
-            console.error("Authentication Error:", error);
-        }
-    };
-    
-    // Update Navbar UI
-    function updateNavbar(user) {
-        if (user) {
-            // Show avatar, hide icon
-            profileIcon.classList.add('d-none');
-            profileAvatar.src = user.photoURL;
-            profileAvatar.classList.remove('d-none');
-
-            // Populate dropdown menu for logged-in user
-            profileMenu.innerHTML = `
-                <li><a class="dropdown-item" href="profile.html">My Profile</a></li>
-                <li><a class="dropdown-item" href="#">My Applications</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><button class="dropdown-item" id="logoutButton">Logout</button></li>
-            `;
-
-            // Add event listener for the new logout button
-            document.getElementById('logoutButton').addEventListener('click', async () => {
-                await signOut(auth);
-                localStorage.removeItem('lastKnownUser');
-                window.location.reload(); // Reload to reflect signed-out state
-            });
-
-        } else {
-            // Show icon, hide avatar
-            profileIcon.classList.remove('d-none');
-            profileAvatar.classList.add('d-none');
-
-            // Populate dropdown for logged-out user
-            profileMenu.innerHTML = `
-                <li><a class="dropdown-item" href="#" id="loginLink">Login</a></li>
-                <li><a class="dropdown-item" href="#" id="registerLink">Register</a></li>
-            `;
-
-             // Add event listeners to show popup on login/register click
-            document.getElementById('loginLink').addEventListener('click', () => authPopup.classList.add('show'));
-            document.getElementById('registerLink').addEventListener('click', () => authPopup.classList.add('show'));
-        }
-    }
-
-    // Event Listeners for sign-in and popup controls
-    googleSignInButton.addEventListener('click', handleSignIn);
-    continueAsButton.addEventListener('click', handleSignIn);
-    closePopupBtn.addEventListener('click', () => authPopup.classList.remove('show'));
-    
-    // Show popup when "Upload Resume" is clicked if the user is not logged in
-    uploadResumeLink.addEventListener('click', (e) => {
-        if (!auth.currentUser) {
-            e.preventDefault(); // Prevent navigation
-            authPopup.classList.add('show');
-        } else {
-           window.location.href = 'profile.html'; // Or wherever resume upload happens
-        }
-    });
-    
   </script>
 </body>
 </html>
