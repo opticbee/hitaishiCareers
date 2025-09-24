@@ -1,34 +1,56 @@
+// server.js
+require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+
+// Import API routes from routes folder
 const registerRoute = require('./routes/register');
-const db = require('./db');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
+// --- Middleware Setup ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-    secret: 'your_secret_key',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}));
 
-// Serve static files from root folder
+// --- Session Middleware ---
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET || 'a_very_long_and_secure_default_secret_key',
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: process.env.NODE_ENV === 'production' } // HTTPS only in prod
+    })
+);
+
+// --- Serve Static Files ---
+// Root static files (css, js, images in root)
 app.use(express.static(path.join(__dirname)));
 
-// API routes
-app.use('/register', registerRoute);
+// Serve uploads folder statically
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Catch-all route for frontend
-app.get(/.*/, (req, res) => {
+// --- API Routes ---
+// All registration-related routes handled here
+app.use('/api', registerRoute);
+
+// --- Frontend Routes ---
+// Serve homepage (index.html) at root
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Start server
-app.listen(port, '0.0.0.0', () => {
-    console.log(`HitaishiCareers server running on port ${port}...`);
+// Optional: simple session check route
+app.get('/profile', (req, res) => {
+    if (req.session.user) {
+        res.send(`Welcome ${req.session.user.fullName}`);
+    } else {
+        res.redirect('/');
+    }
+});
+
+// --- Server Startup ---
+app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
 });
