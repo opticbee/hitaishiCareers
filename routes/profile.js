@@ -109,6 +109,29 @@ router.post('/api/profile/update', async (req, res) => {
   }
 });
 
+// POST /api/profile/update
+router.post('/api/profile/update', upload.single('profilePhoto'), async (req, res) => {
+  try {
+    let email = req.session.user?.email;
+    if (!email && req.body.email) {
+      email = req.body.email;
+    }
+    if (!email) return res.status(401).json({ error: "Not logged in" });
+
+    // Now use email in your update queries
+    // Example:
+    await query(
+      "UPDATE users SET full_name=?, phone=?, gender=? WHERE email=?",
+      [req.body.fullName, req.body.phone, req.body.gender, email]
+    );
+
+    res.json({ message: "Profile updated" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // --- Upload profile photo ---
 router.post('/api/profile/photo', upload.single('profilePhoto'), async (req, res) => {
   try {
@@ -148,5 +171,6 @@ router.post('/api/profile/upload-resume', upload.single('resume'), async (req, r
     res.status(500).json({ error: 'Error uploading resume' });
   }
 });
+
 
 module.exports = router;

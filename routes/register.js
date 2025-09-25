@@ -172,6 +172,25 @@ router.post('/user/login', async (req, res) => {
     }
 });
 
+// GET /api/profile
+router.get('/api/profile', async (req, res) => {
+  try {
+    let email = req.session.user?.email;
+    if (!email && req.query.email) {
+      email = req.query.email;
+    }
+    if (!email) return res.status(401).json({ error: "Not logged in" });
+
+    const rows = await query("SELECT * FROM users WHERE email = ?", [email]);
+    if (rows.length === 0) return res.status(404).json({ error: "User not found" });
+
+    res.json(rows[0]); // or transform as your frontend expects
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 // password update route (without old password check)
 router.post('/user/update-password', async (req, res) => {
     try {

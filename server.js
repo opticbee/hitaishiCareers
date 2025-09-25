@@ -7,6 +7,7 @@ const path = require('path');
 // Import API routes from the 'routes' folder
 const registerRoute = require('./routes/register');
 const authRoute = require('./routes/auth');
+const profileRoute = require('./routes/profile');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -38,6 +39,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', registerRoute); 
 // For Google sign-in: /api/auth/google
 app.use('/api/auth', authRoute);
+
+app.use('/api', profileRoute); // For profile management: /api/profile
 
 // --- Frontend Routes ---
 app.get('/', (req, res) => {

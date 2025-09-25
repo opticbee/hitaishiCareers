@@ -390,14 +390,21 @@
         // Load profile data from API
         async function loadProfileData() {
             try {
-                const response = await fetch('/api/profile');
-                if (!response.ok) throw new Error('Failed to load profile data');
-                
+                const email = sessionStorage.getItem("email");
+                if (!email) {
+                    // no email → redirect back to login
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const response = await fetch(`/api/profile?email=${encodeURIComponent(email)}`);
+                if (!response.ok) throw new Error("Failed to load profile data");
+
                 profileData = await response.json();
                 populateForms();
             } catch (error) {
-                console.error('Error loading profile data:', error);
-                showToast('Error loading profile data', 'danger');
+                console.error("Error loading profile data:", error);
+                showToast("Error loading profile data", "danger");
             }
         }
 
@@ -495,36 +502,42 @@
         // Save Personal Details
         async function savePersonalDetails() {
             try {
-                const formData = new FormData();
-                formData.append('fullName', document.getElementById('fullName').value);
-                formData.append('email', document.getElementById('email').value);
-                formData.append('phone', document.getElementById('phone').value);
-                formData.append('gender', document.getElementById('gender').value);
-                
-                const experienceLevel = document.querySelector('input[name="experienceLevel"]:checked');
-                formData.append('experienceLevel', experienceLevel ? experienceLevel.value : '');
-                
-                formData.append('ctcExpected', document.getElementById('ctcExpected').value);
-                
-                const photoFile = document.getElementById('profilePhoto').files[0];
-                if (photoFile) {
-                    formData.append('profilePhoto', photoFile);
+                const email = sessionStorage.getItem("email");
+                if (!email) {
+                    showToast("No email found, please login again", "danger");
+                    return;
                 }
 
-                const response = await fetch('/api/profile/update', {
-                    method: 'POST',
-                    body: formData
+                const formData = new FormData();
+                formData.append("email", email); // <-- include email
+                formData.append("fullName", document.getElementById("fullName").value);
+                formData.append("phone", document.getElementById("phone").value);
+                formData.append("gender", document.getElementById("gender").value);
+
+                const experienceLevel = document.querySelector('input[name="experienceLevel"]:checked');
+                formData.append("experienceLevel", experienceLevel ? experienceLevel.value : "");
+                formData.append("ctcExpected", document.getElementById("ctcExpected").value);
+
+                const photoFile = document.getElementById("profilePhoto").files[0];
+                if (photoFile) {
+                    formData.append("profilePhoto", photoFile);
+                }
+
+                const response = await fetch("/api/profile/update", {
+                    method: "POST",
+                    body: formData,
                 });
 
-                if (!response.ok) throw new Error('Failed to save personal details');
-                
-                showToast('Personal details saved successfully', 'success');
+                if (!response.ok) throw new Error("Failed to save personal details");
+
+                showToast("Personal details saved successfully", "success");
             } catch (error) {
-                console.error('Error saving personal details:', error);
-                showToast('Error saving personal details', 'danger');
+                console.error("Error saving personal details:", error);
+                showToast("Error saving personal details", "danger");
             }
         }
 
+        
         // Reset Personal Details
         function resetPersonalDetails() {
             document.getElementById('personalDetailsForm').reset();
