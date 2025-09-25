@@ -358,7 +358,7 @@
     window.onload = function () {
       google.accounts.id.initialize({
         // Replace with your actual Google Client ID
-        client_id: "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com",
+        client_id: "62866830906-89e5aqkrpnsjs0dri6hsss239b5rpdd9.apps.googleusercontent.com",
         callback: handleGoogleSignIn,
       });
       google.accounts.id.renderButton(
@@ -371,7 +371,7 @@
     async function handleGoogleSignIn(response) {
       const id_token = response.credential;
       try {
-        const res = await fetch('/api/auth/google/login', {
+        const res = await fetch('/api/auth/google', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -427,7 +427,7 @@
                 this.classList.remove('is-invalid');
                 this.classList.add('is-valid');
                 document.getElementById('emailError').style.display = 'none';
-                document.getElementById('emailSuccess').textContent = 'Valid email address.';
+                document.getElementById('emailSuccess').textContent = 'valid email format.';
                 document.getElementById('emailSuccess').style.display = 'block';
             }
         });

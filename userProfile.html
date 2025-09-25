@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal - Profile</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <style>
+        .profile-photo-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #dee2e6;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: #e7f1ff;
+            color: #0c63e4;
+        }
+        .dynamic-section {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+        }
+        .skill-rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .skill-rating input {
+            flex: 1;
+        }
+        .resume-preview {
+            background-color: #f8f9fa;
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1055;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #e9ecef;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            margin: 0.25rem;
+            font-size: 0.875rem;
+        }
+        .tag .bi-x {
+            cursor: pointer;
+            margin-left: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-4">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-4">My Profile</h1>
+                
+                <!-- Toast Container for Notifications -->
+                <div class="toast-container"></div>
+                
+                <!-- Personal Details Section -->
+                <div class="accordion" id="profileAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="personalDetailsHeading">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalDetails" aria-expanded="true" aria-controls="personalDetails">
+                                Personal Details
+                            </button>
+                        </h2>
+                        <div id="personalDetails" class="accordion-collapse collapse show" aria-labelledby="personalDetailsHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="personalDetailsForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="fullName" class="form-label">Full Name</label>
+                                            <input type="text" class="form-control" id="fullName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" required>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="phone" class="form-label">Phone Number</label>
+                                            <input type="tel" class="form-control" id="phone">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="gender" class="form-label">Gender</label>
+                                            <select class="form-select" id="gender">
+                                                <option value="">Select Gender</option>
+                                                <option value="male">Male</option>
+                                                <option value="female">Female</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Experience Level</label>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="experienceLevel" id="fresher" value="fresher">
+                                                    <label class="form-check-label" for="fresher">Fresher</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="experienceLevel" id="experienced" value="experienced">
+                                                    <label class="form-check-label" for="experienced">Experienced</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="ctcExpected" class="form-label">CTC Expected (in LPA)</label>
+                                            <input type="number" class="form-control" id="ctcExpected" min="0" step="0.1">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="profilePhoto" class="form-label">Profile Photo</label>
+                                            <input type="file" class="form-control" id="profilePhoto" accept="image/*">
+                                            <div class="mt-2">
+                                                <img id="profilePhotoPreview" src="#" alt="Profile Photo Preview" class="profile-photo-preview d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="savePersonalDetails()">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetPersonalDetails()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Professional Details Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="professionalDetailsHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#professionalDetails" aria-expanded="false" aria-controls="professionalDetails">
+                                Professional Details
+                            </button>
+                        </h2>
+                        <div id="professionalDetails" class="accordion-collapse collapse" aria-labelledby="professionalDetailsHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="professionalDetailsForm">
+                                    <div id="professionalEntries">
+                                        <!-- Dynamic entries will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addProfessionalEntry()">
+                                        <i class="bi bi-plus"></i> Add Professional Entry
+                                    </button>
+                                    
+                                    <div class="mb-3">
+                                        <label for="noticePeriod" class="form-label">Notice Period</label>
+                                        <select class="form-select" id="noticePeriod">
+                                            <option value="">Select Notice Period</option>
+                                            <option value="immediate">Immediate</option>
+                                            <option value="15">15 days</option>
+                                            <option value="30">30 days</option>
+                                            <option value="60">60 days</option>
+                                            <option value="90">90 days</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="saveProfessionalDetails()">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetProfessionalDetails()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Projects Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="projectsHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#projects" aria-expanded="false" aria-controls="projects">
+                                Projects
+                            </button>
+                        </h2>
+                        <div id="projects" class="accordion-collapse collapse" aria-labelledby="projectsHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="projectsForm">
+                                    <div id="projectEntries">
+                                        <!-- Dynamic entries will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary" onclick="addProjectEntry()">
+                                        <i class="bi bi-plus"></i> Add Project
+                                    </button>
+                                    
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="saveProjects()">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetProjects()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resume Upload Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="resumeHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resume" aria-expanded="false" aria-controls="resume">
+                                Resume Upload
+                            </button>
+                        </h2>
+                        <div id="resume" class="accordion-collapse collapse" aria-labelledby="resumeHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="resumeForm">
+                                    <div class="mb-3">
+                                        <label for="resumeFile" class="form-label">Upload Resume</label>
+                                        <input type="file" class="form-control" id="resumeFile" accept=".pdf,.doc,.docx">
+                                        <div class="form-text">Accepted formats: PDF, DOC, DOCX</div>
+                                        <div id="resumePreview" class="resume-preview d-none">
+                                            <i class="bi bi-file-earmark-text"></i> <span id="resumeFileName"></span>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="uploadResume()">Upload Resume</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetResume()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Skills Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="skillsHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skills" aria-expanded="false" aria-controls="skills">
+                                Skills
+                            </button>
+                        </h2>
+                        <div id="skills" class="accordion-collapse collapse" aria-labelledby="skillsHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="skillsForm">
+                                    <div id="skillEntries">
+                                        <!-- Dynamic entries will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addSkillEntry()">
+                                        <i class="bi bi-plus"></i> Add Skill
+                                    </button>
+                                    
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="saveSkills()">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetSkills()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Education Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="educationHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="false" aria-controls="education">
+                                Education
+                            </button>
+                        </h2>
+                        <div id="education" class="accordion-collapse collapse" aria-labelledby="educationHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="educationForm">
+                                    <div id="educationEntries">
+                                        <!-- Dynamic entries will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addEducationEntry()">
+                                        <i class="bi bi-plus"></i> Add Education
+                                    </button>
+                                    
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="saveEducation()">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetEducation()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Certifications Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="certificationsHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#certifications" aria-expanded="false" aria-controls="certifications">
+                                Certifications
+                            </button>
+                        </h2>
+                        <div id="certifications" class="accordion-collapse collapse" aria-labelledby="certificationsHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="certificationsForm">
+                                    <div id="certificationEntries">
+                                        <!-- Dynamic entries will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addCertificationEntry()">
+                                        <i class="bi bi-plus"></i> Add Certification
+                                    </button>
+                                    
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="saveCertifications()">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetCertifications()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Languages Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="languagesHeading">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#languages" aria-expanded="false" aria-controls="languages">
+                                Languages Known
+                            </button>
+                        </h2>
+                        <div id="languages" class="accordion-collapse collapse" aria-labelledby="languagesHeading" data-bs-parent="#profileAccordion">
+                            <div class="accordion-body">
+                                <form id="languagesForm">
+                                    <div id="languageEntries">
+                                        <!-- Dynamic entries will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addLanguageEntry()">
+                                        <i class="bi bi-plus"></i> Add Language
+                                    </button>
+                                    
+                                    <div class="mt-3">
+                                        <button type="button" class="btn btn-primary" onclick="saveLanguages()">Save</button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="resetLanguages()">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let profileData = {};
+        let nextEntryId = 1;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfileData();
+            setupEventListeners();
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Profile photo preview
+            document.getElementById('profilePhoto').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.getElementById('profilePhotoPreview');
+                        preview.src = e.target.result;
+                        preview.classList.remove('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Resume file preview
+            document.getElementById('resumeFile').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    document.getElementById('resumeFileName').textContent = file.name;
+                    document.getElementById('resumePreview').classList.remove('d-none');
+                }
+            });
+        }
+
+        // Load profile data from API
+        async function loadProfileData() {
+            try {
+                const response = await fetch('/api/profile');
+                if (!response.ok) throw new Error('Failed to load profile data');
+                
+                profileData = await response.json();
+                populateForms();
+            } catch (error) {
+                console.error('Error loading profile data:', error);
+                showToast('Error loading profile data', 'danger');
+            }
+        }
+
+        // Populate forms with data
+        function populateForms() {
+            // Personal Details
+            if (profileData.personalDetails) {
+                const pd = profileData.personalDetails;
+                document.getElementById('fullName').value = pd.fullName || '';
+                document.getElementById('email').value = pd.email || '';
+                document.getElementById('phone').value = pd.phone || '';
+                document.getElementById('gender').value = pd.gender || '';
+                
+                if (pd.experienceLevel) {
+                    document.querySelector(`input[name="experienceLevel"][value="${pd.experienceLevel}"]`).checked = true;
+                }
+                
+                document.getElementById('ctcExpected').value = pd.ctcExpected || '';
+                
+                if (pd.profilePhoto) {
+                    document.getElementById('profilePhotoPreview').src = pd.profilePhoto;
+                    document.getElementById('profilePhotoPreview').classList.remove('d-none');
+                }
+            }
+
+            // Professional Details
+            if (profileData.professionalDetails) {
+                const profEntries = document.getElementById('professionalEntries');
+                profEntries.innerHTML = '';
+                
+                profileData.professionalDetails.forEach(detail => {
+                    addProfessionalEntry(detail);
+                });
+                
+                document.getElementById('noticePeriod').value = profileData.noticePeriod || '';
+            }
+
+            // Projects
+            if (profileData.projects) {
+                const projectEntries = document.getElementById('projectEntries');
+                projectEntries.innerHTML = '';
+                
+                profileData.projects.forEach(project => {
+                    addProjectEntry(project);
+                });
+            }
+
+            // Skills
+            if (profileData.skills) {
+                const skillEntries = document.getElementById('skillEntries');
+                skillEntries.innerHTML = '';
+                
+                profileData.skills.forEach(skill => {
+                    addSkillEntry(skill);
+                });
+            }
+
+            // Education
+            if (profileData.education) {
+                const educationEntries = document.getElementById('educationEntries');
+                educationEntries.innerHTML = '';
+                
+                profileData.education.forEach(edu => {
+                    addEducationEntry(edu);
+                });
+            }
+
+            // Certifications
+            if (profileData.certifications) {
+                const certificationEntries = document.getElementById('certificationEntries');
+                certificationEntries.innerHTML = '';
+                
+                profileData.certifications.forEach(cert => {
+                    addCertificationEntry(cert);
+                });
+            }
+
+            // Languages
+            if (profileData.languages) {
+                const languageEntries = document.getElementById('languageEntries');
+                languageEntries.innerHTML = '';
+                
+                profileData.languages.forEach(lang => {
+                    addLanguageEntry(lang);
+                });
+            }
+
+            // Resume
+            if (profileData.resume) {
+                document.getElementById('resumeFileName').textContent = profileData.resume.name || 'Resume';
+                document.getElementById('resumePreview').classList.remove('d-none');
+            }
+        }
+
+        // Save Personal Details
+        async function savePersonalDetails() {
+            try {
+                const formData = new FormData();
+                formData.append('fullName', document.getElementById('fullName').value);
+                formData.append('email', document.getElementById('email').value);
+                formData.append('phone', document.getElementById('phone').value);
+                formData.append('gender', document.getElementById('gender').value);
+                
+                const experienceLevel = document.querySelector('input[name="experienceLevel"]:checked');
+                formData.append('experienceLevel', experienceLevel ? experienceLevel.value : '');
+                
+                formData.append('ctcExpected', document.getElementById('ctcExpected').value);
+                
+                const photoFile = document.getElementById('profilePhoto').files[0];
+                if (photoFile) {
+                    formData.append('profilePhoto', photoFile);
+                }
+
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Failed to save personal details');
+                
+                showToast('Personal details saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving personal details:', error);
+                showToast('Error saving personal details', 'danger');
+            }
+        }
+
+        // Reset Personal Details
+        function resetPersonalDetails() {
+            document.getElementById('personalDetailsForm').reset();
+            document.getElementById('profilePhotoPreview').classList.add('d-none');
+            
+            if (profileData.personalDetails) {
+                const pd = profileData.personalDetails;
+                document.getElementById('fullName').value = pd.fullName || '';
+                document.getElementById('email').value = pd.email || '';
+                document.getElementById('phone').value = pd.phone || '';
+                document.getElementById('gender').value = pd.gender || '';
+                
+                if (pd.experienceLevel) {
+                    document.querySelector(`input[name="experienceLevel"][value="${pd.experienceLevel}"]`).checked = true;
+                }
+                
+                document.getElementById('ctcExpected').value = pd.ctcExpected || '';
+                
+                if (pd.profilePhoto) {
+                    document.getElementById('profilePhotoPreview').src = pd.profilePhoto;
+                    document.getElementById('profilePhotoPreview').classList.remove('d-none');
+                }
+            }
+        }
+
+        // Add Professional Entry
+        function addProfessionalEntry(data = {}) {
+            const entryId = nextEntryId++;
+            const entryHTML = `
+                <div class="dynamic-section" id="professionalEntry-${entryId}">
+                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeProfessionalEntry(${entryId})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="companyName-${entryId}" class="form-label">Company Name</label>
+                            <input type="text" class="form-control" id="companyName-${entryId}" value="${data.companyName || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="companyLink-${entryId}" class="form-label">Company Link</label>
+                            <input type="url" class="form-control" id="companyLink-${entryId}" value="${data.companyLink || ''}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fromDate-${entryId}" class="form-label">From Date</label>
+                            <input type="date" class="form-control" id="fromDate-${entryId}" value="${data.fromDate || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="toDate-${entryId}" class="form-label">To Date</label>
+                            <input type="date" class="form-control" id="toDate-${entryId}" value="${data.toDate || ''}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Roles</label>
+                        <div id="rolesContainer-${entryId}">
+                            ${data.roles ? data.roles.map(role => `
+                                <span class="tag">
+                                    ${role}
+                                    <i class="bi bi-x" onclick="removeRole(${entryId}, '${role}')"></i>
+                                </span>
+                            `).join('') : ''}
+                        </div>
+                        <div class="input-group mt-2">
+                            <input type="text" class="form-control" id="newRole-${entryId}" placeholder="Add a role">
+                            <button class="btn btn-outline-secondary" type="button" onclick="addRole(${entryId})">Add</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('professionalEntries').insertAdjacentHTML('beforeend', entryHTML);
+        }
+
+        // Remove Professional Entry
+        function removeProfessionalEntry(entryId) {
+            document.getElementById(`professionalEntry-${entryId}`).remove();
+        }
+
+        // Add Role to Professional Entry
+        function addRole(entryId) {
+            const roleInput = document.getElementById(`newRole-${entryId}`);
+            const role = roleInput.value.trim();
+            if (role) {
+                const rolesContainer = document.getElementById(`rolesContainer-${entryId}`);
+                const roleHTML = `
+                    <span class="tag">
+                        ${role}
+                        <i class="bi bi-x" onclick="this.parentElement.remove()"></i>
+                    </span>
+                `;
+                rolesContainer.insertAdjacentHTML('beforeend', roleHTML);
+                roleInput.value = '';
+            }
+        }
+
+        // Remove Role from Professional Entry
+        function removeRole(entryId, role) {
+            // This function would need to be implemented based on how roles are stored
+            console.log(`Remove role ${role} from entry ${entryId}`);
+        }
+
+        // Save Professional Details
+        async function saveProfessionalDetails() {
+            try {
+                const professionalDetails = [];
+                const entries = document.querySelectorAll('[id^="professionalEntry-"]');
+                
+                entries.forEach(entry => {
+                    const entryId = entry.id.split('-')[1];
+                    const companyName = document.getElementById(`companyName-${entryId}`).value;
+                    const companyLink = document.getElementById(`companyLink-${entryId}`).value;
+                    const fromDate = document.getElementById(`fromDate-${entryId}`).value;
+                    const toDate = document.getElementById(`toDate-${entryId}`).value;
+                    
+                    const roles = [];
+                    const roleTags = entry.querySelectorAll('.tag');
+                    roleTags.forEach(tag => {
+                        roles.push(tag.textContent.trim());
+                    });
+                    
+                    professionalDetails.push({
+                        companyName,
+                        companyLink,
+                        fromDate,
+                        toDate,
+                        roles
+                    });
+                });
+                
+                const noticePeriod = document.getElementById('noticePeriod').value;
+                
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        professionalDetails,
+                        noticePeriod
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to save professional details');
+                
+                showToast('Professional details saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving professional details:', error);
+                showToast('Error saving professional details', 'danger');
+            }
+        }
+
+        // Reset Professional Details
+        function resetProfessionalDetails() {
+            document.getElementById('professionalDetailsForm').reset();
+            document.getElementById('professionalEntries').innerHTML = '';
+            
+            if (profileData.professionalDetails) {
+                profileData.professionalDetails.forEach(detail => {
+                    addProfessionalEntry(detail);
+                });
+            }
+            
+            document.getElementById('noticePeriod').value = profileData.noticePeriod || '';
+        }
+
+        // Add Project Entry
+        function addProjectEntry(data = {}) {
+            const entryId = nextEntryId++;
+            const entryHTML = `
+                <div class="dynamic-section" id="projectEntry-${entryId}">
+                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeProjectEntry(${entryId})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="projectTitle-${entryId}" class="form-label">Project Title</label>
+                            <input type="text" class="form-control" id="projectTitle-${entryId}" value="${data.projectTitle || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="client-${entryId}" class="form-label">Client</label>
+                            <input type="text" class="form-control" id="client-${entryId}" value="${data.client || ''}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="projectRole-${entryId}" class="form-label">Role</label>
+                            <input type="text" class="form-control" id="projectRole-${entryId}" value="${data.role || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="teamSize-${entryId}" class="form-label">Team Size</label>
+                            <input type="number" class="form-control" id="teamSize-${entryId}" min="1" value="${data.teamSize || ''}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="projectDescription-${entryId}" class="form-label">Description</label>
+                        <textarea class="form-control" id="projectDescription-${entryId}" rows="3">${data.description || ''}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Skills Used</label>
+                        <div id="skillsUsedContainer-${entryId}">
+                            ${data.skillsUsed ? data.skillsUsed.map(skill => `
+                                <span class="tag">
+                                    ${skill}
+                                    <i class="bi bi-x" onclick="this.parentElement.remove()"></i>
+                                </span>
+                            `).join('') : ''}
+                        </div>
+                        <div class="input-group mt-2">
+                            <input type="text" class="form-control" id="newSkillUsed-${entryId}" placeholder="Add a skill">
+                            <button class="btn btn-outline-secondary" type="button" onclick="addSkillUsed(${entryId})">Add</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="projectFromDate-${entryId}" class="form-label">From Date</label>
+                            <input type="date" class="form-control" id="projectFromDate-${entryId}" value="${data.projectFromDate || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="projectToDate-${entryId}" class="form-label">To Date</label>
+                            <input type="date" class="form-control" id="projectToDate-${entryId}" value="${data.projectToDate || ''}">
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('projectEntries').insertAdjacentHTML('beforeend', entryHTML);
+        }
+
+        // Remove Project Entry
+        function removeProjectEntry(entryId) {
+            document.getElementById(`projectEntry-${entryId}`).remove();
+        }
+
+        // Add Skill Used to Project
+        function addSkillUsed(entryId) {
+            const skillInput = document.getElementById(`newSkillUsed-${entryId}`);
+            const skill = skillInput.value.trim();
+            if (skill) {
+                const skillsContainer = document.getElementById(`skillsUsedContainer-${entryId}`);
+                const skillHTML = `
+                    <span class="tag">
+                        ${skill}
+                        <i class="bi bi-x" onclick="this.parentElement.remove()"></i>
+                    </span>
+                `;
+                skillsContainer.insertAdjacentHTML('beforeend', skillHTML);
+                skillInput.value = '';
+            }
+        }
+
+        // Save Projects
+        async function saveProjects() {
+            try {
+                const projects = [];
+                const entries = document.querySelectorAll('[id^="projectEntry-"]');
+                
+                entries.forEach(entry => {
+                    const entryId = entry.id.split('-')[1];
+                    const projectTitle = document.getElementById(`projectTitle-${entryId}`).value;
+                    const client = document.getElementById(`client-${entryId}`).value;
+                    const role = document.getElementById(`projectRole-${entryId}`).value;
+                    const teamSize = document.getElementById(`teamSize-${entryId}`).value;
+                    const description = document.getElementById(`projectDescription-${entryId}`).value;
+                    
+                    const skillsUsed = [];
+                    const skillTags = entry.querySelectorAll('.tag');
+                    skillTags.forEach(tag => {
+                        skillsUsed.push(tag.textContent.trim());
+                    });
+                    
+                    const fromDate = document.getElementById(`projectFromDate-${entryId}`).value;
+                    const toDate = document.getElementById(`projectToDate-${entryId}`).value;
+                    
+                    projects.push({
+                        projectTitle,
+                        client,
+                        role,
+                        teamSize,
+                        description,
+                        skillsUsed,
+                        fromDate,
+                        toDate
+                    });
+                });
+                
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ projects })
+                });
+
+                if (!response.ok) throw new Error('Failed to save projects');
+                
+                showToast('Projects saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving projects:', error);
+                showToast('Error saving projects', 'danger');
+            }
+        }
+
+        // Reset Projects
+        function resetProjects() {
+            document.getElementById('projectsForm').reset();
+            document.getElementById('projectEntries').innerHTML = '';
+            
+            if (profileData.projects) {
+                profileData.projects.forEach(project => {
+                    addProjectEntry(project);
+                });
+            }
+        }
+
+        // Upload Resume
+        async function uploadResume() {
+            try {
+                const resumeFile = document.getElementById('resumeFile').files[0];
+                if (!resumeFile) {
+                    showToast('Please select a resume file', 'warning');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('resume', resumeFile);
+
+                const response = await fetch('/api/profile/upload-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Failed to upload resume');
+                
+                showToast('Resume uploaded successfully', 'success');
+            } catch (error) {
+                console.error('Error uploading resume:', error);
+                showToast('Error uploading resume', 'danger');
+            }
+        }
+
+        // Reset Resume
+        function resetResume() {
+            document.getElementById('resumeForm').reset();
+            document.getElementById('resumePreview').classList.add('d-none');
+            
+            if (profileData.resume) {
+                document.getElementById('resumeFileName').textContent = profileData.resume.name || 'Resume';
+                document.getElementById('resumePreview').classList.remove('d-none');
+            }
+        }
+
+        // Add Skill Entry
+        function addSkillEntry(data = {}) {
+            const entryId = nextEntryId++;
+            const entryHTML = `
+                <div class="dynamic-section" id="skillEntry-${entryId}">
+                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeSkillEntry(${entryId})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="skillName-${entryId}" class="form-label">Skill Name</label>
+                            <input type="text" class="form-control" id="skillName-${entryId}" value="${data.skillName || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="skillRating-${entryId}" class="form-label">Rating (1-10)</label>
+                            <div class="skill-rating">
+                                <input type="range" class="form-range" id="skillRating-${entryId}" min="1" max="10" value="${data.rating || 5}">
+                                <span id="skillRatingValue-${entryId}">${data.rating || 5}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('skillEntries').insertAdjacentHTML('beforeend', entryHTML);
+            
+            // Add event listener for rating slider
+            document.getElementById(`skillRating-${entryId}`).addEventListener('input', function() {
+                document.getElementById(`skillRatingValue-${entryId}`).textContent = this.value;
+            });
+        }
+
+        // Remove Skill Entry
+        function removeSkillEntry(entryId) {
+            document.getElementById(`skillEntry-${entryId}`).remove();
+        }
+
+        // Save Skills
+        async function saveSkills() {
+            try {
+                const skills = [];
+                const entries = document.querySelectorAll('[id^="skillEntry-"]');
+                
+                entries.forEach(entry => {
+                    const entryId = entry.id.split('-')[1];
+                    const skillName = document.getElementById(`skillName-${entryId}`).value;
+                    const rating = document.getElementById(`skillRating-${entryId}`).value;
+                    
+                    skills.push({
+                        skillName,
+                        rating: parseInt(rating)
+                    });
+                });
+                
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ skills })
+                });
+
+                if (!response.ok) throw new Error('Failed to save skills');
+                
+                showToast('Skills saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving skills:', error);
+                showToast('Error saving skills', 'danger');
+            }
+        }
+
+        // Reset Skills
+        function resetSkills() {
+            document.getElementById('skillsForm').reset();
+            document.getElementById('skillEntries').innerHTML = '';
+            
+            if (profileData.skills) {
+                profileData.skills.forEach(skill => {
+                    addSkillEntry(skill);
+                });
+            }
+        }
+
+        // Add Education Entry
+        function addEducationEntry(data = {}) {
+            const entryId = nextEntryId++;
+            const entryHTML = `
+                <div class="dynamic-section" id="educationEntry-${entryId}">
+                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeEducationEntry(${entryId})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="institutionName-${entryId}" class="form-label">School/College Name</label>
+                            <input type="text" class="form-control" id="institutionName-${entryId}" value="${data.institutionName || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="university-${entryId}" class="form-label">University</label>
+                            <input type="text" class="form-control" id="university-${entryId}" value="${data.university || ''}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="passedYear-${entryId}" class="form-label">Passed Year</label>
+                            <input type="number" class="form-control" id="passedYear-${entryId}" min="1900" max="2099" value="${data.passedYear || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="percentage-${entryId}" class="form-label">Percentage Obtained</label>
+                            <input type="number" class="form-control" id="percentage-${entryId}" min="0" max="100" step="0.01" value="${data.percentage || ''}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="specialization-${entryId}" class="form-label">Main Stream / Specialization</label>
+                        <input type="text" class="form-control" id="specialization-${entryId}" value="${data.specialization || ''}">
+                    </div>
+                </div>
+            `;
+            document.getElementById('educationEntries').insertAdjacentHTML('beforeend', entryHTML);
+        }
+
+        // Remove Education Entry
+        function removeEducationEntry(entryId) {
+            document.getElementById(`educationEntry-${entryId}`).remove();
+        }
+
+        // Save Education
+        async function saveEducation() {
+            try {
+                const education = [];
+                const entries = document.querySelectorAll('[id^="educationEntry-"]');
+                
+                entries.forEach(entry => {
+                    const entryId = entry.id.split('-')[1];
+                    const institutionName = document.getElementById(`institutionName-${entryId}`).value;
+                    const university = document.getElementById(`university-${entryId}`).value;
+                    const passedYear = document.getElementById(`passedYear-${entryId}`).value;
+                    const percentage = document.getElementById(`percentage-${entryId}`).value;
+                    const specialization = document.getElementById(`specialization-${entryId}`).value;
+                    
+                    education.push({
+                        institutionName,
+                        university,
+                        passedYear: parseInt(passedYear),
+                        percentage: parseFloat(percentage),
+                        specialization
+                    });
+                });
+                
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ education })
+                });
+
+                if (!response.ok) throw new Error('Failed to save education');
+                
+                showToast('Education details saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving education:', error);
+                showToast('Error saving education details', 'danger');
+            }
+        }
+
+        // Reset Education
+        function resetEducation() {
+            document.getElementById('educationForm').reset();
+            document.getElementById('educationEntries').innerHTML = '';
+            
+            if (profileData.education) {
+                profileData.education.forEach(edu => {
+                    addEducationEntry(edu);
+                });
+            }
+        }
+
+        // Add Certification Entry
+        function addCertificationEntry(data = {}) {
+            const entryId = nextEntryId++;
+            const entryHTML = `
+                <div class="dynamic-section" id="certificationEntry-${entryId}">
+                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeCertificationEntry(${entryId})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <div class="mb-3">
+                        <label for="certificateName-${entryId}" class="form-label">Certificate Name *</label>
+                        <input type="text" class="form-control" id="certificateName-${entryId}" value="${data.certificateName || ''}" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="certificationId-${entryId}" class="form-label">Certification Completion ID</label>
+                            <input type="text" class="form-control" id="certificationId-${entryId}" value="${data.certificationId || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="certificationUrl-${entryId}" class="form-label">Certification URL</label>
+                            <input type="url" class="form-control" id="certificationUrl-${entryId}" value="${data.certificationUrl || ''}">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="certificationValidity-${entryId}" class="form-label">Certification Validity</label>
+                        <input type="date" class="form-control" id="certificationValidity-${entryId}" value="${data.certificationValidity || ''}">
+                    </div>
+                </div>
+            `;
+            document.getElementById('certificationEntries').insertAdjacentHTML('beforeend', entryHTML);
+        }
+
+        // Remove Certification Entry
+        function removeCertificationEntry(entryId) {
+            document.getElementById(`certificationEntry-${entryId}`).remove();
+        }
+
+        // Save Certifications
+        async function saveCertifications() {
+            try {
+                const certifications = [];
+                const entries = document.querySelectorAll('[id^="certificationEntry-"]');
+                
+                entries.forEach(entry => {
+                    const entryId = entry.id.split('-')[1];
+                    const certificateName = document.getElementById(`certificateName-${entryId}`).value;
+                    const certificationId = document.getElementById(`certificationId-${entryId}`).value;
+                    const certificationUrl = document.getElementById(`certificationUrl-${entryId}`).value;
+                    const certificationValidity = document.getElementById(`certificationValidity-${entryId}`).value;
+                    
+                    certifications.push({
+                        certificateName,
+                        certificationId,
+                        certificationUrl,
+                        certificationValidity
+                    });
+                });
+                
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ certifications })
+                });
+
+                if (!response.ok) throw new Error('Failed to save certifications');
+                
+                showToast('Certifications saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving certifications:', error);
+                showToast('Error saving certifications', 'danger');
+            }
+        }
+
+        // Reset Certifications
+        function resetCertifications() {
+            document.getElementById('certificationsForm').reset();
+            document.getElementById('certificationEntries').innerHTML = '';
+            
+            if (profileData.certifications) {
+                profileData.certifications.forEach(cert => {
+                    addCertificationEntry(cert);
+                });
+            }
+        }
+
+        // Add Language Entry
+        function addLanguageEntry(data = {}) {
+            const entryId = nextEntryId++;
+            const entryHTML = `
+                <div class="dynamic-section" id="languageEntry-${entryId}">
+                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeLanguageEntry(${entryId})">
+                        <i class="bi bi-x"></i>
+                    </button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="language-${entryId}" class="form-label">Language</label>
+                            <select class="form-select" id="language-${entryId}">
+                                <option value="">Select Language</option>
+                                <option value="english" ${data.language === 'english' ? 'selected' : ''}>English</option>
+                                <option value="hindi" ${data.language === 'hindi' ? 'selected' : ''}>Hindi</option>
+                                <option value="spanish" ${data.language === 'spanish' ? 'selected' : ''}>Spanish</option>
+                                <option value="french" ${data.language === 'french' ? 'selected' : ''}>French</option>
+                                <option value="german" ${data.language === 'german' ? 'selected' : ''}>German</option>
+                                <option value="chinese" ${data.language === 'chinese' ? 'selected' : ''}>Chinese</option>
+                                <option value="japanese" ${data.language === 'japanese' ? 'selected' : ''}>Japanese</option>
+                                <option value="arabic" ${data.language === 'arabic' ? 'selected' : ''}>Arabic</option>
+                                <option value="russian" ${data.language === 'russian' ? 'selected' : ''}>Russian</option>
+                                <option value="portuguese" ${data.language === 'portuguese' ? 'selected' : ''}>Portuguese</option>
+                                <option value="other" ${data.language === 'other' ? 'selected' : ''}>Other</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="proficiency-${entryId}" class="form-label">Proficiency Level</label>
+                            <select class="form-select" id="proficiency-${entryId}">
+                                <option value="">Select Proficiency</option>
+                                <option value="beginner" ${data.proficiency === 'beginner' ? 'selected' : ''}>Beginner</option>
+                                <option value="intermediate" ${data.proficiency === 'intermediate' ? 'selected' : ''}>Intermediate</option>
+                                <option value="fluent" ${data.proficiency === 'fluent' ? 'selected' : ''}>Fluent</option>
+                                <option value="native" ${data.proficiency === 'native' ? 'selected' : ''}>Native</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('languageEntries').insertAdjacentHTML('beforeend', entryHTML);
+        }
+
+        // Remove Language Entry
+        function removeLanguageEntry(entryId) {
+            document.getElementById(`languageEntry-${entryId}`).remove();
+        }
+
+        // Save Languages
+        async function saveLanguages() {
+            try {
+                const languages = [];
+                const entries = document.querySelectorAll('[id^="languageEntry-"]');
+                
+                entries.forEach(entry => {
+                    const entryId = entry.id.split('-')[1];
+                    const language = document.getElementById(`language-${entryId}`).value;
+                    const proficiency = document.getElementById(`proficiency-${entryId}`).value;
+                    
+                    languages.push({
+                        language,
+                        proficiency
+                    });
+                });
+                
+                const response = await fetch('/api/profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ languages })
+                });
+
+                if (!response.ok) throw new Error('Failed to save languages');
+                
+                showToast('Languages saved successfully', 'success');
+            } catch (error) {
+                console.error('Error saving languages:', error);
+                showToast('Error saving languages', 'danger');
+            }
+        }
+
+        // Reset Languages
+        function resetLanguages() {
+            document.getElementById('languagesForm').reset();
+            document.getElementById('languageEntries').innerHTML = '';
+            
+            if (profileData.languages) {
+                profileData.languages.forEach(lang => {
+                    addLanguageEntry(lang);
+                });
+            }
+        }
+
+        // Show Toast Notification
+        function showToast(message, type = 'info') {
+            const toastContainer = document.querySelector('.toast-container');
+            const toastId = 'toast-' + Date.now();
+            
+            const toastHTML = `
+                <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+            
+            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
+            
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+            toast.show();
+            
+            // Remove toast from DOM after it's hidden
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastElement.remove();
+            });
+        }
+    </script>
+</body>
+</html>

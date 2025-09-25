@@ -1,3 +1,4 @@
 npm init -y
 npm install express passport passport-google-oauth20 express-session mongoose dotenv mysql2 multer nodemailer
 npm install google-auth-library
+npm install ejs

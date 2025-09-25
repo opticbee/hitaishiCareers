@@ -52,8 +52,8 @@ const setupDatabaseTable = async () => {
 
         // --- Alter table to add/modify columns, ignoring 'duplicate column' errors ---
         const alterQueries = [
-            "ALTER TABLE users ADD COLUMN google_id VARCHAR(255) UNIQUE",
-            "ALTER TABLE users ADD COLUMN auth_provider VARCHAR(50) NOT NULL DEFAULT 'local'",
+            // "ALTER TABLE users ADD COLUMN google_id VARCHAR(255) UNIQUE",
+            // "ALTER TABLE users ADD COLUMN auth_provider VARCHAR(50) NOT NULL DEFAULT 'local'",
             "ALTER TABLE users MODIFY COLUMN password_hash VARCHAR(255) NULL",
             "ALTER TABLE users MODIFY COLUMN mobile_number VARCHAR(20) NULL"
         ];
