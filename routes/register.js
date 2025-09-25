@@ -172,6 +172,43 @@ router.post('/user/login', async (req, res) => {
     }
 });
 
+// password update route (without old password check)
+router.post('/user/update-password', async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+
+        if (!email || !newPassword) {
+            return res.status(400).json({ error: 'Email and new password are required.' });
+        }
+
+        // Fetch user by email
+        const users = await query('SELECT * FROM users WHERE email = ?', [email]);
+        if (users.length === 0) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+
+        const user = users[0];
+
+        // Block password updates for Google accounts
+        if (user.auth_provider === 'google') {
+            return res.status(403).json({ error: 'This account was registered with Google. Password update is not applicable.' });
+        }
+
+        // Hash the new password
+        const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
+
+        // Update in DB
+        await query('UPDATE users SET password_hash = ? WHERE email = ?', [newHashedPassword, email]);
+
+        res.status(200).json({ message: 'Password updated successfully.' });
+
+    } catch (error) {
+        console.error('❌ Error during password update:', error);
+        res.status(500).json({ error: 'An error occurred on the server.' });
+    }
+});
+
+
 // --- Logout Route ---
 router.post('/logout', (req, res) => {
     req.session.destroy(err => {
