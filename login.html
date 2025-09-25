@@ -337,7 +337,7 @@
             </div>
             
             <!-- Google Sign-In -->
-            <div id="googleSignInButtonWrapper" class="d-grid mb-3">
+            <div id="googleSignInButtonWrapper" class="d-grid mb-3 d-flex justify-content-center">
                 <!-- The Google button will be rendered here by the library -->
             </div>
 
@@ -383,10 +383,14 @@
         if (res.ok) {
           alert('✅ ' + result.message);
           
-          // ✅ Save email in sessionStorage
-          sessionStorage.setItem('email', result.user.email);
+          // ✅ Save email in sessionStorage (This now works because the backend sends result.user)
+          if(result.user && result.user.email) {
+            sessionStorage.setItem('email', result.user.email);
+            window.location.href = 'userProfile.html'; // Redirect to profile page
+          } else {
+            alert('❌ Login successful, but no user email was returned.');
+          }
 
-          window.location.href = 'userProfile.html'; // Redirect to dashboard
         } else {
           alert('❌ ' + result.error);
         }
@@ -485,7 +489,7 @@
                     // ✅ Save email in sessionStorage
                     sessionStorage.setItem('email', email);
                     
-                    window.location.href = 'index.html';
+                    window.location.href = 'userProfile.html';
                 } else {
                     alert('❌ ' + result.error);
                 }

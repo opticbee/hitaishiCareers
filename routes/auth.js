@@ -1,10 +1,14 @@
 // routes/auth.js
 const express = require('express');
-const { OAuth2Client } = require('google-auth-library');
-const { query } = require('../db');
+const {
+    OAuth2Client
+} = require('google-auth-library');
+const {
+    query
+} = require('../db');
 const router = express.Router();
 
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '62866830906-89e5aqkrpnsjs0dri6hsss239b5rpdd9.apps.googleusercontent.com';
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 /**
@@ -12,9 +16,13 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID);
  * It will either log in an existing user or register a new one.
  */
 router.post('/google', async (req, res) => {
-    const { token } = req.body;
+    const {
+        token
+    } = req.body;
     if (!token) {
-        return res.status(400).json({ error: 'Google token is required.' });
+        return res.status(400).json({
+            error: 'Google token is required.'
+        });
     }
 
     try {
@@ -24,12 +32,19 @@ router.post('/google', async (req, res) => {
             audience: GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();
-        
+
         if (!payload) {
-            return res.status(401).json({ error: 'Invalid Google token.' });
+            return res.status(401).json({
+                error: 'Invalid Google token.'
+            });
         }
 
-        const { sub: google_id, email, name: full_name, picture: profile_image_url } = payload;
+        const {
+            sub: google_id,
+            email,
+            name: full_name,
+            picture: profile_image_url
+        } = payload;
 
         // Check if user exists in our database
         const users = await query('SELECT * FROM users WHERE email = ?', [email]);
@@ -40,7 +55,9 @@ router.post('/google', async (req, res) => {
 
             if (user.auth_provider !== 'google') {
                 // User exists but signed up with a password.
-                return res.status(403).json({ error: 'This email is registered with a password. Please sign in using your password.' });
+                return res.status(403).json({
+                    error: 'This email is registered with a password. Please sign in using your password.'
+                });
             }
 
             // User exists and signed up with Google, so we log them in.
@@ -50,7 +67,16 @@ router.post('/google', async (req, res) => {
                 email: user.email,
             };
             console.log(`✅ Google user logged in: ${user.email}`);
-            return res.status(200).json({ message: 'Login successful with Google!' });
+            // FIX: Return a user object so the frontend can use it.
+            return res.status(200).json({
+                message: 'Login successful with Google!',
+                user: {
+                    id: user.id,
+                    fullName: user.full_name,
+                    email: user.email,
+                    profileImage: user.profile_image_url
+                }
+            });
 
         } else {
             // --- USER DOES NOT EXIST, SO WE REGISTER THEM ---
@@ -60,17 +86,32 @@ router.post('/google', async (req, res) => {
             );
 
             const newUserId = insertResult.insertId;
-            req.session.user = { id: newUserId, fullName: full_name, email: email };
+            const newUser = {
+                id: newUserId,
+                fullName: full_name,
+                email: email
+            };
+            req.session.user = newUser;
 
             console.log(`✅ New Google user registered: ${email}`);
-            res.status(201).json({ message: 'Account created successfully with Google!', userId: newUserId });
+            // FIX: Return a user object so the frontend can use it.
+            res.status(201).json({
+                message: 'Account created successfully with Google!',
+                user: {
+                    id: newUser.id,
+                    fullName: newUser.fullName,
+                    email: newUser.email,
+                    profileImage: profile_image_url
+                }
+            });
         }
 
     } catch (error) {
         console.error('❌ Error during Google authentication:', error);
-        res.status(500).json({ error: 'An error occurred on the server.' });
+        res.status(500).json({
+            error: 'An error occurred on the server.'
+        });
     }
 });
 
 module.exports = router;
-

@@ -64,283 +64,297 @@
             cursor: pointer;
             margin-left: 0.25rem;
         }
+        .nav-link.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        .section-content {
+            display: none;
+        }
+        .section-content.active {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .nav-pills {
+                flex-direction: row;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .nav-pills .nav-link {
+                display: inline-block;
+                width: auto;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container my-4">
         <div class="row">
-            <div class="col-12">
-                <h1 class="mb-4">My Profile</h1>
-                
-                <!-- Toast Container for Notifications -->
-                <div class="toast-container"></div>
-                
-                <!-- Personal Details Section -->
-                <div class="accordion" id="profileAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="personalDetailsHeading">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#personalDetails" aria-expanded="true" aria-controls="personalDetails">
-                                Personal Details
-                            </button>
-                        </h2>
-                        <div id="personalDetails" class="accordion-collapse collapse show" aria-labelledby="personalDetailsHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="personalDetailsForm">
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="fullName" class="form-label">Full Name</label>
-                                            <input type="text" class="form-control" id="fullName" required>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="email" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="email" required>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="phone" class="form-label">Phone Number</label>
-                                            <input type="tel" class="form-control" id="phone">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="gender" class="form-label">Gender</label>
-                                            <select class="form-select" id="gender">
-                                                <option value="">Select Gender</option>
-                                                <option value="male">Male</option>
-                                                <option value="female">Female</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Experience Level</label>
-                                            <div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="experienceLevel" id="fresher" value="fresher">
-                                                    <label class="form-check-label" for="fresher">Fresher</label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="experienceLevel" id="experienced" value="experienced">
-                                                    <label class="form-check-label" for="experienced">Experienced</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label for="ctcExpected" class="form-label">CTC Expected (in LPA)</label>
-                                            <input type="number" class="form-control" id="ctcExpected" min="0" step="0.1">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label for="profilePhoto" class="form-label">Profile Photo</label>
-                                            <input type="file" class="form-control" id="profilePhoto" accept="image/*">
-                                            <div class="mt-2">
-                                                <img id="profilePhotoPreview" src="#" alt="Profile Photo Preview" class="profile-photo-preview d-none">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="savePersonalDetails()">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetPersonalDetails()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Profile Sections</h5>
+                        <nav class="nav nav-pills flex-column" id="profileNav">
+                            <a class="nav-link active" href="#" data-section="personalDetails">
+                                <i class="bi bi-person me-2"></i>Personal Details
+                            </a>
+                            <a class="nav-link" href="#" data-section="professionalDetails">
+                                <i class="bi bi-briefcase me-2"></i>Professional Details
+                            </a>
+                            <a class="nav-link" href="#" data-section="projects">
+                                <i class="bi bi-folder me-2"></i>Projects
+                            </a>
+                            <a class="nav-link" href="#" data-section="resume">
+                                <i class="bi bi-file-earmark me-2"></i>Resume Upload
+                            </a>
+                            <a class="nav-link" href="#" data-section="skills">
+                                <i class="bi bi-tools me-2"></i>Skills
+                            </a>
+                            <a class="nav-link" href="#" data-section="education">
+                                <i class="bi bi-book me-2"></i>Education
+                            </a>
+                            <a class="nav-link" href="#" data-section="certifications">
+                                <i class="bi bi-award me-2"></i>Certifications
+                            </a>
+                            <a class="nav-link" href="#" data-section="languages">
+                                <i class="bi bi-translate me-2"></i>Languages
+                            </a>
+                        </nav>
                     </div>
-                    
-                    <!-- Professional Details Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="professionalDetailsHeading">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#professionalDetails" aria-expanded="false" aria-controls="professionalDetails">
-                                Professional Details
-                            </button>
-                        </h2>
-                        <div id="professionalDetails" class="accordion-collapse collapse" aria-labelledby="professionalDetailsHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="professionalDetailsForm">
-                                    <div id="professionalEntries">
-                                        <!-- Dynamic entries will be added here -->
+                </div>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="mb-0">My Profile</h1>
+                    </div>
+                    <div class="card-body">
+                        <!-- Toast Container for Notifications -->
+                        <div class="toast-container"></div>
+                        
+                        <!-- Personal Details Section -->
+                        <div class="section-content active" id="personalDetails">
+                            <h2 class="mb-3">Personal Details</h2>
+                            <form id="personalDetailsForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="fullName" class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" id="fullName" required>
                                     </div>
-                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addProfessionalEntry()">
-                                        <i class="bi bi-plus"></i> Add Professional Entry
-                                    </button>
-                                    
-                                    <div class="mb-3">
-                                        <label for="noticePeriod" class="form-label">Notice Period</label>
-                                        <select class="form-select" id="noticePeriod">
-                                            <option value="">Select Notice Period</option>
-                                            <option value="immediate">Immediate</option>
-                                            <option value="15">15 days</option>
-                                            <option value="30">30 days</option>
-                                            <option value="60">60 days</option>
-                                            <option value="90">90 days</option>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="phone" class="form-label">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phone">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="gender" class="form-label">Gender</label>
+                                        <select class="form-select" id="gender">
+                                            <option value="">Select Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
                                         </select>
                                     </div>
-                                    
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="saveProfessionalDetails()">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetProfessionalDetails()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Projects Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="projectsHeading">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#projects" aria-expanded="false" aria-controls="projects">
-                                Projects
-                            </button>
-                        </h2>
-                        <div id="projects" class="accordion-collapse collapse" aria-labelledby="projectsHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="projectsForm">
-                                    <div id="projectEntries">
-                                        <!-- Dynamic entries will be added here -->
-                                    </div>
-                                    <button type="button" class="btn btn-outline-primary" onclick="addProjectEntry()">
-                                        <i class="bi bi-plus"></i> Add Project
-                                    </button>
-                                    
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="saveProjects()">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetProjects()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Resume Upload Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="resumeHeading">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#resume" aria-expanded="false" aria-controls="resume">
-                                Resume Upload
-                            </button>
-                        </h2>
-                        <div id="resume" class="accordion-collapse collapse" aria-labelledby="resumeHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="resumeForm">
-                                    <div class="mb-3">
-                                        <label for="resumeFile" class="form-label">Upload Resume</label>
-                                        <input type="file" class="form-control" id="resumeFile" accept=".pdf,.doc,.docx">
-                                        <div class="form-text">Accepted formats: PDF, DOC, DOCX</div>
-                                        <div id="resumePreview" class="resume-preview d-none">
-                                            <i class="bi bi-file-earmark-text"></i> <span id="resumeFileName"></span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Experience Level</label>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="experienceLevel" id="fresher" value="fresher">
+                                                <label class="form-check-label" for="fresher">Fresher</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="experienceLevel" id="experienced" value="experienced">
+                                                <label class="form-check-label" for="experienced">Experienced</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="uploadResume()">Upload Resume</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetResume()">Cancel</button>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ctcExpected" class="form-label">CTC Expected (in LPA)</label>
+                                        <input type="number" class="form-control" id="ctcExpected" min="0" step="0.1">
                                     </div>
-                                </form>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profilePhoto" class="form-label">Profile Photo</label>
+                                        <input type="file" class="form-control" id="profilePhoto" accept="image/*">
+                                        <div class="mt-2">
+                                            <img id="profilePhotoPreview" src="#" alt="Profile Photo Preview" class="profile-photo-preview d-none">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="savePersonalDetails()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetPersonalDetails()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Professional Details Section -->
+                        <div class="section-content" id="professionalDetails">
+                            <h2 class="mb-3">Professional Details</h2>
+                            <form id="professionalDetailsForm">
+                                <div id="professionalEntries">
+                                    <!-- Dynamic entries will be added here -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addProfessionalEntry()">
+                                    <i class="bi bi-plus"></i> Add Professional Entry
+                                </button>
+                                
+                                <div class="mb-3">
+                                    <label for="noticePeriod" class="form-label">Notice Period</label>
+                                    <select class="form-select" id="noticePeriod">
+                                        <option value="">Select Notice Period</option>
+                                        <option value="immediate">Immediate</option>
+                                        <option value="15">15 days</option>
+                                        <option value="30">30 days</option>
+                                        <option value="60">60 days</option>
+                                        <option value="90">90 days</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="saveProfessionalDetails()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetProfessionalDetails()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Projects Section -->
+                        <div class="section-content" id="projects">
+                            <h2 class="mb-3">Projects</h2>
+                            <form id="projectsForm">
+                                <div id="projectEntries">
+                                    <!-- Dynamic entries will be added here -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary" onclick="addProjectEntry()">
+                                    <i class="bi bi-plus"></i> Add Project
+                                </button>
+                                
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="saveProjects()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetProjects()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Resume Upload Section -->
+                        <div class="section-content" id="resume">
+                            <h2 class="mb-3">Resume Upload</h2>
+                            <form id="resumeForm">
+                                <div class="mb-3">
+                                    <label for="resumeFile" class="form-label">Upload Resume</label>
+                                    <input type="file" class="form-control" id="resumeFile" accept=".pdf,.doc,.docx">
+                                    <div class="form-text">Accepted formats: PDF, DOC, DOCX</div>
+                                    <div id="resumePreview" class="resume-preview d-none">
+                                        <i class="bi bi-file-earmark-text"></i> <span id="resumeFileName"></span>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="uploadResume()">Upload Resume</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetResume()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Skills Section -->
+                        <div class="section-content" id="skills">
+                            <h2 class="mb-3">Skills</h2>
+                            <form id="skillsForm">
+                                <div id="skillEntries">
+                                    <!-- Dynamic entries will be added here -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addSkillEntry()">
+                                    <i class="bi bi-plus"></i> Add Skill
+                                </button>
+                                
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="saveSkills()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetSkills()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Education Section -->
+                        <div class="section-content" id="education">
+                            <h2 class="mb-3">Education</h2>
+                            <form id="educationForm">
+                                <div id="educationEntries">
+                                    <!-- Dynamic entries will be added here -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addEducationEntry()">
+                                    <i class="bi bi-plus"></i> Add Education
+                                </button>
+                                
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="saveEducation()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetEducation()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Certifications Section -->
+                        <div class="section-content" id="certifications">
+                            <h2 class="mb-3">Certifications</h2>
+                            <form id="certificationsForm">
+                                <div id="certificationEntries">
+                                    <!-- Dynamic entries will be added here -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addCertificationEntry()">
+                                    <i class="bi bi-plus"></i> Add Certification
+                                </button>
+                                
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="saveCertifications()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetCertifications()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Languages Section -->
+                        <div class="section-content" id="languages">
+                            <h2 class="mb-3">Languages Known</h2>
+                            <form id="languagesForm">
+                                <div id="languageEntries">
+                                    <!-- Dynamic entries will be added here -->
+                                </div>
+                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addLanguageEntry()">
+                                    <i class="bi bi-plus"></i> Add Language
+                                </button>
+                                
+                                <div class="mt-3">
+                                    <button type="button" class="btn btn-primary" onclick="saveLanguages()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="resetLanguages()">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        <hr>
+                        <!-- change password -->
+                        <h3>Change Password</h3>
+                        <form id="changePasswordForm" onsubmit="event.preventDefault(); updatePassword();">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" id="newPassword" class="form-control" minlength="6" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" id="confirmPassword" class="form-control" minlength="6" required>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Skills Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="skillsHeading">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skills" aria-expanded="false" aria-controls="skills">
-                                Skills
-                            </button>
-                        </h2>
-                        <div id="skills" class="accordion-collapse collapse" aria-labelledby="skillsHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="skillsForm">
-                                    <div id="skillEntries">
-                                        <!-- Dynamic entries will be added here -->
-                                    </div>
-                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addSkillEntry()">
-                                        <i class="bi bi-plus"></i> Add Skill
-                                    </button>
-                                    
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="saveSkills()">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetSkills()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-warning">Update Password</button>
                         </div>
-                    </div>
-                    
-                    <!-- Education Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="educationHeading">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#education" aria-expanded="false" aria-controls="education">
-                                Education
-                            </button>
-                        </h2>
-                        <div id="education" class="accordion-collapse collapse" aria-labelledby="educationHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="educationForm">
-                                    <div id="educationEntries">
-                                        <!-- Dynamic entries will be added here -->
-                                    </div>
-                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addEducationEntry()">
-                                        <i class="bi bi-plus"></i> Add Education
-                                    </button>
-                                    
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="saveEducation()">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetEducation()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Certifications Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="certificationsHeading">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#certifications" aria-expanded="false" aria-controls="certifications">
-                                Certifications
-                            </button>
-                        </h2>
-                        <div id="certifications" class="accordion-collapse collapse" aria-labelledby="certificationsHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="certificationsForm">
-                                    <div id="certificationEntries">
-                                        <!-- Dynamic entries will be added here -->
-                                    </div>
-                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addCertificationEntry()">
-                                        <i class="bi bi-plus"></i> Add Certification
-                                    </button>
-                                    
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="saveCertifications()">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetCertifications()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Languages Section -->
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="languagesHeading">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#languages" aria-expanded="false" aria-controls="languages">
-                                Languages Known
-                            </button>
-                        </h2>
-                        <div id="languages" class="accordion-collapse collapse" aria-labelledby="languagesHeading" data-bs-parent="#profileAccordion">
-                            <div class="accordion-body">
-                                <form id="languagesForm">
-                                    <div id="languageEntries">
-                                        <!-- Dynamic entries will be added here -->
-                                    </div>
-                                    <button type="button" class="btn btn-outline-primary mb-3" onclick="addLanguageEntry()">
-                                        <i class="bi bi-plus"></i> Add Language
-                                    </button>
-                                    
-                                    <div class="mt-3">
-                                        <button type="button" class="btn btn-primary" onclick="saveLanguages()">Save</button>
-                                        <button type="button" class="btn btn-outline-secondary" onclick="resetLanguages()">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -359,7 +373,33 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadProfileData();
             setupEventListeners();
+            setupNavigation();
         });
+
+        // Setup navigation
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('#profileNav .nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    document.querySelectorAll('.section-content').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Show the selected section
+                    const sectionId = this.getAttribute('data-section');
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+        }
 
         // Setup event listeners
         function setupEventListeners() {
@@ -397,7 +437,7 @@
                     return;
                 }
 
-                const response = await fetch(`/api/profile?email=${encodeURIComponent(email)}`);
+                const response = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
                 if (!response.ok) throw new Error("Failed to load profile data");
 
                 profileData = await response.json();
@@ -913,7 +953,7 @@
             `;
             document.getElementById('skillEntries').insertAdjacentHTML('beforeend', entryHTML);
             
-            // Add event listener for rating slider
+            // Add event listener for rating change
             document.getElementById(`skillRating-${entryId}`).addEventListener('input', function() {
                 document.getElementById(`skillRatingValue-${entryId}`).textContent = this.value;
             });
@@ -980,27 +1020,27 @@
                     </button>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="institutionName-${entryId}" class="form-label">School/College Name</label>
-                            <input type="text" class="form-control" id="institutionName-${entryId}" value="${data.institutionName || ''}">
+                            <label for="degree-${entryId}" class="form-label">Degree</label>
+                            <input type="text" class="form-control" id="degree-${entryId}" value="${data.degree || ''}">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="university-${entryId}" class="form-label">University</label>
-                            <input type="text" class="form-control" id="university-${entryId}" value="${data.university || ''}">
+                            <label for="institution-${entryId}" class="form-label">Institution</label>
+                            <input type="text" class="form-control" id="institution-${entryId}" value="${data.institution || ''}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="passedYear-${entryId}" class="form-label">Passed Year</label>
-                            <input type="number" class="form-control" id="passedYear-${entryId}" min="1900" max="2099" value="${data.passedYear || ''}">
+                            <label for="educationFromDate-${entryId}" class="form-label">From Date</label>
+                            <input type="date" class="form-control" id="educationFromDate-${entryId}" value="${data.fromDate || ''}">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="percentage-${entryId}" class="form-label">Percentage Obtained</label>
-                            <input type="number" class="form-control" id="percentage-${entryId}" min="0" max="100" step="0.01" value="${data.percentage || ''}">
+                            <label for="educationToDate-${entryId}" class="form-label">To Date</label>
+                            <input type="date" class="form-control" id="educationToDate-${entryId}" value="${data.toDate || ''}">
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="specialization-${entryId}" class="form-label">Main Stream / Specialization</label>
-                        <input type="text" class="form-control" id="specialization-${entryId}" value="${data.specialization || ''}">
+                        <label for="educationDescription-${entryId}" class="form-label">Description</label>
+                        <textarea class="form-control" id="educationDescription-${entryId}" rows="3">${data.description || ''}</textarea>
                     </div>
                 </div>
             `;
@@ -1020,18 +1060,18 @@
                 
                 entries.forEach(entry => {
                     const entryId = entry.id.split('-')[1];
-                    const institutionName = document.getElementById(`institutionName-${entryId}`).value;
-                    const university = document.getElementById(`university-${entryId}`).value;
-                    const passedYear = document.getElementById(`passedYear-${entryId}`).value;
-                    const percentage = document.getElementById(`percentage-${entryId}`).value;
-                    const specialization = document.getElementById(`specialization-${entryId}`).value;
+                    const degree = document.getElementById(`degree-${entryId}`).value;
+                    const institution = document.getElementById(`institution-${entryId}`).value;
+                    const fromDate = document.getElementById(`educationFromDate-${entryId}`).value;
+                    const toDate = document.getElementById(`educationToDate-${entryId}`).value;
+                    const description = document.getElementById(`educationDescription-${entryId}`).value;
                     
                     education.push({
-                        institutionName,
-                        university,
-                        passedYear: parseInt(passedYear),
-                        percentage: parseFloat(percentage),
-                        specialization
+                        degree,
+                        institution,
+                        fromDate,
+                        toDate,
+                        description
                     });
                 });
                 
@@ -1045,10 +1085,10 @@
 
                 if (!response.ok) throw new Error('Failed to save education');
                 
-                showToast('Education details saved successfully', 'success');
+                showToast('Education saved successfully', 'success');
             } catch (error) {
                 console.error('Error saving education:', error);
-                showToast('Error saving education details', 'danger');
+                showToast('Error saving education', 'danger');
             }
         }
 
@@ -1072,23 +1112,29 @@
                     <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeCertificationEntry(${entryId})">
                         <i class="bi bi-x"></i>
                     </button>
-                    <div class="mb-3">
-                        <label for="certificateName-${entryId}" class="form-label">Certificate Name *</label>
-                        <input type="text" class="form-control" id="certificateName-${entryId}" value="${data.certificateName || ''}" required>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="certificationName-${entryId}" class="form-label">Certification Name</label>
+                            <input type="text" class="form-control" id="certificationName-${entryId}" value="${data.certificationName || ''}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="issuingOrganization-${entryId}" class="form-label">Issuing Organization</label>
+                            <input type="text" class="form-control" id="issuingOrganization-${entryId}" value="${data.issuingOrganization || ''}">
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="certificationId-${entryId}" class="form-label">Certification Completion ID</label>
-                            <input type="text" class="form-control" id="certificationId-${entryId}" value="${data.certificationId || ''}">
+                            <label for="issueDate-${entryId}" class="form-label">Issue Date</label>
+                            <input type="date" class="form-control" id="issueDate-${entryId}" value="${data.issueDate || ''}">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="certificationUrl-${entryId}" class="form-label">Certification URL</label>
-                            <input type="url" class="form-control" id="certificationUrl-${entryId}" value="${data.certificationUrl || ''}">
+                            <label for="expiryDate-${entryId}" class="form-label">Expiry Date</label>
+                            <input type="date" class="form-control" id="expiryDate-${entryId}" value="${data.expiryDate || ''}">
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="certificationValidity-${entryId}" class="form-label">Certification Validity</label>
-                        <input type="date" class="form-control" id="certificationValidity-${entryId}" value="${data.certificationValidity || ''}">
+                        <label for="certificationLink-${entryId}" class="form-label">Certification Link</label>
+                        <input type="url" class="form-control" id="certificationLink-${entryId}" value="${data.certificationLink || ''}">
                     </div>
                 </div>
             `;
@@ -1108,16 +1154,18 @@
                 
                 entries.forEach(entry => {
                     const entryId = entry.id.split('-')[1];
-                    const certificateName = document.getElementById(`certificateName-${entryId}`).value;
-                    const certificationId = document.getElementById(`certificationId-${entryId}`).value;
-                    const certificationUrl = document.getElementById(`certificationUrl-${entryId}`).value;
-                    const certificationValidity = document.getElementById(`certificationValidity-${entryId}`).value;
+                    const certificationName = document.getElementById(`certificationName-${entryId}`).value;
+                    const issuingOrganization = document.getElementById(`issuingOrganization-${entryId}`).value;
+                    const issueDate = document.getElementById(`issueDate-${entryId}`).value;
+                    const expiryDate = document.getElementById(`expiryDate-${entryId}`).value;
+                    const certificationLink = document.getElementById(`certificationLink-${entryId}`).value;
                     
                     certifications.push({
-                        certificateName,
-                        certificationId,
-                        certificationUrl,
-                        certificationValidity
+                        certificationName,
+                        issuingOrganization,
+                        issueDate,
+                        expiryDate,
+                        certificationLink
                     });
                 });
                 
@@ -1160,29 +1208,16 @@
                     </button>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="language-${entryId}" class="form-label">Language</label>
-                            <select class="form-select" id="language-${entryId}">
-                                <option value="">Select Language</option>
-                                <option value="english" ${data.language === 'english' ? 'selected' : ''}>English</option>
-                                <option value="hindi" ${data.language === 'hindi' ? 'selected' : ''}>Hindi</option>
-                                <option value="spanish" ${data.language === 'spanish' ? 'selected' : ''}>Spanish</option>
-                                <option value="french" ${data.language === 'french' ? 'selected' : ''}>French</option>
-                                <option value="german" ${data.language === 'german' ? 'selected' : ''}>German</option>
-                                <option value="chinese" ${data.language === 'chinese' ? 'selected' : ''}>Chinese</option>
-                                <option value="japanese" ${data.language === 'japanese' ? 'selected' : ''}>Japanese</option>
-                                <option value="arabic" ${data.language === 'arabic' ? 'selected' : ''}>Arabic</option>
-                                <option value="russian" ${data.language === 'russian' ? 'selected' : ''}>Russian</option>
-                                <option value="portuguese" ${data.language === 'portuguese' ? 'selected' : ''}>Portuguese</option>
-                                <option value="other" ${data.language === 'other' ? 'selected' : ''}>Other</option>
-                            </select>
+                            <label for="languageName-${entryId}" class="form-label">Language</label>
+                            <input type="text" class="form-control" id="languageName-${entryId}" value="${data.languageName || ''}">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="proficiency-${entryId}" class="form-label">Proficiency Level</label>
+                            <label for="proficiency-${entryId}" class="form-label">Proficiency</label>
                             <select class="form-select" id="proficiency-${entryId}">
                                 <option value="">Select Proficiency</option>
                                 <option value="beginner" ${data.proficiency === 'beginner' ? 'selected' : ''}>Beginner</option>
                                 <option value="intermediate" ${data.proficiency === 'intermediate' ? 'selected' : ''}>Intermediate</option>
-                                <option value="fluent" ${data.proficiency === 'fluent' ? 'selected' : ''}>Fluent</option>
+                                <option value="advanced" ${data.proficiency === 'advanced' ? 'selected' : ''}>Advanced</option>
                                 <option value="native" ${data.proficiency === 'native' ? 'selected' : ''}>Native</option>
                             </select>
                         </div>
@@ -1205,11 +1240,11 @@
                 
                 entries.forEach(entry => {
                     const entryId = entry.id.split('-')[1];
-                    const language = document.getElementById(`language-${entryId}`).value;
+                    const languageName = document.getElementById(`languageName-${entryId}`).value;
                     const proficiency = document.getElementById(`proficiency-${entryId}`).value;
                     
                     languages.push({
-                        language,
+                        languageName,
                         proficiency
                     });
                 });
@@ -1249,7 +1284,7 @@
             const toastId = 'toast-' + Date.now();
             
             const toastHTML = `
-                <div id="${toastId}" class="toast align-items-center text-bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div id="${toastId}" class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="d-flex">
                         <div class="toast-body">
                             ${message}
@@ -1265,11 +1300,48 @@
             const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
             toast.show();
             
-            // Remove toast from DOM after it's hidden
+            // Remove the toast from DOM after it's hidden
             toastElement.addEventListener('hidden.bs.toast', function() {
                 toastElement.remove();
             });
         }
+    
+        async function updatePassword() {
+        try {
+            const email = sessionStorage.getItem('email'); // fallback; backend will also accept session
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+
+            if (!newPassword || newPassword.length < 6) {
+            showToast('Password must be at least 6 characters', 'warning');
+            return;
+            }
+            if (newPassword !== confirmPassword) {
+            showToast('Passwords do not match', 'warning');
+            return;
+            }
+
+            const body = { newPassword };
+            if (email) body.email = email; // if your backend uses session this is optional
+
+            const resp = await fetch('/user/update-password', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+            });
+
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data.error || 'Failed to update password');
+
+            showToast('Password updated successfully', 'success');
+            // clear form
+            document.getElementById('changePasswordForm').reset();
+        } catch (err) {
+            console.error('Password update error:', err);
+            showToast(err.message || 'Could not update password', 'danger');
+        }
+        }
+
     </script>
 </body>
 </html>
