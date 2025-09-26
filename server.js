@@ -8,6 +8,11 @@ const path = require('path');
 const registerRoute = require('./routes/register');
 const authRoute = require('./routes/auth');
 const profileRoute = require('./routes/profile');
+const jobsRoute = require('./routes/jobs');
+const applicantRoute = require('./routes/applicant');
+const companyRoute = require('./routes/company');
+
+// Initialize Express app
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -39,6 +44,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api', registerRoute); 
 // For Google sign-in: /api/auth/google
 app.use('/api/auth', authRoute);
+
+app.use('/api/jobs', jobsRoute); // For job postings: /api/jobs/...
+app.use('/api/applicant', applicantRoute); // For applicant actions: /api/applicant/...
+app.use('/api/company', companyRoute); // For company actions: /api/company/...
 
 app.use('/api', profileRoute); // For profile management: /api/profile
 

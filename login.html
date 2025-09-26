@@ -251,6 +251,40 @@
         </div>
       </div>
     </nav>
+    <script>
+      async function loadNavbarProfile() {
+        const email = sessionStorage.getItem("email");
+        if (!email) {
+          console.log("User not logged in → showing default icon.");
+          return;
+        }
+
+        try {
+          const res = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
+          if (!res.ok) {
+            console.error("Failed to fetch profile:", res.status);
+            return;
+          }
+
+          const data = await res.json();
+          const profilePhoto = data.personalDetails?.profilePhoto;
+
+          if (profilePhoto) {
+            // Hide the default font-awesome icon
+            document.getElementById("profile-icon").classList.add("d-none");
+
+            // Show user’s actual avatar
+            const avatar = document.getElementById("profile-avatar");
+            avatar.src = profilePhoto;
+            avatar.classList.remove("d-none");
+          }
+        } catch (err) {
+          console.error("Error loading navbar profile:", err);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", loadNavbarProfile);
+    </script>
   </header>
 
   <div class="container login-container">
