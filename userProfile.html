@@ -9,6 +9,9 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <style>
+        body {
+            background-color: #f8f9fa;
+        }
         .profile-photo-preview {
             width: 150px;
             height: 150px;
@@ -16,21 +19,18 @@
             border-radius: 50%;
             border: 3px solid #dee2e6;
         }
-        .accordion-button:not(.collapsed) {
-            background-color: #e7f1ff;
-            color: #0c63e4;
-        }
-        .dynamic-section {
+        .dynamic-section, .view-section {
             border: 1px solid #dee2e6;
             border-radius: 0.375rem;
-            padding: 1rem;
+            padding: 1.5rem;
             margin-bottom: 1rem;
             position: relative;
+            background-color: #fff;
         }
         .remove-btn {
             position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
+            top: 0.75rem;
+            right: 0.75rem;
         }
         .skill-rating {
             display: flex;
@@ -41,10 +41,14 @@
             flex: 1;
         }
         .resume-preview {
-            background-color: #f8f9fa;
+            background-color: #e9ecef;
             border-radius: 0.375rem;
-            padding: 0.5rem;
+            padding: 0.75rem;
             margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #dee2e6;
         }
         .toast-container {
             position: fixed;
@@ -55,10 +59,11 @@
         .tag {
             display: inline-block;
             background-color: #e9ecef;
-            padding: 0.25rem 0.5rem;
+            padding: 0.3rem 0.6rem;
             border-radius: 0.375rem;
             margin: 0.25rem;
             font-size: 0.875rem;
+            border: 1px solid #ced4da;
         }
         .tag .bi-x {
             cursor: pointer;
@@ -66,7 +71,7 @@
         }
         .nav-link.active {
             background-color: #0d6efd;
-            color: white;
+            color: white !important;
         }
         .section-content {
             display: none;
@@ -74,11 +79,22 @@
         .section-content.active {
             display: block;
         }
-        @media (max-width: 768px) {
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .action-buttons {
+            margin-top: 1.5rem;
+        }
+
+        @media (max-width: 991px) {
             .nav-pills {
                 flex-direction: row;
                 overflow-x: auto;
                 white-space: nowrap;
+                flex-wrap: nowrap;
             }
             .nav-pills .nav-link {
                 display: inline-block;
@@ -92,34 +108,19 @@
         <div class="row">
             <!-- Sidebar Navigation -->
             <div class="col-lg-3 mb-4">
-                <div class="card">
+                <div class="card shadow-sm">
                     <div class="card-body">
                         <h5 class="card-title">Profile Sections</h5>
                         <nav class="nav nav-pills flex-column" id="profileNav">
-                            <a class="nav-link active" href="#" data-section="personalDetails">
-                                <i class="bi bi-person me-2"></i>Personal Details
-                            </a>
-                            <a class="nav-link" href="#" data-section="professionalDetails">
-                                <i class="bi bi-briefcase me-2"></i>Professional Details
-                            </a>
-                            <a class="nav-link" href="#" data-section="projects">
-                                <i class="bi bi-folder me-2"></i>Projects
-                            </a>
-                            <a class="nav-link" href="#" data-section="resume">
-                                <i class="bi bi-file-earmark me-2"></i>Resume Upload
-                            </a>
-                            <a class="nav-link" href="#" data-section="skills">
-                                <i class="bi bi-tools me-2"></i>Skills
-                            </a>
-                            <a class="nav-link" href="#" data-section="education">
-                                <i class="bi bi-book me-2"></i>Education
-                            </a>
-                            <a class="nav-link" href="#" data-section="certifications">
-                                <i class="bi bi-award me-2"></i>Certifications
-                            </a>
-                            <a class="nav-link" href="#" data-section="languages">
-                                <i class="bi bi-translate me-2"></i>Languages
-                            </a>
+                            <a class="nav-link active" href="#" data-section="personalDetails"><i class="bi bi-person me-2"></i>Personal Details</a>
+                            <a class="nav-link" href="#" data-section="professionalDetails"><i class="bi bi-briefcase me-2"></i>Professional</a>
+                            <a class="nav-link" href="#" data-section="projects"><i class="bi bi-folder me-2"></i>Projects</a>
+                            <a class="nav-link" href="#" data-section="resume"><i class="bi bi-file-earmark me-2"></i>Resume</a>
+                            <a class="nav-link" href="#" data-section="skills"><i class="bi bi-tools me-2"></i>Skills</a>
+                            <a class="nav-link" href="#" data-section="education"><i class="bi bi-book me-2"></i>Education</a>
+                            <a class="nav-link" href="#" data-section="certifications"><i class="bi bi-award me-2"></i>Certifications</a>
+                            <a class="nav-link" href="#" data-section="languages"><i class="bi bi-translate me-2"></i>Languages</a>
+                            <a class="nav-link" href="#" data-section="password"><i class="bi bi-shield-lock me-2"></i>Password</a>
                         </nav>
                     </div>
                 </div>
@@ -127,9 +128,9 @@
             
             <!-- Main Content Area -->
             <div class="col-lg-9">
-                <div class="card">
-                    <div class="card-header">
-                        <h1 class="mb-0">My Profile</h1>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h1 class="mb-0 h4">My Profile</h1>
                     </div>
                     <div class="card-body">
                         <!-- Toast Container for Notifications -->
@@ -137,8 +138,12 @@
                         
                         <!-- Personal Details Section -->
                         <div class="section-content active" id="personalDetails">
-                            <h2 class="mb-3">Personal Details</h2>
-                            <form id="personalDetailsForm">
+                            <div class="section-header">
+                                <h2 class="h5 mb-0">Personal Details</h2>
+                                <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('personalDetails', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
+                            </div>
+                            <div id="personalDetailsView"></div>
+                            <form id="personalDetailsForm" class="d-none">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="fullName" class="form-label">Full Name</label>
@@ -146,7 +151,7 @@
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="email" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="email" required>
+                                        <input type="email" class="form-control" id="email" required readonly disabled>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -168,14 +173,8 @@
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Experience Level</label>
                                         <div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="experienceLevel" id="fresher" value="fresher">
-                                                <label class="form-check-label" for="fresher">Fresher</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="experienceLevel" id="experienced" value="experienced">
-                                                <label class="form-check-label" for="experienced">Experienced</label>
-                                            </div>
+                                            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="experienceLevel" id="fresher" value="fresher"><label class="form-check-label" for="fresher">Fresher</label></div>
+                                            <div class="form-check form-check-inline"><input class="form-check-input" type="radio" name="experienceLevel" id="experienced" value="experienced"><label class="form-check-label" for="experienced">Experienced</label></div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mb-3">
@@ -183,178 +182,48 @@
                                         <input type="number" class="form-control" id="ctcExpected" min="0" step="0.1">
                                     </div>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="profilePhoto" class="form-label">Profile Photo</label>
+                                    <input type="file" class="form-control" id="profilePhoto" accept="image/*">
+                                    <div class="mt-2">
+                                        <img id="profilePhotoPreview" src="https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo" alt="Profile Photo Preview" class="profile-photo-preview">
+                                    </div>
+                                </div>
+                                <div class="action-buttons">
+                                    <button type="button" class="btn btn-primary" onclick="savePersonalDetails()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('personalDetails', false)">Cancel</button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Dynamic Sections (will be populated by JS) -->
+                        <div class="section-content" id="professionalDetails"></div>
+                        <div class="section-content" id="projects"></div>
+                        <div class="section-content" id="resume"></div>
+                        <div class="section-content" id="skills"></div>
+                        <div class="section-content" id="education"></div>
+                        <div class="section-content" id="certifications"></div>
+                        <div class="section-content" id="languages"></div>
+
+                        <!-- Change Password Section -->
+                        <div class="section-content" id="password">
+                            <div class="section-header"><h2 class="h5 mb-0">Change Password</h2></div>
+                            <form id="changePasswordForm" onsubmit="event.preventDefault(); updatePassword();">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
-                                        <label for="profilePhoto" class="form-label">Profile Photo</label>
-                                        <input type="file" class="form-control" id="profilePhoto" accept="image/*">
-                                        <div class="mt-2">
-                                            <img id="profilePhotoPreview" src="#" alt="Profile Photo Preview" class="profile-photo-preview d-none">
-                                        </div>
+                                        <label for="newPassword" class="form-label">New Password</label>
+                                        <input type="password" id="newPassword" class="form-control" minlength="6" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                                        <input type="password" id="confirmPassword" class="form-control" minlength="6" required>
                                     </div>
                                 </div>
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="savePersonalDetails()">Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetPersonalDetails()">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Professional Details Section -->
-                        <div class="section-content" id="professionalDetails">
-                            <h2 class="mb-3">Professional Details</h2>
-                            <form id="professionalDetailsForm">
-                                <div id="professionalEntries">
-                                    <!-- Dynamic entries will be added here -->
-                                </div>
-                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addProfessionalEntry()">
-                                    <i class="bi bi-plus"></i> Add Professional Entry
-                                </button>
-                                
                                 <div class="mb-3">
-                                    <label for="noticePeriod" class="form-label">Notice Period</label>
-                                    <select class="form-select" id="noticePeriod">
-                                        <option value="">Select Notice Period</option>
-                                        <option value="immediate">Immediate</option>
-                                        <option value="15">15 days</option>
-                                        <option value="30">30 days</option>
-                                        <option value="60">60 days</option>
-                                        <option value="90">90 days</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="saveProfessionalDetails()">Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetProfessionalDetails()">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Update Password</button>
                                 </div>
                             </form>
                         </div>
-                        
-                        <!-- Projects Section -->
-                        <div class="section-content" id="projects">
-                            <h2 class="mb-3">Projects</h2>
-                            <form id="projectsForm">
-                                <div id="projectEntries">
-                                    <!-- Dynamic entries will be added here -->
-                                </div>
-                                <button type="button" class="btn btn-outline-primary" onclick="addProjectEntry()">
-                                    <i class="bi bi-plus"></i> Add Project
-                                </button>
-                                
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="saveProjects()">Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetProjects()">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Resume Upload Section -->
-                        <div class="section-content" id="resume">
-                            <h2 class="mb-3">Resume Upload</h2>
-                            <form id="resumeForm">
-                                <div class="mb-3">
-                                    <label for="resumeFile" class="form-label">Upload Resume</label>
-                                    <input type="file" class="form-control" id="resumeFile" accept=".pdf,.doc,.docx">
-                                    <div class="form-text">Accepted formats: PDF, DOC, DOCX</div>
-                                    <div id="resumePreview" class="resume-preview d-none">
-                                        <i class="bi bi-file-earmark-text"></i> <span id="resumeFileName"></span>
-                                    </div>
-                                </div>
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="uploadResume()">Upload Resume</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetResume()">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Skills Section -->
-                        <div class="section-content" id="skills">
-                            <h2 class="mb-3">Skills</h2>
-                            <form id="skillsForm">
-                                <div id="skillEntries">
-                                    <!-- Dynamic entries will be added here -->
-                                </div>
-                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addSkillEntry()">
-                                    <i class="bi bi-plus"></i> Add Skill
-                                </button>
-                                
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="saveSkills()">Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetSkills()">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Education Section -->
-                        <div class="section-content" id="education">
-                            <h2 class="mb-3">Education</h2>
-                            <form id="educationForm">
-                                <div id="educationEntries">
-                                    <!-- Dynamic entries will be added here -->
-                                </div>
-                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addEducationEntry()">
-                                    <i class="bi bi-plus"></i> Add Education
-                                </button>
-                                
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="saveEducation()">Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetEducation()">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Certifications Section -->
-                        <div class="section-content" id="certifications">
-                            <h2 class="mb-3">Certifications</h2>
-                            <form id="certificationsForm">
-                                <div id="certificationEntries">
-                                    <!-- Dynamic entries will be added here -->
-                                </div>
-                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addCertificationEntry()">
-                                    <i class="bi bi-plus"></i> Add Certification
-                                </button>
-                                
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="saveCertifications()">Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetCertifications()">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                        
-                        <!-- Languages Section -->
-                        <div class="section-content" id="languages">
-                            <h2 class="mb-3">Languages Known</h2>
-                            <form id="languagesForm">
-                                <div id="languageEntries">
-                                    <!-- Dynamic entries will be added here -->
-                                </div>
-                                <button type="button" class="btn btn-outline-primary mb-3" onclick="addLanguageEntry()">
-                                    <i class="bi bi-plus"></i> Add Language
-                                </button>
-                                
-                                <div class="mt-3">
-                                    <button type="button" class="btn btn-primary" onclick="saveLanguages()">Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="resetLanguages()">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                        <hr>
-                        <!-- change password -->
-                        <h3>Change Password</h3>
-                        <form id="changePasswordForm" onsubmit="event.preventDefault(); updatePassword();">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                            <label for="newPassword" class="form-label">New Password</label>
-                            <input type="password" id="newPassword" class="form-control" minlength="6" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                            <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" id="confirmPassword" class="form-control" minlength="6" required>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-warning">Update Password</button>
-                        </div>
-                        </form>
                     </div>
                 </div>
             </div>
@@ -365,60 +234,438 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Global variables
+        // Global state
         let profileData = {};
         let nextEntryId = 1;
 
-        // Initialize the page
+        // --- Initialization ---
         document.addEventListener('DOMContentLoaded', function() {
+            setupNavigation();
             loadProfileData();
             setupEventListeners();
-            setupNavigation();
         });
 
-        // Setup navigation
         function setupNavigation() {
-            const navLinks = document.querySelectorAll('#profileNav .nav-link');
-            navLinks.forEach(link => {
+            document.querySelectorAll('#profileNav .nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
-                    // Remove active class from all links
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
+                    document.querySelectorAll('#profileNav .nav-link').forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Hide all sections
-                    document.querySelectorAll('.section-content').forEach(section => {
-                        section.classList.remove('active');
-                    });
-                    
-                    // Show the selected section
+                    document.querySelectorAll('.section-content').forEach(section => section.classList.remove('active'));
                     const sectionId = this.getAttribute('data-section');
                     document.getElementById(sectionId).classList.add('active');
                 });
             });
         }
-
-        // Setup event listeners
+        
         function setupEventListeners() {
-            // Profile photo preview
-            document.getElementById('profilePhoto').addEventListener('change', function(e) {
+            document.getElementById('profilePhoto').addEventListener('change', e => {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
-                        const preview = document.getElementById('profilePhotoPreview');
-                        preview.src = e.target.result;
-                        preview.classList.remove('d-none');
-                    };
+                    reader.onload = e => { document.getElementById('profilePhotoPreview').src = e.target.result; };
                     reader.readAsDataURL(file);
                 }
             });
+        }
 
-            // Resume file preview
-            document.getElementById('resumeFile').addEventListener('change', function(e) {
+        // --- Data Loading & Population ---
+        async function loadProfileData() {
+            try {
+                const email = sessionStorage.getItem("email");
+                if (!email) {
+                    // Redirect to login if email is not in session storage.
+                    // window.location.href = "login.html"; 
+                    console.warn("No email found in session storage. Please log in.");
+                    showToast("Authentication error. Please log in again.", "danger");
+                    return;
+                }
+
+                const response = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
+                if (!response.ok) throw new Error("Failed to load profile data. Status: " + response.status);
+
+                profileData = await response.json();
+                populateAllSections();
+            } catch (error) {
+                console.error("Error loading profile data:", error);
+                showToast("Error loading your profile. Please try again.", "danger");
+            }
+        }
+
+        function populateAllSections() {
+            populatePersonalDetails();
+            renderDynamicSection('professionalDetails', 'Professional Details', profileData.professionalDetails, renderProfessionalView, 'addProfessionalEntry', 'saveProfessionalDetails');
+            renderDynamicSection('projects', 'Projects', profileData.projects, renderProjectView, 'addProjectEntry', 'saveProjects');
+            renderDynamicSection('skills', 'Skills', profileData.skills, renderSkillView, 'addSkillEntry', 'saveSkills');
+            renderDynamicSection('education', 'Education', profileData.education, renderEducationView, 'addEducationEntry', 'saveEducation');
+            renderDynamicSection('certifications', 'Certifications', profileData.certifications, renderCertificationView, 'addCertificationEntry', 'saveCertifications');
+            renderDynamicSection('languages', 'Languages', profileData.languages, renderLanguageView, 'addLanguageEntry', 'saveLanguages');
+            // Special handling for resume section
+            renderResumeSection();
+        }
+        
+        function populatePersonalDetails() {
+            if (!profileData.personalDetails) return;
+            const pd = profileData.personalDetails;
+            
+            // Populate View
+            const viewContainer = document.getElementById('personalDetailsView');
+            const na = '<span class="text-muted">N/A</span>';
+            viewContainer.innerHTML = `
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <img src="${pd.profilePhoto || 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo'}" class="profile-photo-preview" alt="Profile Photo">
+                    </div>
+                    <div class="col-md-9">
+                        <p><strong>Full Name:</strong> ${pd.fullName || na}</p>
+                        <p><strong>Email:</strong> ${pd.email || na}</p>
+                        <p><strong>Phone:</strong> ${pd.phone || na}</p>
+                        <p><strong>Gender:</strong> ${pd.gender ? pd.gender.charAt(0).toUpperCase() + pd.gender.slice(1) : na}</p>
+                        <p><strong>Experience:</strong> ${pd.experienceLevel ? pd.experienceLevel.charAt(0).toUpperCase() + pd.experienceLevel.slice(1) : na}</p>
+                        <p><strong>Expected CTC:</strong> ${pd.ctcExpected ? `${pd.ctcExpected} LPA` : na}</p>
+                    </div>
+                </div>`;
+            
+            // Populate Form
+            document.getElementById('fullName').value = pd.fullName || '';
+            document.getElementById('email').value = pd.email || '';
+            document.getElementById('phone').value = pd.phone || '';
+            document.getElementById('gender').value = pd.gender || '';
+            if (pd.experienceLevel) {
+                const el = document.querySelector(`input[name="experienceLevel"][value="${pd.experienceLevel}"]`);
+                if (el) el.checked = true;
+            } else {
+                 const el = document.querySelector(`input[name="experienceLevel"]:checked`);
+                 if(el) el.checked = false;
+            }
+            document.getElementById('ctcExpected').value = pd.ctcExpected || '';
+            document.getElementById('profilePhotoPreview').src = pd.profilePhoto || 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo';
+        }
+
+
+        // --- Generic Section Rendering ---
+        function renderDynamicSection(id, title, data, renderViewFn, addEntryFnName, saveFnName) {
+            const container = document.getElementById(id);
+            let itemsHTML = data && data.length > 0 ? data.map(renderViewFn).join('') : '<p class="text-muted">No information added yet.</p>';
+            
+            container.innerHTML = `
+                <div class="section-header">
+                    <h2 class="h5 mb-0">${title}</h2>
+                    <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('${id}', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
+                </div>
+                <div id="${id}View">
+                    ${itemsHTML}
+                </div>
+                <form id="${id}Form" class="d-none">
+                    <div id="${id}Entries"></div>
+                    <button type="button" class="btn btn-outline-primary mb-3" onclick="${addEntryFnName}()">
+                        <i class="bi bi-plus"></i> Add Entry
+                    </button>
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-primary" onclick="${saveFnName}()">Save</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('${id}', false)">Cancel</button>
+                    </div>
+                </form>
+            `;
+        }
+        
+        function renderResumeSection() {
+            const id = 'resume';
+            const title = 'Resume';
+            const container = document.getElementById(id);
+            const data = profileData.resume;
+
+            container.innerHTML = `
+                <div class="section-header">
+                    <h2 class="h5 mb-0">${title}</h2>
+                    <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('${id}', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
+                </div>
+                <div id="${id}View">
+                    ${data ? renderResumeView(data) : '<p class="text-muted">No resume uploaded yet.</p>'}
+                </div>
+                <form id="${id}Form" class="d-none">
+                    <div id="${id}Entries"></div>
+                    <div class="action-buttons">
+                        <button type="button" class="btn btn-primary" onclick="uploadResume()">Save</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('${id}', false)">Cancel</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // --- View Renderers ---
+        const renderProfessionalView = item => `<div class="view-section"><h5>${item.companyName || 'N/A'}</h5><p class="mb-1">${item.roles?.join(', ') || 'N/A'}</p><small class="text-muted">${item.fromDate || ''} - ${item.toDate || 'Present'}</small></div>`;
+        const renderProjectView = item => `<div class="view-section"><h5>${item.projectTitle || 'N/A'}</h5><p class="mb-1">${item.description || ''}</p><small class="text-muted">Role: ${item.role || 'N/A'}</small></div>`;
+        const renderSkillView = item => `<div class="view-section d-flex justify-content-between align-items-center"><span>${item.skillName || 'N/A'}</span><span class="badge bg-primary rounded-pill">Rating: ${item.rating || 'N/A'}</span></div>`;
+        const renderEducationView = item => `<div class="view-section"><h5>${item.degree || 'N/A'}</h5><p class="mb-1">${item.institution || 'N/A'}</p><small class="text-muted">${item.fromDate || ''} - ${item.toDate || ''}</small></div>`;
+        const renderCertificationView = item => `<div class="view-section"><h5>${item.certificationName || 'N/A'}</h5><p class="mb-1">Issued by: ${item.issuingOrganization || 'N/A'}</p></div>`;
+        const renderLanguageView = item => `<div class="view-section d-flex justify-content-between align-items-center"><span>${item.languageName || 'N/A'}</span><span class="text-capitalize text-muted">${item.proficiency || 'N/A'}</span></div>`;
+        const renderResumeView = item => `<div class="resume-preview"><i class="bi bi-file-earmark-text fs-4"></i> <span>${item.name || 'No resume uploaded'}</span> ${item.url ? `<a href="${item.url}" target="_blank" class="ms-auto btn btn-sm btn-outline-secondary">View</a>` : ''}</div>`;
+
+
+        // --- UI State Management ---
+        function toggleEdit(sectionId, isEditing) {
+            const view = document.getElementById(`${sectionId}View`);
+            const form = document.getElementById(`${sectionId}Form`);
+            const editBtn = document.querySelector(`#${sectionId} .edit-btn`);
+
+            if (!view || !form) return;
+
+            view.classList.toggle('d-none', isEditing);
+            form.classList.toggle('d-none', !isEditing);
+            if (editBtn) editBtn.classList.toggle('d-none', isEditing);
+
+            if (isEditing) {
+                const data = profileData[sectionId];
+                const entriesContainer = document.getElementById(`${sectionId}Entries`);
+                entriesContainer.innerHTML = ''; // Clear previous entries
+                
+                const addFnMap = {
+                    professionalDetails: window.addProfessionalEntry,
+                    projects: window.addProjectEntry,
+                    skills: window.addSkillEntry,
+                    education: window.addEducationEntry,
+                    certifications: window.addCertificationEntry,
+                    languages: window.addLanguageEntry,
+                    resume: window.addResumeEntry
+                };
+                
+                const addFn = addFnMap[sectionId];
+                if(typeof addFn !== 'function') return;
+
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(item => addFn(item));
+                } else if (sectionId === 'resume' && data) { // Resume is an object, not array
+                    addFn(data);
+                } else {
+                    addFn(); // Add one empty entry for user to fill
+                }
+            } else {
+                // On cancel, reload the last-loaded profile snapshot to revert any form changes
+                populateAllSections();
+            }
+        }
+
+        // --- Save & Update Functions ---
+        async function saveData(endpoint, payload) {
+            const email = sessionStorage.getItem("email");
+            if (!email) {
+                showToast("Authentication error. Please log in again.", "danger");
+                return null;
+            }
+
+            const body = payload instanceof FormData ? payload : { ...payload, email };
+            if (payload instanceof FormData) {
+                 body.append('email', email);
+            }
+
+            try {
+                const isFormData = body instanceof FormData;
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+                    body: isFormData ? body : JSON.stringify(body),
+                });
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({ error: 'Failed to save data. Please try again.' }));
+                    throw new Error(error.error);
+                }
+                await loadProfileData(); // Reload data to show saved state
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving data:', error);
+                showToast(error.message, 'danger');
+                return null;
+            }
+        }
+
+        async function savePersonalDetails() {
+            const formData = new FormData();
+            formData.append("fullName", document.getElementById("fullName").value);
+            formData.append("phone", document.getElementById("phone").value);
+            formData.append("gender", document.getElementById("gender").value);
+            const expLevel = document.querySelector('input[name="experienceLevel"]:checked');
+            formData.append("experienceLevel", expLevel ? expLevel.value : "");
+            formData.append("ctcExpected", document.getElementById("ctcExpected").value);
+            const photoFile = document.getElementById("profilePhoto").files[0];
+            if (photoFile) {
+                formData.append("profilePhoto", photoFile);
+            }
+
+            const result = await saveData('/api/profile/update', formData);
+            if(result) {
+                showToast("Personal details updated!", "success");
+                toggleEdit('personalDetails', false);
+            }
+        }
+        
+        async function saveGenericSection(sectionId, dataExtractor) {
+            const payload = { [sectionId]: dataExtractor() };
+            const result = await saveData('/api/profile/update', payload);
+            if (result) {
+                showToast(`${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)} updated!`, "success");
+                toggleEdit(sectionId, false);
+            }
+        }
+        
+        // --- Data Extractors from Forms ---
+        const extractProfessionalDetails = () => Array.from(document.querySelectorAll('#professionalDetailsEntries .dynamic-section')).map(el => ({ companyName: el.querySelector('[id^=companyName]').value, companyLink: el.querySelector('[id^=companyLink]').value, fromDate: el.querySelector('[id^=fromDate]').value, toDate: el.querySelector('[id^=toDate]').value, roles: Array.from(el.querySelectorAll('.tag')).map(t => t.innerText.trim())}));
+        const extractProjects = () => Array.from(document.querySelectorAll('#projectsEntries .dynamic-section')).map(el => ({ projectTitle: el.querySelector('[id^=projectTitle]').value, client: el.querySelector('[id^=client]').value, role: el.querySelector('[id^=projectRole]').value, teamSize: el.querySelector('[id^=teamSize]').value, description: el.querySelector('[id^=projectDescription]').value, skillsUsed: Array.from(el.querySelectorAll('.tag')).map(t => t.innerText.trim()), fromDate: el.querySelector('[id^=projectFromDate]').value, toDate: el.querySelector('[id^=projectToDate]').value }));
+        const extractSkills = () => Array.from(document.querySelectorAll('#skillsEntries .dynamic-section')).map(el => ({ skillName: el.querySelector('[id^=skillName]').value, rating: el.querySelector('[id^=skillRating]').value }));
+        const extractEducation = () => Array.from(document.querySelectorAll('#educationEntries .dynamic-section')).map(el => ({ degree: el.querySelector('[id^=degree]').value, institution: el.querySelector('[id^=institution]').value, fromDate: el.querySelector('[id^=educationFromDate]').value, toDate: el.querySelector('[id^=educationToDate]').value, description: el.querySelector('[id^=educationDescription]').value }));
+        const extractCertifications = () => Array.from(document.querySelectorAll('#certificationsEntries .dynamic-section')).map(el => ({ certificationName: el.querySelector('[id^=certificationName]').value, issuingOrganization: el.querySelector('[id^=issuingOrganization]').value, issueDate: el.querySelector('[id^=issueDate]').value, expiryDate: el.querySelector('[id^=expiryDate]').value, certificationLink: el.querySelector('[id^=certificationLink]').value }));
+        const extractLanguages = () => Array.from(document.querySelectorAll('#languagesEntries .dynamic-section')).map(el => ({ languageName: el.querySelector('[id^=languageName]').value, proficiency: el.querySelector('[id^=proficiency]').value }));
+
+        // FIX: Assign functions to window object to make them accessible from inline 'onclick'
+        window.saveProfessionalDetails = () => saveGenericSection('professionalDetails', extractProfessionalDetails);
+        window.saveProjects = () => saveGenericSection('projects', extractProjects);
+        window.saveSkills = () => saveGenericSection('skills', extractSkills);
+        window.saveEducation = () => saveGenericSection('education', extractEducation);
+        window.saveCertifications = () => saveGenericSection('certifications', extractCertifications);
+        window.saveLanguages = () => saveGenericSection('languages', extractLanguages);
+
+        window.uploadResume = async function() {
+            const resumeInput = document.getElementById('resumeFile');
+            if (!resumeInput) {
+                showToast('An error occurred. Please cancel and try again.', 'danger');
+                return;
+            }
+            const resumeFile = resumeInput.files[0];
+            if (!resumeFile) {
+                showToast('Please select a resume file.', 'warning');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('resume', resumeFile);
+            const result = await saveData('/api/profile/upload-resume', formData);
+             if (result) {
+                showToast('Resume uploaded successfully!', 'success');
+                toggleEdit('resume', false);
+            }
+        }
+        
+        // --- Dynamic Entry Add/Remove Functions (Attached to window) ---
+        window.addProfessionalEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Company</label><input type="text" class="form-control" id="companyName-${id}" value="${data.companyName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Company Link</label><input type="url" class="form-control" id="companyLink-${id}" value="${data.companyLink || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">From</label><input type="date" class="form-control" id="fromDate-${id}" value="${data.fromDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">To</label><input type="date" class="form-control" id="toDate-${id}" value="${data.toDate || ''}"></div>
+                    </div>
+                    <div><label class="form-label">Roles</label><div class="rolesContainer-${id}">${(data.roles || []).map(r => `<span class="tag">${r}<i class="bi bi-x" onclick="this.parentElement.remove()"></i></span>`).join('')}</div><div class="input-group"><input type="text" class="form-control" placeholder="Add role"><button class="btn btn-outline-secondary" type="button" onclick="addTag(this,'.rolesContainer-${id}')">Add</button></div></div>
+                </div>`;
+            document.getElementById('professionalDetailsEntries').insertAdjacentHTML('beforeend', html);
+        }
+        
+        window.addSkillEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3"><label class="form-label">Skill Name</label><input type="text" class="form-control" id="skillName-${id}" value="${data.skillName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Rating: <span id="ratingVal-${id}">${data.rating || 5}</span></label><input type="range" class="form-range" id="skillRating-${id}" min="1" max="10" value="${data.rating || 5}" oninput="document.getElementById('ratingVal-${id}').textContent = this.value"></div>
+                    </div>
+                </div>`;
+            document.getElementById('skillsEntries').insertAdjacentHTML('beforeend', html);
+        }
+
+        window.addProjectEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Project Title</label><input type="text" class="form-control" id="projectTitle-${id}" value="${data.projectTitle || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Client</label><input type="text" class="form-control" id="client-${id}" value="${data.client || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Role</label><input type="text" class="form-control" id="projectRole-${id}" value="${data.role || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Team Size</label><input type="number" class="form-control" id="teamSize-${id}" value="${data.teamSize || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">From</label><input type="date" class="form-control" id="projectFromDate-${id}" value="${data.fromDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">To</label><input type="date" class="form-control" id="projectToDate-${id}" value="${data.toDate || ''}"></div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" id="projectDescription-${id}" rows="3">${data.description || ''}</textarea></div>
+                    <div><label class="form-label">Skills Used</label>
+                        <div class="skillsContainer-${id}">${(data.skillsUsed || []).map(s => `<span class="tag">${s}<i class="bi bi-x" onclick="this.parentElement.remove()"></i></span>`).join('')}</div>
+                        <div class="input-group mt-2"><input type="text" class="form-control" placeholder="Add skill"><button class="btn btn-outline-secondary" type="button" onclick="addTag(this,'.skillsContainer-${id}')">Add</button></div>
+                    </div>
+                </div>`;
+            document.getElementById('projectsEntries').insertAdjacentHTML('beforeend', html);
+        }
+
+        window.addEducationEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Degree</label><input type="text" class="form-control" id="degree-${id}" value="${data.degree || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Institution</label><input type="text" class="form-control" id="institution-${id}" value="${data.institution || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">From</label><input type="date" class="form-control" id="educationFromDate-${id}" value="${data.fromDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">To</label><input type="date" class="form-control" id="educationToDate-${id}" value="${data.toDate || ''}"></div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" id="educationDescription-${id}" rows="2">${data.description || ''}</textarea></div>
+                </div>`;
+            document.getElementById('educationEntries').insertAdjacentHTML('beforeend', html);
+        }
+
+        window.addCertificationEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Certification Name</label><input type="text" class="form-control" id="certificationName-${id}" value="${data.certificationName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Issuing Organization</label><input type="text" class="form-control" id="issuingOrganization-${id}" value="${data.issuingOrganization || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Issue Date</label><input type="date" class="form-control" id="issueDate-${id}" value="${data.issueDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Expiry Date</label><input type="date" class="form-control" id="expiryDate-${id}" value="${data.expiryDate || ''}"></div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Certification Link</label><input type="url" class="form-control" id="certificationLink-${id}" value="${data.certificationLink || ''}"></div>
+                </div>`;
+            document.getElementById('certificationsEntries').insertAdjacentHTML('beforeend', html);
+        }
+
+        window.addLanguageEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Language</label><input type="text" class="form-control" id="languageName-${id}" value="${data.languageName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Proficiency</label>
+                            <select class="form-select" id="proficiency-${id}">
+                                <option value="">Select</option>
+                                <option value="basic" ${data.proficiency === 'basic' ? 'selected' : ''}>Basic</option>
+                                <option value="conversational" ${data.proficiency === 'conversational' ? 'selected' : ''}>Conversational</option>
+                                <option value="fluent" ${data.proficiency === 'fluent' ? 'selected' : ''}>Fluent</option>
+                                <option value="native" ${data.proficiency === 'native' ? 'selected' : ''}>Native</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById('languagesEntries').insertAdjacentHTML('beforeend', html);
+        }
+
+        // FIX: Create function to add resume input field dynamically
+        window.addResumeEntry = function(data = {}) {
+            const html = `
+                <div class="mb-3">
+                    <label for="resumeFile" class="form-label">Upload New Resume (PDF, DOC, DOCX)</label>
+                    <input type="file" class="form-control" id="resumeFile" accept=".pdf,.doc,.docx">
+                    <div id="resumePreview" class="resume-preview mt-2 d-none">
+                        <i class="bi bi-file-earmark-text fs-4"></i>
+                        <span id="resumeFileName"></span>
+                    </div>
+                </div>`;
+            const container = document.getElementById('resumeEntries');
+            container.innerHTML = html; // Replace content
+            
+            // Add event listener now that the element exists
+            document.getElementById('resumeFile').addEventListener('change', e => {
                 const file = e.target.files[0];
                 if (file) {
                     document.getElementById('resumeFileName').textContent = file.name;
@@ -427,921 +674,48 @@
             });
         }
 
-        // Load profile data from API
-        async function loadProfileData() {
-            try {
-                const email = sessionStorage.getItem("email");
-                if (!email) {
-                    // no email → redirect back to login
-                    window.location.href = "login.html";
-                    return;
-                }
-
-                const response = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
-                if (!response.ok) throw new Error("Failed to load profile data");
-
-                profileData = await response.json();
-                populateForms();
-            } catch (error) {
-                console.error("Error loading profile data:", error);
-                showToast("Error loading profile data", "danger");
+        function addTag(btn, containerSelector) {
+            const input = btn.previousElementSibling;
+            const text = input.value.trim();
+            if (text) {
+                const container = btn.closest('.dynamic-section').querySelector(containerSelector);
+                container.insertAdjacentHTML('beforeend', `<span class="tag">${text}<i class="bi bi-x" onclick="this.parentElement.remove()"></i></span>`);
+                input.value = '';
             }
         }
-
-        // Populate forms with data
-        function populateForms() {
-            // Personal Details
-            if (profileData.personalDetails) {
-                const pd = profileData.personalDetails;
-                document.getElementById('fullName').value = pd.fullName || '';
-                document.getElementById('email').value = pd.email || '';
-                document.getElementById('phone').value = pd.phone || '';
-                document.getElementById('gender').value = pd.gender || '';
-                
-                if (pd.experienceLevel) {
-                    document.querySelector(`input[name="experienceLevel"][value="${pd.experienceLevel}"]`).checked = true;
-                }
-                
-                document.getElementById('ctcExpected').value = pd.ctcExpected || '';
-                
-                if (pd.profilePhoto) {
-                    document.getElementById('profilePhotoPreview').src = pd.profilePhoto;
-                    document.getElementById('profilePhotoPreview').classList.remove('d-none');
-                }
-            }
-
-            // Professional Details
-            if (profileData.professionalDetails) {
-                const profEntries = document.getElementById('professionalEntries');
-                profEntries.innerHTML = '';
-                
-                profileData.professionalDetails.forEach(detail => {
-                    addProfessionalEntry(detail);
-                });
-                
-                document.getElementById('noticePeriod').value = profileData.noticePeriod || '';
-            }
-
-            // Projects
-            if (profileData.projects) {
-                const projectEntries = document.getElementById('projectEntries');
-                projectEntries.innerHTML = '';
-                
-                profileData.projects.forEach(project => {
-                    addProjectEntry(project);
-                });
-            }
-
-            // Skills
-            if (profileData.skills) {
-                const skillEntries = document.getElementById('skillEntries');
-                skillEntries.innerHTML = '';
-                
-                profileData.skills.forEach(skill => {
-                    addSkillEntry(skill);
-                });
-            }
-
-            // Education
-            if (profileData.education) {
-                const educationEntries = document.getElementById('educationEntries');
-                educationEntries.innerHTML = '';
-                
-                profileData.education.forEach(edu => {
-                    addEducationEntry(edu);
-                });
-            }
-
-            // Certifications
-            if (profileData.certifications) {
-                const certificationEntries = document.getElementById('certificationEntries');
-                certificationEntries.innerHTML = '';
-                
-                profileData.certifications.forEach(cert => {
-                    addCertificationEntry(cert);
-                });
-            }
-
-            // Languages
-            if (profileData.languages) {
-                const languageEntries = document.getElementById('languageEntries');
-                languageEntries.innerHTML = '';
-                
-                profileData.languages.forEach(lang => {
-                    addLanguageEntry(lang);
-                });
-            }
-
-            // Resume
-            if (profileData.resume) {
-                document.getElementById('resumeFileName').textContent = profileData.resume.name || 'Resume';
-                document.getElementById('resumePreview').classList.remove('d-none');
-            }
-        }
-
-        // Save Personal Details
-        async function savePersonalDetails() {
-            try {
-                const email = sessionStorage.getItem("email");
-                if (!email) {
-                    showToast("No email found, please login again", "danger");
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append("email", email); // <-- include email
-                formData.append("fullName", document.getElementById("fullName").value);
-                formData.append("phone", document.getElementById("phone").value);
-                formData.append("gender", document.getElementById("gender").value);
-
-                const experienceLevel = document.querySelector('input[name="experienceLevel"]:checked');
-                formData.append("experienceLevel", experienceLevel ? experienceLevel.value : "");
-                formData.append("ctcExpected", document.getElementById("ctcExpected").value);
-
-                const photoFile = document.getElementById("profilePhoto").files[0];
-                if (photoFile) {
-                    formData.append("profilePhoto", photoFile);
-                }
-
-                const response = await fetch("/api/profile/update", {
-                    method: "POST",
-                    body: formData,
-                });
-
-                if (!response.ok) throw new Error("Failed to save personal details");
-
-                showToast("Personal details saved successfully", "success");
-            } catch (error) {
-                console.error("Error saving personal details:", error);
-                showToast("Error saving personal details", "danger");
-            }
-        }
-
         
-        // Reset Personal Details
-        function resetPersonalDetails() {
-            document.getElementById('personalDetailsForm').reset();
-            document.getElementById('profilePhotoPreview').classList.add('d-none');
-            
-            if (profileData.personalDetails) {
-                const pd = profileData.personalDetails;
-                document.getElementById('fullName').value = pd.fullName || '';
-                document.getElementById('email').value = pd.email || '';
-                document.getElementById('phone').value = pd.phone || '';
-                document.getElementById('gender').value = pd.gender || '';
-                
-                if (pd.experienceLevel) {
-                    document.querySelector(`input[name="experienceLevel"][value="${pd.experienceLevel}"]`).checked = true;
-                }
-                
-                document.getElementById('ctcExpected').value = pd.ctcExpected || '';
-                
-                if (pd.profilePhoto) {
-                    document.getElementById('profilePhotoPreview').src = pd.profilePhoto;
-                    document.getElementById('profilePhotoPreview').classList.remove('d-none');
-                }
+        // --- Password Update ---
+        async function updatePassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (newPassword.length < 6) {
+                showToast("Password must be at least 6 characters.", "warning");
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast("Passwords do not match.", "warning");
+                return;
+            }
+            // FIX: Correct API path for updating password
+            const result = await saveData('/api/user/update-password', { newPassword });
+            if(result) {
+                showToast("Password updated successfully!", "success");
+                document.getElementById('changePasswordForm').reset();
             }
         }
 
-        // Add Professional Entry
-        function addProfessionalEntry(data = {}) {
-            const entryId = nextEntryId++;
-            const entryHTML = `
-                <div class="dynamic-section" id="professionalEntry-${entryId}">
-                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeProfessionalEntry(${entryId})">
-                        <i class="bi bi-x"></i>
-                    </button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="companyName-${entryId}" class="form-label">Company Name</label>
-                            <input type="text" class="form-control" id="companyName-${entryId}" value="${data.companyName || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="companyLink-${entryId}" class="form-label">Company Link</label>
-                            <input type="url" class="form-control" id="companyLink-${entryId}" value="${data.companyLink || ''}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="fromDate-${entryId}" class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="fromDate-${entryId}" value="${data.fromDate || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="toDate-${entryId}" class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="toDate-${entryId}" value="${data.toDate || ''}">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Roles</label>
-                        <div id="rolesContainer-${entryId}">
-                            ${data.roles ? data.roles.map(role => `
-                                <span class="tag">
-                                    ${role}
-                                    <i class="bi bi-x" onclick="removeRole(${entryId}, '${role}')"></i>
-                                </span>
-                            `).join('') : ''}
-                        </div>
-                        <div class="input-group mt-2">
-                            <input type="text" class="form-control" id="newRole-${entryId}" placeholder="Add a role">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addRole(${entryId})">Add</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('professionalEntries').insertAdjacentHTML('beforeend', entryHTML);
-        }
-
-        // Remove Professional Entry
-        function removeProfessionalEntry(entryId) {
-            document.getElementById(`professionalEntry-${entryId}`).remove();
-        }
-
-        // Add Role to Professional Entry
-        function addRole(entryId) {
-            const roleInput = document.getElementById(`newRole-${entryId}`);
-            const role = roleInput.value.trim();
-            if (role) {
-                const rolesContainer = document.getElementById(`rolesContainer-${entryId}`);
-                const roleHTML = `
-                    <span class="tag">
-                        ${role}
-                        <i class="bi bi-x" onclick="this.parentElement.remove()"></i>
-                    </span>
-                `;
-                rolesContainer.insertAdjacentHTML('beforeend', roleHTML);
-                roleInput.value = '';
-            }
-        }
-
-        // Remove Role from Professional Entry
-        function removeRole(entryId, role) {
-            // This function would need to be implemented based on how roles are stored
-            console.log(`Remove role ${role} from entry ${entryId}`);
-        }
-
-        // Save Professional Details
-        async function saveProfessionalDetails() {
-            try {
-                const professionalDetails = [];
-                const entries = document.querySelectorAll('[id^="professionalEntry-"]');
-                
-                entries.forEach(entry => {
-                    const entryId = entry.id.split('-')[1];
-                    const companyName = document.getElementById(`companyName-${entryId}`).value;
-                    const companyLink = document.getElementById(`companyLink-${entryId}`).value;
-                    const fromDate = document.getElementById(`fromDate-${entryId}`).value;
-                    const toDate = document.getElementById(`toDate-${entryId}`).value;
-                    
-                    const roles = [];
-                    const roleTags = entry.querySelectorAll('.tag');
-                    roleTags.forEach(tag => {
-                        roles.push(tag.textContent.trim());
-                    });
-                    
-                    professionalDetails.push({
-                        companyName,
-                        companyLink,
-                        fromDate,
-                        toDate,
-                        roles
-                    });
-                });
-                
-                const noticePeriod = document.getElementById('noticePeriod').value;
-                
-                const response = await fetch('/api/profile/update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        professionalDetails,
-                        noticePeriod
-                    })
-                });
-
-                if (!response.ok) throw new Error('Failed to save professional details');
-                
-                showToast('Professional details saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving professional details:', error);
-                showToast('Error saving professional details', 'danger');
-            }
-        }
-
-        // Reset Professional Details
-        function resetProfessionalDetails() {
-            document.getElementById('professionalDetailsForm').reset();
-            document.getElementById('professionalEntries').innerHTML = '';
-            
-            if (profileData.professionalDetails) {
-                profileData.professionalDetails.forEach(detail => {
-                    addProfessionalEntry(detail);
-                });
-            }
-            
-            document.getElementById('noticePeriod').value = profileData.noticePeriod || '';
-        }
-
-        // Add Project Entry
-        function addProjectEntry(data = {}) {
-            const entryId = nextEntryId++;
-            const entryHTML = `
-                <div class="dynamic-section" id="projectEntry-${entryId}">
-                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeProjectEntry(${entryId})">
-                        <i class="bi bi-x"></i>
-                    </button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="projectTitle-${entryId}" class="form-label">Project Title</label>
-                            <input type="text" class="form-control" id="projectTitle-${entryId}" value="${data.projectTitle || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="client-${entryId}" class="form-label">Client</label>
-                            <input type="text" class="form-control" id="client-${entryId}" value="${data.client || ''}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="projectRole-${entryId}" class="form-label">Role</label>
-                            <input type="text" class="form-control" id="projectRole-${entryId}" value="${data.role || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="teamSize-${entryId}" class="form-label">Team Size</label>
-                            <input type="number" class="form-control" id="teamSize-${entryId}" min="1" value="${data.teamSize || ''}">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="projectDescription-${entryId}" class="form-label">Description</label>
-                        <textarea class="form-control" id="projectDescription-${entryId}" rows="3">${data.description || ''}</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Skills Used</label>
-                        <div id="skillsUsedContainer-${entryId}">
-                            ${data.skillsUsed ? data.skillsUsed.map(skill => `
-                                <span class="tag">
-                                    ${skill}
-                                    <i class="bi bi-x" onclick="this.parentElement.remove()"></i>
-                                </span>
-                            `).join('') : ''}
-                        </div>
-                        <div class="input-group mt-2">
-                            <input type="text" class="form-control" id="newSkillUsed-${entryId}" placeholder="Add a skill">
-                            <button class="btn btn-outline-secondary" type="button" onclick="addSkillUsed(${entryId})">Add</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="projectFromDate-${entryId}" class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="projectFromDate-${entryId}" value="${data.projectFromDate || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="projectToDate-${entryId}" class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="projectToDate-${entryId}" value="${data.projectToDate || ''}">
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('projectEntries').insertAdjacentHTML('beforeend', entryHTML);
-        }
-
-        // Remove Project Entry
-        function removeProjectEntry(entryId) {
-            document.getElementById(`projectEntry-${entryId}`).remove();
-        }
-
-        // Add Skill Used to Project
-        function addSkillUsed(entryId) {
-            const skillInput = document.getElementById(`newSkillUsed-${entryId}`);
-            const skill = skillInput.value.trim();
-            if (skill) {
-                const skillsContainer = document.getElementById(`skillsUsedContainer-${entryId}`);
-                const skillHTML = `
-                    <span class="tag">
-                        ${skill}
-                        <i class="bi bi-x" onclick="this.parentElement.remove()"></i>
-                    </span>
-                `;
-                skillsContainer.insertAdjacentHTML('beforeend', skillHTML);
-                skillInput.value = '';
-            }
-        }
-
-        // Save Projects
-        async function saveProjects() {
-            try {
-                const projects = [];
-                const entries = document.querySelectorAll('[id^="projectEntry-"]');
-                
-                entries.forEach(entry => {
-                    const entryId = entry.id.split('-')[1];
-                    const projectTitle = document.getElementById(`projectTitle-${entryId}`).value;
-                    const client = document.getElementById(`client-${entryId}`).value;
-                    const role = document.getElementById(`projectRole-${entryId}`).value;
-                    const teamSize = document.getElementById(`teamSize-${entryId}`).value;
-                    const description = document.getElementById(`projectDescription-${entryId}`).value;
-                    
-                    const skillsUsed = [];
-                    const skillTags = entry.querySelectorAll('.tag');
-                    skillTags.forEach(tag => {
-                        skillsUsed.push(tag.textContent.trim());
-                    });
-                    
-                    const fromDate = document.getElementById(`projectFromDate-${entryId}`).value;
-                    const toDate = document.getElementById(`projectToDate-${entryId}`).value;
-                    
-                    projects.push({
-                        projectTitle,
-                        client,
-                        role,
-                        teamSize,
-                        description,
-                        skillsUsed,
-                        fromDate,
-                        toDate
-                    });
-                });
-                
-                const response = await fetch('/api/profile/update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ projects })
-                });
-
-                if (!response.ok) throw new Error('Failed to save projects');
-                
-                showToast('Projects saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving projects:', error);
-                showToast('Error saving projects', 'danger');
-            }
-        }
-
-        // Reset Projects
-        function resetProjects() {
-            document.getElementById('projectsForm').reset();
-            document.getElementById('projectEntries').innerHTML = '';
-            
-            if (profileData.projects) {
-                profileData.projects.forEach(project => {
-                    addProjectEntry(project);
-                });
-            }
-        }
-
-        // Upload Resume
-        async function uploadResume() {
-            try {
-                const resumeFile = document.getElementById('resumeFile').files[0];
-                if (!resumeFile) {
-                    showToast('Please select a resume file', 'warning');
-                    return;
-                }
-
-                const formData = new FormData();
-                formData.append('resume', resumeFile);
-
-                const response = await fetch('/api/profile/upload-resume', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) throw new Error('Failed to upload resume');
-                
-                showToast('Resume uploaded successfully', 'success');
-            } catch (error) {
-                console.error('Error uploading resume:', error);
-                showToast('Error uploading resume', 'danger');
-            }
-        }
-
-        // Reset Resume
-        function resetResume() {
-            document.getElementById('resumeForm').reset();
-            document.getElementById('resumePreview').classList.add('d-none');
-            
-            if (profileData.resume) {
-                document.getElementById('resumeFileName').textContent = profileData.resume.name || 'Resume';
-                document.getElementById('resumePreview').classList.remove('d-none');
-            }
-        }
-
-        // Add Skill Entry
-        function addSkillEntry(data = {}) {
-            const entryId = nextEntryId++;
-            const entryHTML = `
-                <div class="dynamic-section" id="skillEntry-${entryId}">
-                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeSkillEntry(${entryId})">
-                        <i class="bi bi-x"></i>
-                    </button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="skillName-${entryId}" class="form-label">Skill Name</label>
-                            <input type="text" class="form-control" id="skillName-${entryId}" value="${data.skillName || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="skillRating-${entryId}" class="form-label">Rating (1-10)</label>
-                            <div class="skill-rating">
-                                <input type="range" class="form-range" id="skillRating-${entryId}" min="1" max="10" value="${data.rating || 5}">
-                                <span id="skillRatingValue-${entryId}">${data.rating || 5}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('skillEntries').insertAdjacentHTML('beforeend', entryHTML);
-            
-            // Add event listener for rating change
-            document.getElementById(`skillRating-${entryId}`).addEventListener('input', function() {
-                document.getElementById(`skillRatingValue-${entryId}`).textContent = this.value;
-            });
-        }
-
-        // Remove Skill Entry
-        function removeSkillEntry(entryId) {
-            document.getElementById(`skillEntry-${entryId}`).remove();
-        }
-
-        // Save Skills
-        async function saveSkills() {
-            try {
-                const skills = [];
-                const entries = document.querySelectorAll('[id^="skillEntry-"]');
-                
-                entries.forEach(entry => {
-                    const entryId = entry.id.split('-')[1];
-                    const skillName = document.getElementById(`skillName-${entryId}`).value;
-                    const rating = document.getElementById(`skillRating-${entryId}`).value;
-                    
-                    skills.push({
-                        skillName,
-                        rating: parseInt(rating)
-                    });
-                });
-                
-                const response = await fetch('/api/profile/update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ skills })
-                });
-
-                if (!response.ok) throw new Error('Failed to save skills');
-                
-                showToast('Skills saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving skills:', error);
-                showToast('Error saving skills', 'danger');
-            }
-        }
-
-        // Reset Skills
-        function resetSkills() {
-            document.getElementById('skillsForm').reset();
-            document.getElementById('skillEntries').innerHTML = '';
-            
-            if (profileData.skills) {
-                profileData.skills.forEach(skill => {
-                    addSkillEntry(skill);
-                });
-            }
-        }
-
-        // Add Education Entry
-        function addEducationEntry(data = {}) {
-            const entryId = nextEntryId++;
-            const entryHTML = `
-                <div class="dynamic-section" id="educationEntry-${entryId}">
-                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeEducationEntry(${entryId})">
-                        <i class="bi bi-x"></i>
-                    </button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="degree-${entryId}" class="form-label">Degree</label>
-                            <input type="text" class="form-control" id="degree-${entryId}" value="${data.degree || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="institution-${entryId}" class="form-label">Institution</label>
-                            <input type="text" class="form-control" id="institution-${entryId}" value="${data.institution || ''}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="educationFromDate-${entryId}" class="form-label">From Date</label>
-                            <input type="date" class="form-control" id="educationFromDate-${entryId}" value="${data.fromDate || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="educationToDate-${entryId}" class="form-label">To Date</label>
-                            <input type="date" class="form-control" id="educationToDate-${entryId}" value="${data.toDate || ''}">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="educationDescription-${entryId}" class="form-label">Description</label>
-                        <textarea class="form-control" id="educationDescription-${entryId}" rows="3">${data.description || ''}</textarea>
-                    </div>
-                </div>
-            `;
-            document.getElementById('educationEntries').insertAdjacentHTML('beforeend', entryHTML);
-        }
-
-        // Remove Education Entry
-        function removeEducationEntry(entryId) {
-            document.getElementById(`educationEntry-${entryId}`).remove();
-        }
-
-        // Save Education
-        async function saveEducation() {
-            try {
-                const education = [];
-                const entries = document.querySelectorAll('[id^="educationEntry-"]');
-                
-                entries.forEach(entry => {
-                    const entryId = entry.id.split('-')[1];
-                    const degree = document.getElementById(`degree-${entryId}`).value;
-                    const institution = document.getElementById(`institution-${entryId}`).value;
-                    const fromDate = document.getElementById(`educationFromDate-${entryId}`).value;
-                    const toDate = document.getElementById(`educationToDate-${entryId}`).value;
-                    const description = document.getElementById(`educationDescription-${entryId}`).value;
-                    
-                    education.push({
-                        degree,
-                        institution,
-                        fromDate,
-                        toDate,
-                        description
-                    });
-                });
-                
-                const response = await fetch('/api/profile/update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ education })
-                });
-
-                if (!response.ok) throw new Error('Failed to save education');
-                
-                showToast('Education saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving education:', error);
-                showToast('Error saving education', 'danger');
-            }
-        }
-
-        // Reset Education
-        function resetEducation() {
-            document.getElementById('educationForm').reset();
-            document.getElementById('educationEntries').innerHTML = '';
-            
-            if (profileData.education) {
-                profileData.education.forEach(edu => {
-                    addEducationEntry(edu);
-                });
-            }
-        }
-
-        // Add Certification Entry
-        function addCertificationEntry(data = {}) {
-            const entryId = nextEntryId++;
-            const entryHTML = `
-                <div class="dynamic-section" id="certificationEntry-${entryId}">
-                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeCertificationEntry(${entryId})">
-                        <i class="bi bi-x"></i>
-                    </button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="certificationName-${entryId}" class="form-label">Certification Name</label>
-                            <input type="text" class="form-control" id="certificationName-${entryId}" value="${data.certificationName || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="issuingOrganization-${entryId}" class="form-label">Issuing Organization</label>
-                            <input type="text" class="form-control" id="issuingOrganization-${entryId}" value="${data.issuingOrganization || ''}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="issueDate-${entryId}" class="form-label">Issue Date</label>
-                            <input type="date" class="form-control" id="issueDate-${entryId}" value="${data.issueDate || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="expiryDate-${entryId}" class="form-label">Expiry Date</label>
-                            <input type="date" class="form-control" id="expiryDate-${entryId}" value="${data.expiryDate || ''}">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="certificationLink-${entryId}" class="form-label">Certification Link</label>
-                        <input type="url" class="form-control" id="certificationLink-${entryId}" value="${data.certificationLink || ''}">
-                    </div>
-                </div>
-            `;
-            document.getElementById('certificationEntries').insertAdjacentHTML('beforeend', entryHTML);
-        }
-
-        // Remove Certification Entry
-        function removeCertificationEntry(entryId) {
-            document.getElementById(`certificationEntry-${entryId}`).remove();
-        }
-
-        // Save Certifications
-        async function saveCertifications() {
-            try {
-                const certifications = [];
-                const entries = document.querySelectorAll('[id^="certificationEntry-"]');
-                
-                entries.forEach(entry => {
-                    const entryId = entry.id.split('-')[1];
-                    const certificationName = document.getElementById(`certificationName-${entryId}`).value;
-                    const issuingOrganization = document.getElementById(`issuingOrganization-${entryId}`).value;
-                    const issueDate = document.getElementById(`issueDate-${entryId}`).value;
-                    const expiryDate = document.getElementById(`expiryDate-${entryId}`).value;
-                    const certificationLink = document.getElementById(`certificationLink-${entryId}`).value;
-                    
-                    certifications.push({
-                        certificationName,
-                        issuingOrganization,
-                        issueDate,
-                        expiryDate,
-                        certificationLink
-                    });
-                });
-                
-                const response = await fetch('/api/profile/update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ certifications })
-                });
-
-                if (!response.ok) throw new Error('Failed to save certifications');
-                
-                showToast('Certifications saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving certifications:', error);
-                showToast('Error saving certifications', 'danger');
-            }
-        }
-
-        // Reset Certifications
-        function resetCertifications() {
-            document.getElementById('certificationsForm').reset();
-            document.getElementById('certificationEntries').innerHTML = '';
-            
-            if (profileData.certifications) {
-                profileData.certifications.forEach(cert => {
-                    addCertificationEntry(cert);
-                });
-            }
-        }
-
-        // Add Language Entry
-        function addLanguageEntry(data = {}) {
-            const entryId = nextEntryId++;
-            const entryHTML = `
-                <div class="dynamic-section" id="languageEntry-${entryId}">
-                    <button type="button" class="btn btn-sm btn-danger remove-btn" onclick="removeLanguageEntry(${entryId})">
-                        <i class="bi bi-x"></i>
-                    </button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="languageName-${entryId}" class="form-label">Language</label>
-                            <input type="text" class="form-control" id="languageName-${entryId}" value="${data.languageName || ''}">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="proficiency-${entryId}" class="form-label">Proficiency</label>
-                            <select class="form-select" id="proficiency-${entryId}">
-                                <option value="">Select Proficiency</option>
-                                <option value="beginner" ${data.proficiency === 'beginner' ? 'selected' : ''}>Beginner</option>
-                                <option value="intermediate" ${data.proficiency === 'intermediate' ? 'selected' : ''}>Intermediate</option>
-                                <option value="advanced" ${data.proficiency === 'advanced' ? 'selected' : ''}>Advanced</option>
-                                <option value="native" ${data.proficiency === 'native' ? 'selected' : ''}>Native</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            `;
-            document.getElementById('languageEntries').insertAdjacentHTML('beforeend', entryHTML);
-        }
-
-        // Remove Language Entry
-        function removeLanguageEntry(entryId) {
-            document.getElementById(`languageEntry-${entryId}`).remove();
-        }
-
-        // Save Languages
-        async function saveLanguages() {
-            try {
-                const languages = [];
-                const entries = document.querySelectorAll('[id^="languageEntry-"]');
-                
-                entries.forEach(entry => {
-                    const entryId = entry.id.split('-')[1];
-                    const languageName = document.getElementById(`languageName-${entryId}`).value;
-                    const proficiency = document.getElementById(`proficiency-${entryId}`).value;
-                    
-                    languages.push({
-                        languageName,
-                        proficiency
-                    });
-                });
-                
-                const response = await fetch('/api/profile/update', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ languages })
-                });
-
-                if (!response.ok) throw new Error('Failed to save languages');
-                
-                showToast('Languages saved successfully', 'success');
-            } catch (error) {
-                console.error('Error saving languages:', error);
-                showToast('Error saving languages', 'danger');
-            }
-        }
-
-        // Reset Languages
-        function resetLanguages() {
-            document.getElementById('languagesForm').reset();
-            document.getElementById('languageEntries').innerHTML = '';
-            
-            if (profileData.languages) {
-                profileData.languages.forEach(lang => {
-                    addLanguageEntry(lang);
-                });
-            }
-        }
-
-        // Show Toast Notification
+        // --- Utilities ---
         function showToast(message, type = 'info') {
             const toastContainer = document.querySelector('.toast-container');
             const toastId = 'toast-' + Date.now();
-            
-            const toastHTML = `
+            toastContainer.insertAdjacentHTML('beforeend', `
                 <div id="${toastId}" class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body">
-                            ${message}
-                        </div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                </div>
-            `;
-            
-            toastContainer.insertAdjacentHTML('beforeend', toastHTML);
-            
-            const toastElement = document.getElementById(toastId);
-            const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+                    <div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>
+                </div>`);
+            const toast = new bootstrap.Toast(document.getElementById(toastId), { delay: 4000 });
             toast.show();
-            
-            // Remove the toast from DOM after it's hidden
-            toastElement.addEventListener('hidden.bs.toast', function() {
-                toastElement.remove();
-            });
+            document.getElementById(toastId).addEventListener('hidden.bs.toast', e => e.target.remove());
         }
-    
-        async function updatePassword() {
-        try {
-            const email = sessionStorage.getItem('email'); // fallback; backend will also accept session
-            const newPassword = document.getElementById('newPassword').value.trim();
-            const confirmPassword = document.getElementById('confirmPassword').value.trim();
-
-            if (!newPassword || newPassword.length < 6) {
-            showToast('Password must be at least 6 characters', 'warning');
-            return;
-            }
-            if (newPassword !== confirmPassword) {
-            showToast('Passwords do not match', 'warning');
-            return;
-            }
-
-            const body = { newPassword };
-            if (email) body.email = email; // if your backend uses session this is optional
-
-            const resp = await fetch('/user/update-password', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-            });
-
-            const data = await resp.json();
-            if (!resp.ok) throw new Error(data.error || 'Failed to update password');
-
-            showToast('Password updated successfully', 'success');
-            // clear form
-            document.getElementById('changePasswordForm').reset();
-        } catch (err) {
-            console.error('Password update error:', err);
-            showToast(err.message || 'Could not update password', 'danger');
-        }
-        }
-
     </script>
 </body>
 </html>

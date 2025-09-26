@@ -108,7 +108,7 @@ router.get('/profile/full', async (req, res) => {
 });
 
 // Unified update route: handles JSON body & multipart/form-data with profilePhoto
-router.post('/api/profile/update', upload.single('profilePhoto'), async (req, res) => {
+router.post('/profile/update', upload.single('profilePhoto'), async (req, res) => {
   try {
     let email = req.session?.user?.email || req.body?.email || req.query?.email;
     if (!email) return res.status(401).json({ error: 'Not logged in' });
