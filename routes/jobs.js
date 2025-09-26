@@ -1,12 +1,12 @@
 // routes/jobs.js
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
-const { query } = require("../db");   // <-- use the query helper from db.js
+const { query } = require("../db");   // use the query helper from db.js
 
 const router = express.Router();
 
 /**
- * Ensure the jobs table exists.
+ * Ensure the jobs table exists with all requested fields.
  * Uses query() so we don't manually handle connections.
  */
 (async function initJobsTable() {
@@ -15,8 +15,18 @@ const router = express.Router();
       CREATE TABLE IF NOT EXISTS jobs (
         id CHAR(36) PRIMARY KEY,
         company_id CHAR(36) NOT NULL,
-        posted_by_email VARCHAR(255) NOT NULL,
-        job_data JSON NOT NULL,
+        posted_by_name VARCHAR(255) NOT NULL,       -- person who posted the job
+        posted_by_email VARCHAR(255) NOT NULL,      -- email of person who posted
+        job_title VARCHAR(255) NOT NULL,            -- job title
+        required_experience VARCHAR(255),           -- required experience (e.g. "3+ years")
+        job_description TEXT NOT NULL,              -- job description
+        required_skills TEXT NOT NULL,              -- must-have skills (comma separated or JSON)
+        additional_skills TEXT,                     -- preferred/optional skills
+        country VARCHAR(100),
+        state VARCHAR(100),
+        city VARCHAR(100),
+        zip_code VARCHAR(20),
+        job_data JSON,                              -- optional: store original JSON from frontend if needed
         status ENUM('active','inactive') DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -25,7 +35,7 @@ const router = express.Router();
         FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
       )
     `);
-    console.log("✅ jobs table ready");
+    console.log("✅ jobs table ready with extended fields");
   } catch (err) {
     console.error("❌ Error creating jobs table:", err.message);
   }
@@ -37,14 +47,47 @@ const router = express.Router();
  */
 router.post("/post", async (req, res) => {
   try {
-    const { company_id, posted_by_email, job_data } = req.body;
+    const {
+      company_id,
+      posted_by_name,
+      posted_by_email,
+      job_title,
+      required_experience,
+      job_description,
+      required_skills,
+      additional_skills,
+      country,
+      state,
+      city,
+      zip_code,
+      job_data        // optional: raw JSON from frontend if you want to store it
+    } = req.body;
+
     const id = uuidv4();
 
     await query(
       `INSERT INTO jobs
-       (id, company_id, posted_by_email, job_data, status, activated_at)
-       VALUES (?, ?, ?, ?, 'active', NOW())`,
-      [id, company_id, posted_by_email, JSON.stringify(job_data)]
+       (id, company_id, posted_by_name, posted_by_email, job_title,
+        required_experience, job_description, required_skills, additional_skills,
+        country, state, city, zip_code, job_data,
+        status, activated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', NOW())`,
+      [
+        id,
+        company_id,
+        posted_by_name,
+        posted_by_email,
+        job_title,
+        required_experience,
+        job_description,
+        required_skills,
+        additional_skills,
+        country,
+        state,
+        city,
+        zip_code,
+        job_data ? JSON.stringify(job_data) : null
+      ]
     );
 
     res.json({ success: true, job_id: id });
@@ -56,12 +99,15 @@ router.post("/post", async (req, res) => {
 
 /**
  * GET /api/jobs/active
- * Get all active jobs
+ * Get all active jobs with full details
  */
 router.get("/active", async (_req, res) => {
   try {
     const rows = await query(
-      `SELECT * FROM jobs WHERE status='active' ORDER BY created_at DESC`
+      `SELECT *
+       FROM jobs
+       WHERE status='active'
+       ORDER BY created_at DESC`
     );
     res.json({ jobs: rows });
   } catch (err) {
