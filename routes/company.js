@@ -9,10 +9,7 @@ const router = express.Router();
 const saltRounds = 10;
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-/**
- * Ensure the companies table exists.
- * Uses the query() helper which already gets / releases connections.
- */
+
 (async function initCompanyTable() {
   try {
     await query(`

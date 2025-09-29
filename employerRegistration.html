@@ -4,82 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employer Registration</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        /* Custom styles to ensure content is centered vertically */
+        body, html {
+            height: 100%;
+        }
+        .container-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100%;
+            padding: 1.5rem 0;
+        }
+        /* Style for validation feedback */
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: .875em;
+            color: #dc3545;
+        }
+        .was-validated .form-control:invalid, .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+        .was-validated .form-control:invalid ~ .invalid-feedback,
+        .form-control.is-invalid ~ .invalid-feedback {
+            display: block;
         }
     </style>
 </head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Create Your Employer Account</h2>
-            <form id="register-form">
-                <div class="mb-4">
-                    <label for="companyName" class="block text-gray-700 text-sm font-medium mb-2">Company Name</label>
-                    <input type="text" id="companyName" name="companyName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+<body class="bg-light">
+
+    <div class="container-wrapper">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-4 p-md-5">
+                            <h2 class="card-title text-center fw-bold mb-4">Create Your Employer Account</h2>
+                            <!-- Form for employer registration -->
+                            <form id="register-form" novalidate>
+                                <!-- Message container for success/error alerts -->
+                                <div id="message-container"></div>
+
+                                <div class="mb-3">
+                                    <label for="companyName" class="form-label">Company Name</label>
+                                    <input type="text" id="companyName" name="company_name" class="form-control" required>
+                                    <div class="invalid-feedback">Please enter the company name.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Company Email</label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input type="password" id="password" name="password" class="form-control" required>
+                                    <div class="invalid-feedback">Please enter a password.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="website" class="form-label">Company Website <span class="text-muted">(Optional)</span></label>
+                                    <input type="url" id="website" name="website" class="form-control">
+                                    <div class="invalid-feedback">Please enter a valid URL (e.g., https://example.com).</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="logoFile" class="form-label">Company Logo <span class="text-muted">(Optional)</span></label>
+                                    <input type="file" id="logoFile" name="logo" class="form-control" accept="image/*">
+                                    <div class="invalid-feedback">Please select a valid image file.</div>
+                                </div>
+                                 <div class="mb-3">
+                                    <label for="contactPerson" class="form-label">Contact Person</label>
+                                    <input type="text" id="contactPerson" name="contact_person" class="form-control">
+                                </div>
+                                 <div class="mb-3">
+                                    <label for="contactPhone" class="form-label">Contact Phone</label>
+                                    <input type="tel" id="contactPhone" name="contact_phone" class="form-control">
+                                    <div class="invalid-feedback">Please enter a valid phone number.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Address</label>
+                                    <textarea id="address" name="address" rows="2" class="form-control"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Company Description</label>
+                                    <textarea id="description" name="description" rows="3" class="form-control"></textarea>
+                                </div>
+                                <div class="d-grid">
+                                     <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                                </div>
+                            </form>
+                            <p class="text-center text-muted mt-4">
+                                Already have an account? <a href="employerlogin.html">Login here</a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 text-sm font-medium mb-2">Company Email</label>
-                    <input type="email" id="email" name="email" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                <div class="mb-4">
-                    <label for="password" class="block text-gray-700 text-sm font-medium mb-2">Password</label>
-                    <input type="password" id="password" name="password" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                </div>
-                 <div class="mb-4">
-                    <label for="website" class="block text-gray-700 text-sm font-medium mb-2">Company Website (Optional)</label>
-                    <input type="url" id="website" name="website" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                 <div class="mb-6">
-                    <label for="description" class="block text-gray-700 text-sm font-medium mb-2">Company Description</label>
-                    <textarea id="description" name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">Register</button>
-            </form>
-            <p class="text-center text-gray-600 text-sm mt-6">
-                Already have an account? <a href="employerlogin.html" class="text-blue-600 hover:underline">Login here</a>
-            </p>
+            </div>
         </div>
     </div>
 
-    <script>
-        document.getElementById('register-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const companyName = document.getElementById('companyName').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const website = document.getElementById('website').value;
-            const description = document.getElementById('description').value;
+    <!-- Bootstrap JS Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
-            // In a real application, you would send this to your backend.
-            // For this example, we'll use localStorage to simulate user accounts.
-            const employers = JSON.parse(localStorage.getItem('employers')) || [];
+    <script>
+        const form = document.getElementById('register-form');
+        const messageContainer = document.getElementById('message-container');
+
+        // Validation helper functions
+        const validateEmail = (email) => {
+            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(String(email).toLowerCase());
+        };
+
+        const validatePhone = (phone) => {
+            const re = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
+            return re.test(String(phone));
+        };
+
+        const validateUrl = (url) => {
+            try {
+                new URL(url);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        };
+
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            messageContainer.innerHTML = '';
+            // Reset custom validation classes
+            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
             
-            const existingEmployer = employers.find(emp => emp.email === email);
-            if (existingEmployer) {
-                alert('An account with this email already exists.');
+            let isFormValid = true;
+
+            // --- Custom Field Validations ---
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('contactPhone');
+            const websiteInput = document.getElementById('website');
+
+            if (!validateEmail(emailInput.value)) {
+                isFormValid = false;
+                emailInput.classList.add('is-invalid');
+            }
+            
+            // Validate optional fields only if they have a value
+            if (phoneInput.value && !validatePhone(phoneInput.value)) {
+                isFormValid = false;
+                phoneInput.classList.add('is-invalid');
+            }
+            if (websiteInput.value && !validateUrl(websiteInput.value)) {
+                isFormValid = false;
+                websiteInput.classList.add('is-invalid');
+            }
+
+            // --- Bootstrap's required field validation ---
+            if (!form.checkValidity()) {
+                 isFormValid = false;
+            }
+            
+            form.classList.add('was-validated');
+
+            if (!isFormValid) {
+                showMessage('Please correct the errors in the form.', 'danger');
                 return;
             }
 
-            const newEmployer = {
-                id: `comp_${Date.now()}`,
-                companyName,
-                email,
-                password, // In a real app, you'd hash this password
-                website,
-                description
-            };
+            // Use FormData to handle file uploads
+            const formData = new FormData(form);
+            // Note: Your backend needs to be configured to handle multipart/form-data.
 
-            employers.push(newEmployer);
-            localStorage.setItem('employers', JSON.stringify(employers));
+            try {
+                const response = await fetch('/api/company/register', {
+                    method: 'POST',
+                    // For FormData, the browser automatically sets the 'Content-Type' header with the correct boundary.
+                    // Do NOT set it manually.
+                    body: formData
+                });
 
-            alert('Registration successful! You can now log in.');
-            window.location.href = 'employerlogin.html';
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    form.classList.remove('was-validated');
+                    showMessage('Registration successful! Redirecting to login...', 'success');
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.href = 'employerlogin.html';
+                    }, 2000);
+                } else {
+                    showMessage(result.error || 'Registration failed. Please try again.', 'danger');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showMessage('An unexpected error occurred. Please check your connection and try again.', 'danger');
+            }
         });
+
+        function showMessage(message, type) {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                    <div>${message}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>`;
+            messageContainer.innerHTML = ''; // Clear previous messages
+            messageContainer.append(wrapper);
+        }
     </script>
 </body>
 </html>
+
