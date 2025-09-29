@@ -28,7 +28,6 @@
         <div class="max-w-md w-full bg-white rounded-lg shadow-md p-8">
             <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Employer Login</h2>
             
-            <!-- Message container for errors -->
             <div id="message-container"></div>
 
             <form id="login-form">
@@ -54,12 +53,11 @@
 
             const messageContainer = document.getElementById('message-container');
             const submitButton = document.getElementById('submit-button');
-            messageContainer.innerHTML = ''; // Clear previous errors
+            messageContainer.innerHTML = ''; 
 
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
-            // Disable button to prevent multiple clicks
             submitButton.disabled = true;
             submitButton.textContent = 'Logging in...';
 
@@ -75,17 +73,14 @@
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    // On successful login, the server sends back a token.
-                    // Store the token to keep the user logged in.
-                    localStorage.setItem('authToken', result.token);
-                    localStorage.setItem('companyId', result.company_id);
+                    // --- CHANGED ---
+                    // On successful login, store only the token in sessionStorage.
+                    // This is more secure as no IDs are exposed on the client side.
+                    // The session ends when the browser tab is closed.
                     sessionStorage.setItem('authToken', result.token);
-                    sessionStorage.setItem('companyId', result.company_id);
                     
-                    // Redirect to a protected page, like a dashboard or profile.
                     window.location.href = 'employer.html'; 
                 } else {
-                    // Display specific error from the server
                     showMessage(result.error || `Error ${response.status}: Login failed.`);
                 }
 
@@ -93,7 +88,6 @@
                 console.error('Login error:', error);
                 showMessage('An unexpected network error occurred. Please try again.');
             } finally {
-                // Re-enable the button
                 submitButton.disabled = false;
                 submitButton.textContent = 'Login';
             }

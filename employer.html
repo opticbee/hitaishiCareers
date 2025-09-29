@@ -8,75 +8,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            width: 260px;
-            background-color: #fff;
-            border-right: 1px solid #dee2e6;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            z-index: 1000;
-        }
-        .sidebar-header .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #0d6efd;
-        }
-        .sidebar-header .company-name {
-            font-weight: 600;
-            color: #343a40;
-        }
-        .nav-buttons .nav-btn {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 0.8rem 1rem;
-            border-radius: 0.5rem;
-            color: #495057;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        .nav-buttons .nav-btn i {
-            font-size: 1.1rem;
-            width: 20px;
-        }
-        .nav-buttons .nav-btn:hover, .nav-buttons .nav-btn.active {
-            background-color: #e9ecef;
-            color: #0d6efd;
-        }
-        .main-content {
-            margin-left: 260px;
-            padding: 2rem;
-        }
-        .content-section {
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-        .content-section.active {
-            display: block;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .card {
-            border: none;
-            border-radius: 0.75rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-        }
-        .placeholder-text {
-            color: #6c757d;
-            text-align: center;
-            padding: 3rem;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .sidebar { position: fixed; top: 0; left: 0; height: 100vh; width: 260px; background-color: #fff; border-right: 1px solid #dee2e6; padding: 1.5rem; display: flex; flex-direction: column; z-index: 1000; }
+        .sidebar-header .logo { font-size: 1.8rem; font-weight: 700; color: #0d6efd; }
+        .sidebar-header .company-name { font-weight: 600; color: #343a40; }
+        .nav-buttons .nav-btn { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; border-radius: 0.5rem; color: #495057; font-weight: 500; transition: all 0.2s ease; }
+        .nav-buttons .nav-btn i { font-size: 1.1rem; width: 20px; }
+        .nav-buttons .nav-btn:hover, .nav-buttons .nav-btn.active { background-color: #e9ecef; color: #0d6efd; }
+        .main-content { margin-left: 260px; padding: 2rem; }
+        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .card { border: none; border-radius: 0.75rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07); }
+        .placeholder-text { color: #6c757d; text-align: center; padding: 3rem; }
     </style>
 </head>
 <body>
@@ -96,7 +40,6 @@
     </div>
 
     <main class="main-content">
-        <!-- Section: Post a New Job -->
         <section id="postJobSection" class="content-section active">
             <div class="card">
                 <div class="card-header bg-white py-3"><h5 class="mb-0">Post a New Job Opening</h5></div>
@@ -119,13 +62,11 @@
             </div>
         </section>
 
-        <!-- Section: My Posted Jobs -->
         <section id="myJobsSection" class="content-section">
             <h3 class="mb-4">My Posted Jobs</h3>
             <div id="jobsContainer"><p class="placeholder-text">Loading jobs...</p></div>
         </section>
 
-        <!-- Section: Update Company Profile -->
         <section id="updateProfileSection" class="content-section">
              <div class="card">
                 <div class="card-header bg-white py-3"><h5 class="mb-0">Update Company Profile</h5></div>
@@ -149,11 +90,11 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // --- Config and Auth ---
-            const companyId = localStorage.getItem('companyId');
-            const token = localStorage.getItem('authToken');
+            // CHANGED: We now use sessionStorage and only need the authentication token.
+            const token = sessionStorage.getItem('authToken');
 
-            if (!companyId || !token) {
-                alert('You are not logged in. Redirecting to login page.');
+            if (!token) {
+                // No alert needed, just redirect.
                 window.location.href = 'employerlogin.html';
                 return;
             }
@@ -165,30 +106,41 @@
                         ...options,
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
+                            'Authorization': `Bearer ${token}`, // Token is sent with every authenticated request
                             ...options.headers,
                         },
                     });
                     if (!response.ok) {
+                        if (response.status === 401 || response.status === 403) {
+                            // If token is invalid or expired, log out the user.
+                            sessionStorage.removeItem('authToken');
+                            window.location.href = 'employerlogin.html';
+                        }
                         throw new Error(`Error: ${response.status} ${response.statusText}`);
                     }
                     return await response.json();
                 } catch (error) {
                     console.error('API call failed:', error);
-                    alert('An error occurred. Please check the console for details.');
                     return null;
                 }
             };
 
             // --- Data Fetching ---
             const fetchCompanyProfile = async () => {
-                const profile = await fetchData(`/api/company/${companyId}`);
+                // CHANGED: The endpoint gets the company from the token, so no ID is needed in the URL.
+                const profile = await fetchData(`/api/company/profile`);
                 if (profile) renderCompanyProfile(profile);
             };
 
             const fetchJobs = async () => {
-                const data = await fetchData(`/api/jobs/company/${companyId}`);
-                if (data && data.jobs) renderJobs(data.jobs);
+                // CHANGED: This endpoint should also be protected and get the company from the token.
+                // Assuming an endpoint like `/api/jobs/my-jobs`.
+                const data = await fetchData(`/api/jobs/my-jobs`); 
+                if (data && data.jobs) {
+                    renderJobs(data.jobs);
+                } else {
+                    document.getElementById('jobsContainer').innerHTML = '<p class="placeholder-text">Could not load jobs, or you have not posted any yet.</p>';
+                }
             };
 
             // --- Rendering ---
@@ -200,8 +152,6 @@
                 document.getElementById('contactPerson').value = profile.contact_person || '';
                 document.getElementById('contactPhone').value = profile.contact_phone || '';
                 document.getElementById('address').value = profile.address || '';
-                
-                // Also pre-fill the job form contact details
                 document.getElementById('postedByName').value = profile.contact_person || '';
                 document.getElementById('postedByEmail').value = profile.user_email || '';
             };
@@ -229,7 +179,7 @@
             document.getElementById('postJobForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const jobData = {
-                    company_id: companyId,
+                    // CHANGED: company_id is no longer sent. The backend will extract it from the token.
                     job_title: document.getElementById('jobTitle').value,
                     required_experience: document.getElementById('requiredExperience').value,
                     posted_by_name: document.getElementById('postedByName').value,
@@ -238,13 +188,15 @@
                     state: document.getElementById('state').value,
                     city: document.getElementById('city').value,
                     job_description: document.getElementById('jobDescription').value,
-                    required_skills: document.getElementById('requiredSkills').value,
+                    required_skills: document.getElementById('requiredSkills').value.split(',').map(s => s.trim()),
                 };
                 const result = await fetchData('/api/jobs/post', { method: 'POST', body: JSON.stringify(jobData) });
                 if (result && result.success) {
                     alert('Job posted successfully!');
                     e.target.reset();
-                    fetchJobs(); // Refresh job list
+                    fetchJobs(); 
+                } else {
+                    alert('Failed to post job. Please try again.');
                 }
             });
 
@@ -258,10 +210,13 @@
                     contact_phone: document.getElementById('contactPhone').value,
                     address: document.getElementById('address').value,
                 };
-                const result = await fetchData(`/api/company/${companyId}`, { method: 'PATCH', body: JSON.stringify(profileData) });
+                // CHANGED: The endpoint gets the company from the token, so no ID is needed in the URL.
+                const result = await fetchData(`/api/company/profile`, { method: 'PATCH', body: JSON.stringify(profileData) });
                 if (result && result.success) {
                     alert('Profile updated successfully!');
-                    fetchCompanyProfile(); // Refresh profile data
+                    fetchCompanyProfile(); 
+                } else {
+                    alert('Failed to update profile. Please try again.');
                 }
             });
 
@@ -278,8 +233,8 @@
 
             // --- Logout ---
             document.getElementById('logoutButton').addEventListener('click', () => {
-                localStorage.removeItem('companyId');
-                localStorage.removeItem('authToken');
+                // CHANGED: Clear the session storage
+                sessionStorage.removeItem('authToken');
                 window.location.href = 'employerlogin.html';
             });
 

@@ -11,6 +11,27 @@ const router = express.Router();
 const saltRounds = 10;
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
+// --- Authentication Middleware ---
+// This middleware verifies the JWT from the request header and attaches the user payload.
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+    if (token == null) {
+        return res.status(401).json({ error: "No token provided." });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: "Invalid or expired token." });
+        }
+        // The decoded payload (e.g., { id: '...', role: '...' }) is attached to the request object.
+        req.user = user;
+        next();
+    });
+};
+
+
 // --- Multer Configuration for File Uploads ---
 const storage = multer.diskStorage({
     destination: './uploads/logos/',
@@ -111,11 +132,10 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign({ id: company.id, role: "company" }, JWT_SECRET, { expiresIn: "7d" });
         
         // --- UPDATED RESPONSE ---
-        // Now includes company name and logo URL for the frontend
+        // We no longer send the company_id. The frontend only needs the token.
         res.json({
             success: true,
             token,
-            company_id: company.id,
             company_name: company.company_name,
             logo_url: company.logo_url
         });
@@ -126,16 +146,18 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// GET a specific company's profile by ID
-router.get("/:id", async (req, res) => {
+// GET the logged-in company's profile
+// This is a protected route. Only an authenticated company can access it.
+router.get("/profile", authenticateToken, async (req, res) => {
     try {
-        const { id } = req.params;
+        // The company ID is now securely retrieved from the verified JWT payload.
+        const { id } = req.user; 
         const rows = await query(
             `SELECT id, user_email, company_name, website, description, logo_url, contact_person, contact_phone, address FROM companies WHERE id = ?`,
             [id]
         );
         if (!rows.length) {
-            return res.status(404).json({ error: "Company not found." });
+            return res.status(404).json({ error: "Company profile not found." });
         }
         res.json(rows[0]);
     } catch (err) {
@@ -144,18 +166,27 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// UPDATE a company's profile
-router.patch("/:id", async (req, res) => {
+// UPDATE the logged-in company's profile
+// This is a protected route. Only the company itself can update its profile.
+router.patch("/profile", authenticateToken, async (req, res) => {
     try {
-        const { id } = req.params;
+        // The company ID is securely retrieved from the verified JWT payload.
+        const { id } = req.user;
         const { company_name, website, description, contact_person, contact_phone, address } = req.body;
+        
         if (!company_name) {
             return res.status(400).json({ error: "Company name is required." });
         }
-        await query(
+        
+        const result = await query(
             `UPDATE companies SET company_name = ?, website = ?, description = ?, contact_person = ?, contact_phone = ?, address = ?, updated_at = NOW() WHERE id = ?`,
             [company_name, website, description, contact_person, contact_phone, address, id]
         );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Company not found or no changes were made." });
+        }
+
         res.json({ success: true, message: "Profile updated successfully!" });
     } catch (err) {
         console.error("Failed to update company profile:", err);
@@ -165,4 +196,3 @@ router.patch("/:id", async (req, res) => {
 
 
 module.exports = router;
-
