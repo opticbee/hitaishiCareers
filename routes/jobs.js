@@ -27,9 +27,11 @@ const authenticateToken = (req, res, next) => {
 };
 
 
-// --- Database Table Initialization with New Salary Fields ---
+// --- Database Table Initialization with Migration for Salary Fields ---
 (async function initJobsTable() {
   try {
+    // This ensures the table exists, creating it only if it's not there.
+    // This version does NOT include the new salary fields to avoid errors on first run if the table exists.
     await query(`
       CREATE TABLE IF NOT EXISTS jobs (
         id CHAR(36) PRIMARY KEY,
@@ -45,10 +47,6 @@ const authenticateToken = (req, res, next) => {
         state VARCHAR(100),
         city VARCHAR(100),
         zip_code VARCHAR(20),
-        salary_min INT,
-        salary_max INT,
-        salary_currency VARCHAR(10),
-        salary_period VARCHAR(20),
         job_data JSON,
         status ENUM('active','inactive') DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -56,9 +54,25 @@ const authenticateToken = (req, res, next) => {
         FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
       )
     `);
-    console.log("✅ jobs table is ready with new salary fields.");
+
+    // Check if the salary_min column exists. If not, we run the migration.
+    const columnsResult = await query("SHOW COLUMNS FROM jobs WHERE Field = 'salary_min'");
+    
+    if (columnsResult.length === 0) {
+      console.log("Schema migration needed: Adding salary fields to 'jobs' table.");
+      await query(`
+        ALTER TABLE jobs
+        ADD COLUMN salary_min INT NULL,
+        ADD COLUMN salary_max INT NULL,
+        ADD COLUMN salary_currency VARCHAR(10) NULL,
+        ADD COLUMN salary_period VARCHAR(20) NULL
+      `);
+      console.log("✅ Salary fields added to 'jobs' table successfully.");
+    }
+    
+    console.log("✅ jobs table is ready.");
   } catch (err) {
-    console.error("❌ Error creating jobs table:", err.message);
+    console.error("❌ Error initializing jobs table:", err.message);
   }
 })();
 
@@ -93,20 +107,21 @@ router.post("/post", authenticateToken, async (req, res) => {
     res.json({ success: true, job_id: id });
   } catch (err) {
     console.error("Job posting failed:", err);
-    res.status(500).json({ error: "Job posting failed" });
+    res.status(500).json({ error: "Job posting failed", message: err.message });
   }
 });
 
 // Get all active jobs (for public job boards)
 router.get("/active", async (_req, res) => {
   try {
-    const rows = await query(`SELECT * FROM jobs WHERE status='active' ORDER BY created_at DESC`);
+    const rows = await query(`SELECT j.*, c.company_name, c.logo_url FROM jobs j JOIN companies c ON j.company_id = c.id WHERE j.status='active' ORDER BY j.created_at DESC`);
     res.json({ jobs: rows });
   } catch (err) {
     console.error("Failed to fetch jobs:", err);
     res.status(500).json({ error: "Failed to fetch jobs" });
   }
 });
+
 
 // GET all jobs for a specific company (for the dashboard)
 router.get("/company/:companyId", authenticateToken, async (req, res) => {

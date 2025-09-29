@@ -19,7 +19,7 @@
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         .content-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .card { border: none; border-radius: 0.75rem; box-shadow: 0 2px G(0, 0, 0, 0.07); }
+        .card { border: none; border-radius: 0.75rem; box-shadow: 0 2px 15px rgba(0, 0, 0, 0.07); }
         .placeholder-text { color: #6c757d; text-align: center; padding: 3rem; }
         input:read-only { background-color: #e9ecef; cursor: not-allowed; }
         
@@ -63,7 +63,7 @@
                             <div class="col-md-6"><label for="jobTitle" class="form-label">Job Title</label><input type="text" class="form-control" id="jobTitle" required></div>
                             <div class="col-md-6"><label for="requiredExperience" class="form-label">Required Experience (e.g., 2+ Years)</label><input type="text" class="form-control" id="requiredExperience"></div>
                             
-                            <!-- New Salary Fields -->
+                            <!-- Salary Fields -->
                             <div class="col-md-3"><label for="salaryMin" class="form-label">Salary Minimum</label><input type="number" class="form-control" id="salaryMin" placeholder="e.g., 80000"></div>
                             <div class="col-md-3"><label for="salaryMax" class="form-label">Salary Maximum</label><input type="number" class="form-control" id="salaryMax" placeholder="e.g., 120000"></div>
                             <div class="col-md-3">
@@ -88,13 +88,25 @@
 
                             <hr class="my-3">
 
+                            <!-- Contact and Location -->
                             <div class="col-md-6"><label for="postedByName" class="form-label">Hiring Manager / Contact Person</label><input type="text" class="form-control" id="postedByName" required></div>
                             <div class="col-md-6"><label for="postedByEmail" class="form-label">Contact Email</label><input type="email" class="form-control" id="postedByEmail" required></div>
-                            <div class="col-md-4"><label for="country" class="form-label">Country</label><input type="text" class="form-control" id="country"></div>
-                            <div class="col-md-4"><label for="state" class="form-label">State</label><input type="text" class="form-control" id="state"></div>
-                            <div class="col-md-4"><label for="city" class="form-label">City</label><input type="text" class="form-control" id="city"></div>
+                            <div class="col-md-3"><label for="country" class="form-label">Country</label><input type="text" class="form-control" id="country"></div>
+                            <div class="col-md-3"><label for="state" class="form-label">State</label><input type="text" class="form-control" id="state"></div>
+                            <div class="col-md-3"><label for="city" class="form-label">City</label><input type="text" class="form-control" id="city"></div>
+                            <div class="col-md-3"><label for="zipCode" class="form-label">Zip Code</label><input type="text" class="form-control" id="zipCode"></div>
+                            
+                            <!-- Job Details -->
                             <div class="col-12"><label for="jobDescription" class="form-label">Job Description</label><textarea class="form-control" id="jobDescription" rows="5" required></textarea></div>
                             <div class="col-12"><label for="requiredSkills" class="form-label">Required Skills (comma-separated)</label><input type="text" class="form-control" id="requiredSkills" placeholder="e.g., JavaScript, React, Node.js" required></div>
+                            <div class="col-12"><label for="additionalSkills" class="form-label">Additional Skills (comma-separated)</label><input type="text" class="form-control" id="additionalSkills" placeholder="e.g., Git, Docker, AWS"></div>
+                            
+                            <!-- ** NEW FIELD ADDED HERE ** -->
+                            <div class="col-12">
+                                <label for="jobData" class="form-label">Additional Job Data (JSON format, optional)</label>
+                                <textarea class="form-control" id="jobData" rows="3" placeholder='e.g., {"remote_policy": "hybrid", "travel_required": "10%"}'></textarea>
+                                <div class="form-text">Enter valid JSON or leave blank.</div>
+                            </div>
                          </div>
                         <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4">Post Job</button></div>
                     </form>
@@ -179,7 +191,7 @@
                             window.location.href = 'employerlogin.html';
                         }
                         const errorData = await response.json();
-                        throw new Error(errorData.error || `Error: ${response.status}`);
+                        throw new Error(errorData.message || errorData.error || `Error: ${response.status}`);
                     }
                     return await response.json();
                 } catch (error) {
@@ -281,7 +293,20 @@
 
             document.getElementById('postJobForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const jobData = {
+
+                // ** NEW LOGIC TO HANDLE JSON DATA **
+                let jobData = null;
+                const jobDataRaw = document.getElementById('jobData').value;
+                if (jobDataRaw) {
+                    try {
+                        jobData = JSON.parse(jobDataRaw);
+                    } catch (err) {
+                        showToast('Invalid JSON format in Additional Job Data field.', 'error');
+                        return; // Stop the form submission
+                    }
+                }
+
+                const jobPayload = {
                     job_title: document.getElementById('jobTitle').value,
                     required_experience: document.getElementById('requiredExperience').value,
                     salary_min: document.getElementById('salaryMin').value || null,
@@ -293,10 +318,15 @@
                     country: document.getElementById('country').value,
                     state: document.getElementById('state').value,
                     city: document.getElementById('city').value,
+                    zip_code: document.getElementById('zipCode').value,
                     job_description: document.getElementById('jobDescription').value,
                     required_skills: document.getElementById('requiredSkills').value,
+                    additional_skills: document.getElementById('additionalSkills').value,
+                    job_data: jobData // Pass the parsed JSON object
                 };
-                const result = await fetchData('/api/jobs/post', { method: 'POST', body: JSON.stringify(jobData) });
+                
+                const result = await fetchData('/api/jobs/post', { method: 'POST', body: JSON.stringify(jobPayload) });
+                
                 if (result && result.success) {
                     showToast('Job posted successfully!');
                     e.target.reset();
@@ -358,3 +388,4 @@
     </script>
 </body>
 </html>
+
