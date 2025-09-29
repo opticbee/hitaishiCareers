@@ -21,12 +21,26 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .card { border: none; border-radius: 0.75rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07); }
         .placeholder-text { color: #6c757d; text-align: center; padding: 3rem; }
+        input:read-only { background-color: #e9ecef; cursor: not-allowed; }
+        
+        /* Toast Notification Styles */
+        #toastContainer { position: fixed; top: 20px; right: 20px; z-index: 1055; display: flex; flex-direction: column; gap: 10px; }
+        .toast-notification { padding: 1rem 1.5rem; border-radius: 0.5rem; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 1rem; opacity: 0; transform: translateX(100%); animation: slideIn 0.5s forwards, fadeOut 0.5s 4.5s forwards; }
+        .toast-notification.success { background-color: #28a745; }
+        .toast-notification.error { background-color: #dc3545; }
+        .toast-notification.warning { background-color: #ffc107; color: #212529;}
+        .toast-notification i { font-size: 1.2rem; }
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; transform: translateX(100%);} }
     </style>
 </head>
 <body>
+    <div id="toastContainer"></div>
+
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header text-center mb-5">
-            <div class="logo">WinJob</div>
+            <div class="logo mb-3">WinJob</div>
+            <img id="sidebarLogo" src="https://placehold.co/80x80/EFEFEF/AAAAAA&text=Logo" alt="Logo" class="rounded-circle mb-3" style="width: 80px; height: 80px; object-fit: cover; margin: 0 auto;">
             <div class="company-name mt-2" id="sidebarCompanyName">Loading...</div>
         </div>
         <div class="nav-buttons d-flex flex-column gap-2 flex-grow-1">
@@ -68,19 +82,57 @@
         </section>
 
         <section id="updateProfileSection" class="content-section">
-             <div class="card">
+            <div class="card">
                 <div class="card-header bg-white py-3"><h5 class="mb-0">Update Company Profile</h5></div>
-                 <div class="card-body p-4">
+                <div class="card-body p-4">
                     <form id="updateProfileForm">
                         <div class="row g-3">
-                            <div class="col-md-6"><label for="companyName" class="form-label">Company Name</label><input type="text" class="form-control" id="companyName" required></div>
-                            <div class="col-md-6"><label for="companyWebsite" class="form-label">Website</label><input type="url" class="form-control" id="companyWebsite"></div>
-                            <div class="col-12"><label for="companyDescription" class="form-label">Description</label><textarea class="form-control" id="companyDescription" rows="4"></textarea></div>
-                            <div class="col-md-6"><label for="contactPerson" class="form-label">Contact Person</label><input type="text" class="form-control" id="contactPerson"></div>
-                            <div class="col-md-6"><label for="contactPhone" class="form-label">Contact Phone</label><input type="tel" class="form-control" id="contactPhone"></div>
-                            <div class="col-12"><label for="address" class="form-label">Address</label><input type="text" class="form-control" id="address"></div>
+                            <div class="col-12">
+                                <label class="form-label">Company Logo</label>
+                                <div class="d-flex align-items-center">
+                                    <img id="logoPreview" src="https://placehold.co/100x100/EFEFEF/AAAAAA&text=Logo" alt="Company Logo" class="me-3 rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                                    <input type="file" class="form-control" id="companyLogo" accept="image/*">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="companyName" class="form-label">Company Name</label>
+                                <input type="text" class="form-control" id="companyName" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="companyWebsite" class="form-label">Website</label>
+                                <input type="url" class="form-control" id="companyWebsite">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="companyEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="companyEmail" required readonly>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="personName" class="form-label">Person Name</label>
+                                <input type="text" class="form-control" id="personName">
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phoneNumber">
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="address" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="address">
+                            </div>
+
+                            <div class="col-12">
+                                <label for="companyDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="companyDescription" rows="4"></textarea>
+                            </div>
                         </div>
-                        <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4">Save Changes</button></div>
+                        <div class="mt-4 text-end">
+                            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -89,15 +141,26 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // --- Config and Auth ---
-            // CHANGED: We now use sessionStorage and only need the authentication token.
             const token = sessionStorage.getItem('authToken');
-
             if (!token) {
-                // No alert needed, just redirect.
                 window.location.href = 'employerlogin.html';
                 return;
             }
+
+            // --- Toast Notification ---
+            const toastContainer = document.getElementById('toastContainer');
+            const showToast = (message, type = 'success') => {
+                const toast = document.createElement('div');
+                toast.className = `toast-notification ${type}`;
+                let iconClass = 'fas fa-check-circle';
+                if (type === 'error') iconClass = 'fas fa-times-circle';
+                if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+                toast.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
+                toastContainer.appendChild(toast);
+                setTimeout(() => {
+                    toast.remove();
+                }, 5000);
+            };
 
             // --- API Fetch Helper ---
             const fetchData = async (url, options = {}) => {
@@ -106,13 +169,12 @@
                         ...options,
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`, // Token is sent with every authenticated request
+                            'Authorization': `Bearer ${token}`, 
                             ...options.headers,
                         },
                     });
                     if (!response.ok) {
                         if (response.status === 401 || response.status === 403) {
-                            // If token is invalid or expired, log out the user.
                             sessionStorage.removeItem('authToken');
                             window.location.href = 'employerlogin.html';
                         }
@@ -125,16 +187,12 @@
                 }
             };
 
-            // --- Data Fetching ---
             const fetchCompanyProfile = async () => {
-                // CHANGED: The endpoint gets the company from the token, so no ID is needed in the URL.
                 const profile = await fetchData(`/api/company/profile`);
                 if (profile) renderCompanyProfile(profile);
             };
 
             const fetchJobs = async () => {
-                // CHANGED: This endpoint should also be protected and get the company from the token.
-                // Assuming an endpoint like `/api/jobs/my-jobs`.
                 const data = await fetchData(`/api/jobs/my-jobs`); 
                 if (data && data.jobs) {
                     renderJobs(data.jobs);
@@ -143,15 +201,31 @@
                 }
             };
 
-            // --- Rendering ---
             const renderCompanyProfile = (profile) => {
                 document.getElementById('sidebarCompanyName').textContent = profile.company_name;
+
+                const timestamp = '?t=' + new Date().getTime();
+                const placeholderLogo = 'https://placehold.co/100x100/EFEFEF/AAAAAA&text=Logo';
+                const placeholderSidebarLogo = 'https://placehold.co/80x80/EFEFEF/AAAAAA&text=Logo';
+
+                // Update Sidebar Logo
+                const sidebarLogo = document.getElementById('sidebarLogo');
+                sidebarLogo.src = profile.logo_url ? profile.logo_url + timestamp : placeholderSidebarLogo;
+                sidebarLogo.onerror = () => { sidebarLogo.src = placeholderSidebarLogo; };
+
+                // Update Profile Form Logo Preview
+                const logoPreview = document.getElementById('logoPreview');
+                logoPreview.src = profile.logo_url ? profile.logo_url + timestamp : placeholderLogo;
+                logoPreview.onerror = () => { logoPreview.src = placeholderLogo; };
+
+                // Update Form fields
                 document.getElementById('companyName').value = profile.company_name || '';
                 document.getElementById('companyWebsite').value = profile.website || '';
-                document.getElementById('companyDescription').value = profile.description || '';
-                document.getElementById('contactPerson').value = profile.contact_person || '';
-                document.getElementById('contactPhone').value = profile.contact_phone || '';
+                document.getElementById('companyEmail').value = profile.user_email || '';
+                document.getElementById('personName').value = profile.contact_person || '';
+                document.getElementById('phoneNumber').value = profile.contact_phone || '';
                 document.getElementById('address').value = profile.address || '';
+                document.getElementById('companyDescription').value = profile.description || '';
                 document.getElementById('postedByName').value = profile.contact_person || '';
                 document.getElementById('postedByEmail').value = profile.user_email || '';
             };
@@ -175,11 +249,22 @@
                 `).join('');
             };
             
-            // --- Form Handlers ---
+            document.getElementById('companyLogo').addEventListener('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => { document.getElementById('logoPreview').src = e.target.result; }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            document.getElementById('companyEmail').addEventListener('click', () => {
+                showToast('Email address cannot be modified.', 'warning');
+            });
+
             document.getElementById('postJobForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const jobData = {
-                    // CHANGED: company_id is no longer sent. The backend will extract it from the token.
                     job_title: document.getElementById('jobTitle').value,
                     required_experience: document.getElementById('requiredExperience').value,
                     posted_by_name: document.getElementById('postedByName').value,
@@ -192,35 +277,56 @@
                 };
                 const result = await fetchData('/api/jobs/post', { method: 'POST', body: JSON.stringify(jobData) });
                 if (result && result.success) {
-                    alert('Job posted successfully!');
+                    showToast('Job posted successfully!');
                     e.target.reset();
                     fetchJobs(); 
                 } else {
-                    alert('Failed to post job. Please try again.');
+                    showToast('Failed to post job. Please try again.', 'error');
                 }
             });
 
             document.getElementById('updateProfileForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const profileData = {
-                    company_name: document.getElementById('companyName').value,
-                    website: document.getElementById('companyWebsite').value,
-                    description: document.getElementById('companyDescription').value,
-                    contact_person: document.getElementById('contactPerson').value,
-                    contact_phone: document.getElementById('contactPhone').value,
-                    address: document.getElementById('address').value,
-                };
-                // CHANGED: The endpoint gets the company from the token, so no ID is needed in the URL.
-                const result = await fetchData(`/api/company/profile`, { method: 'PATCH', body: JSON.stringify(profileData) });
-                if (result && result.success) {
-                    alert('Profile updated successfully!');
-                    fetchCompanyProfile(); 
-                } else {
-                    alert('Failed to update profile. Please try again.');
+                const formData = new FormData();
+                formData.append('company_name', document.getElementById('companyName').value);
+                formData.append('website', document.getElementById('companyWebsite').value);
+                formData.append('contact_person', document.getElementById('personName').value);
+                formData.append('contact_phone', document.getElementById('phoneNumber').value);
+                formData.append('address', document.getElementById('address').value);
+                formData.append('description', document.getElementById('companyDescription').value);
+
+                const logoFile = document.getElementById('companyLogo').files[0];
+                if (logoFile) {
+                    formData.append('logo', logoFile);
+                }
+
+                try {
+                    const response = await fetch(`/api/company/profile`, {
+                        method: 'PATCH',
+                        headers: { 'Authorization': `Bearer ${token}` },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.message || `Error: ${response.status}`);
+                    }
+
+                    showToast(result.message || 'Profile updated successfully!');
+                    
+                    if (result.profile) {
+                        renderCompanyProfile(result.profile);
+                    } else {
+                        fetchCompanyProfile();
+                    }
+
+                } catch(error) {
+                    console.error('Profile update failed:', error);
+                    showToast(`Profile update failed: ${error.message}`, 'error');
                 }
             });
 
-            // --- Navigation ---
             const navButtons = document.querySelectorAll('.nav-btn[data-section]');
             const contentSections = document.querySelectorAll('.content-section');
             const showSection = (sectionId) => {
@@ -231,14 +337,11 @@
                 button.addEventListener('click', () => showSection(button.dataset.section));
             });
 
-            // --- Logout ---
             document.getElementById('logoutButton').addEventListener('click', () => {
-                // CHANGED: Clear the session storage
                 sessionStorage.removeItem('authToken');
                 window.location.href = 'employerlogin.html';
             });
 
-            // --- Initial Load ---
             const initializeDashboard = () => {
                 fetchCompanyProfile();
                 fetchJobs();
@@ -248,3 +351,4 @@
     </script>
 </body>
 </html>
+

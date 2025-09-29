@@ -12,10 +12,9 @@ const saltRounds = 10;
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 // --- Authentication Middleware ---
-// This middleware verifies the JWT from the request header and attaches the user payload.
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (token == null) {
         return res.status(401).json({ error: "No token provided." });
@@ -25,7 +24,6 @@ const authenticateToken = (req, res, next) => {
         if (err) {
             return res.status(403).json({ error: "Invalid or expired token." });
         }
-        // The decoded payload (e.g., { id: '...', role: '...' }) is attached to the request object.
         req.user = user;
         next();
     });
@@ -131,8 +129,6 @@ router.post("/login", async (req, res) => {
         
         const token = jwt.sign({ id: company.id, role: "company" }, JWT_SECRET, { expiresIn: "7d" });
         
-        // --- UPDATED RESPONSE ---
-        // We no longer send the company_id. The frontend only needs the token.
         res.json({
             success: true,
             token,
@@ -147,10 +143,8 @@ router.post("/login", async (req, res) => {
 });
 
 // GET the logged-in company's profile
-// This is a protected route. Only an authenticated company can access it.
 router.get("/profile", authenticateToken, async (req, res) => {
     try {
-        // The company ID is now securely retrieved from the verified JWT payload.
         const { id } = req.user; 
         const rows = await query(
             `SELECT id, user_email, company_name, website, description, logo_url, contact_person, contact_phone, address FROM companies WHERE id = ?`,
@@ -167,32 +161,69 @@ router.get("/profile", authenticateToken, async (req, res) => {
 });
 
 // UPDATE the logged-in company's profile
-// This is a protected route. Only the company itself can update its profile.
-router.patch("/profile", authenticateToken, async (req, res) => {
+// MODIFIED: Added the 'upload' middleware to handle multipart/form-data from the profile update form.
+router.patch("/profile", authenticateToken, upload, async (req, res) => {
     try {
-        // The company ID is securely retrieved from the verified JWT payload.
         const { id } = req.user;
+        // Text fields are now correctly parsed by multer and available in req.body
         const { company_name, website, description, contact_person, contact_phone, address } = req.body;
         
         if (!company_name) {
-            return res.status(400).json({ error: "Company name is required." });
+            return res.status(400).json({ success: false, message: "Company name is required." });
         }
         
-        const result = await query(
-            `UPDATE companies SET company_name = ?, website = ?, description = ?, contact_person = ?, contact_phone = ?, address = ?, updated_at = NOW() WHERE id = ?`,
-            [company_name, website, description, contact_person, contact_phone, address, id]
-        );
+        const fieldsToUpdate = [];
+        const values = [];
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ error: "Company not found or no changes were made." });
+        const addField = (fieldName, value) => {
+            if (value !== undefined && value !== null) {
+                fieldsToUpdate.push(`${fieldName} = ?`);
+                values.push(value);
+            }
+        };
+
+        addField('company_name', company_name);
+        addField('website', website);
+        addField('description', description);
+        addField('contact_person', contact_person);
+        addField('contact_phone', contact_phone);
+        addField('address', address);
+
+        if (req.file) {
+            const logoUrl = `/uploads/logos/${req.file.filename}`;
+            fieldsToUpdate.push('logo_url = ?');
+            values.push(logoUrl);
         }
 
-        res.json({ success: true, message: "Profile updated successfully!" });
+        if (fieldsToUpdate.length === 0) {
+            return res.status(400).json({ success: false, message: "No data provided for update." });
+        }
+
+        values.push(id);
+        const sql = `UPDATE companies SET ${fieldsToUpdate.join(', ')}, updated_at = NOW() WHERE id = ?`;
+        const result = await query(sql, values);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Company not found or no changes were made." });
+        }
+
+        // Fetch the updated profile to send back, including the new logo URL if it was changed
+        const updatedProfileRows = await query(
+            `SELECT id, user_email, company_name, website, description, logo_url, contact_person, contact_phone, address FROM companies WHERE id = ?`,
+            [id]
+        );
+
+        res.json({
+            success: true,
+            message: "Profile updated successfully!",
+            profile: updatedProfileRows[0] // Send back the updated profile
+        });
+
     } catch (err) {
         console.error("Failed to update company profile:", err);
-        res.status(500).json({ error: "Failed to update profile." });
+        res.status(500).json({ success: false, message: "Failed to update profile due to a server error." });
     }
 });
 
-
 module.exports = router;
+
