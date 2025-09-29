@@ -79,6 +79,8 @@
                     // Store the token to keep the user logged in.
                     localStorage.setItem('authToken', result.token);
                     localStorage.setItem('companyId', result.company_id);
+                    sessionStorage.setItem('authToken', result.token);
+                    sessionStorage.setItem('companyId', result.company_id);
                     
                     // Redirect to a protected page, like a dashboard or profile.
                     window.location.href = 'employer.html'; 
