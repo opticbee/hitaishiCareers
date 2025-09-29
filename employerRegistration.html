@@ -7,35 +7,34 @@
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
-        /* Custom styles to ensure content is centered vertically */
         body, html {
             height: 100%;
+            background-color: #f8f9fa;
         }
         .container-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100%;
-            padding: 1.5rem 0;
+            padding: 2rem 0;
         }
-        /* Style for validation feedback */
+        .card {
+            border-radius: 0.75rem;
+        }
         .invalid-feedback {
             display: none;
             width: 100%;
-            margin-top: 0.25rem;
+            margin-top: .25rem;
             font-size: .875em;
             color: #dc3545;
         }
-        .was-validated .form-control:invalid, .form-control.is-invalid {
-            border-color: #dc3545;
-        }
-        .was-validated .form-control:invalid ~ .invalid-feedback,
-        .form-control.is-invalid ~ .invalid-feedback {
+        .is-invalid ~ .invalid-feedback,
+        .is-invalid ~ .form-text + .invalid-feedback {
             display: block;
         }
     </style>
 </head>
-<body class="bg-light">
+<body>
 
     <div class="container-wrapper">
         <div class="container">
@@ -46,7 +45,7 @@
                             <h2 class="card-title text-center fw-bold mb-4">Create Your Employer Account</h2>
                             <!-- Form for employer registration -->
                             <form id="register-form" novalidate>
-                                <!-- Message container for success/error alerts -->
+                                <!-- Container for success/error messages -->
                                 <div id="message-container"></div>
 
                                 <div class="mb-3">
@@ -61,41 +60,46 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="password" class="form-label">Password</label>
-                                    <input type="password" id="password" name="password" class="form-control" required>
-                                    <div class="invalid-feedback">Please enter a password.</div>
+                                    <input type="password" id="password" name="password" class="form-control" required aria-describedby="passwordHelpBlock">
+                                     <div id="passwordHelpBlock" class="form-text">
+                                        Use at least 8 characters with uppercase, lowercase, number & special (@$!%*?&)..
+                                    </div>
+                                    <div class="invalid-feedback">Your password does not meet the requirements.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="website" class="form-label">Company Website <span class="text-muted">(Optional)</span></label>
-                                    <input type="url" id="website" name="website" class="form-control">
-                                    <div class="invalid-feedback">Please enter a valid URL (e.g., https://example.com).</div>
+                                    <input type="url" id="website" name="website" class="form-control" placeholder="https://example.com">
+                                    <div class="invalid-feedback">Please enter a valid URL.</div>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="logoFile" class="form-label">Company Logo <span class="text-muted">(Optional)</span></label>
-                                    <input type="file" id="logoFile" name="logo" class="form-control" accept="image/*">
+                                    <label for="logoFile" class="form-label">Company Logo <span class="text-muted">(Optional, max 2MB)</span></label>
+                                    <input type="file" id="logoFile" name="logo" class="form-control" accept="image/png, image/jpeg, image/gif">
                                     <div class="invalid-feedback">Please select a valid image file.</div>
                                 </div>
                                  <div class="mb-3">
                                     <label for="contactPerson" class="form-label">Contact Person</label>
-                                    <input type="text" id="contactPerson" name="contact_person" class="form-control">
+                                    <input type="text" id="contactPerson" name="contact_person" class="form-control" required>
+                                    <div class="invalid-feedback">Please enter a contact person's name.</div>
                                 </div>
                                  <div class="mb-3">
                                     <label for="contactPhone" class="form-label">Contact Phone</label>
-                                    <input type="tel" id="contactPhone" name="contact_phone" class="form-control">
+                                    <input type="tel" id="contactPhone" name="contact_phone" class="form-control" required>
                                     <div class="invalid-feedback">Please enter a valid phone number.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="address" class="form-label">Address</label>
-                                    <textarea id="address" name="address" rows="2" class="form-control"></textarea>
+                                    <textarea id="address" name="address" rows="2" class="form-control" required></textarea>
+                                    <div class="invalid-feedback">Please enter your company address.</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="description" class="form-label">Company Description</label>
                                     <textarea id="description" name="description" rows="3" class="form-control"></textarea>
                                 </div>
-                                <div class="d-grid">
-                                     <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                                <div class="d-grid mt-4">
+                                     <button type="submit" id="submit-button" class="btn btn-primary btn-lg">Register</button>
                                 </div>
                             </form>
-                            <p class="text-center text-muted mt-4">
+                            <p class="text-center text-muted mt-4 mb-0">
                                 Already have an account? <a href="employerlogin.html">Login here</a>
                             </p>
                         </div>
@@ -109,113 +113,115 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
     <script>
-        const form = document.getElementById('register-form');
-        const messageContainer = document.getElementById('message-container');
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('register-form');
+            const messageContainer = document.getElementById('message-container');
+            const submitButton = document.getElementById('submit-button');
 
-        // Validation helper functions
-        const validateEmail = (email) => {
-            const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return re.test(String(email).toLowerCase());
-        };
+            // --- Validation Helper Functions ---
+            const validateEmail = (email) => {
+                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            };
+            
+            // Strong password: min 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+            const validatePassword = (password) => {
+                const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+                return re.test(password);
+            };
 
-        const validatePhone = (phone) => {
-            const re = /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/im;
-            return re.test(String(phone));
-        };
-
-        const validateUrl = (url) => {
-            try {
-                new URL(url);
+            const validateUrl = (url) => {
+                if (!url) return true; // Optional fields are valid if empty
+                try {
+                    new URL(url);
+                    return true;
+                } catch (_) {
+                    return false;
+                }
+            };
+            
+            const validateField = (input, validationFn) => {
+                if (!validationFn(input.value)) {
+                    input.classList.add('is-invalid');
+                    return false;
+                }
+                input.classList.remove('is-invalid');
                 return true;
-            } catch (_) {
-                return false;
-            }
-        };
+            };
 
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                e.stopPropagation();
 
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+                messageContainer.innerHTML = '';
+                form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                
+                let isFormValid = true;
 
-            messageContainer.innerHTML = '';
-            // Reset custom validation classes
-            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
-            
-            let isFormValid = true;
-
-            // --- Custom Field Validations ---
-            const emailInput = document.getElementById('email');
-            const phoneInput = document.getElementById('contactPhone');
-            const websiteInput = document.getElementById('website');
-
-            if (!validateEmail(emailInput.value)) {
-                isFormValid = false;
-                emailInput.classList.add('is-invalid');
-            }
-            
-            // Validate optional fields only if they have a value
-            if (phoneInput.value && !validatePhone(phoneInput.value)) {
-                isFormValid = false;
-                phoneInput.classList.add('is-invalid');
-            }
-            if (websiteInput.value && !validateUrl(websiteInput.value)) {
-                isFormValid = false;
-                websiteInput.classList.add('is-invalid');
-            }
-
-            // --- Bootstrap's required field validation ---
-            if (!form.checkValidity()) {
-                 isFormValid = false;
-            }
-            
-            form.classList.add('was-validated');
-
-            if (!isFormValid) {
-                showMessage('Please correct the errors in the form.', 'danger');
-                return;
-            }
-
-            // Use FormData to handle file uploads
-            const formData = new FormData(form);
-            // Note: Your backend needs to be configured to handle multipart/form-data.
-
-            try {
-                const response = await fetch('/api/company/register', {
-                    method: 'POST',
-                    // For FormData, the browser automatically sets the 'Content-Type' header with the correct boundary.
-                    // Do NOT set it manually.
-                    body: formData
+                // --- Custom Client-Side Validations ---
+                if (!validateField(document.getElementById('email'), validateEmail)) isFormValid = false;
+                if (!validateField(document.getElementById('password'), validatePassword)) isFormValid = false;
+                if (!validateField(document.getElementById('website'), validateUrl)) isFormValid = false;
+                
+                // --- Bootstrap's HTML5 'required' validation ---
+                form.querySelectorAll('[required]').forEach(input => {
+                    if (!input.value.trim()) {
+                         input.classList.add('is-invalid');
+                         isFormValid = false;
+                    }
                 });
 
-                const result = await response.json();
-
-                if (response.ok && result.success) {
-                    form.classList.remove('was-validated');
-                    showMessage('Registration successful! Redirecting to login...', 'success');
-                    form.reset();
-                    setTimeout(() => {
-                        window.location.href = 'employerlogin.html';
-                    }, 2000);
-                } else {
-                    showMessage(result.error || 'Registration failed. Please try again.', 'danger');
+                if (!isFormValid) {
+                    showMessage('Please correct the highlighted errors before submitting.', 'danger');
+                    return;
                 }
-            } catch (error) {
-                console.error('Registration error:', error);
-                showMessage('An unexpected error occurred. Please check your connection and try again.', 'danger');
+                
+                // Disable button to prevent multiple submissions
+                submitButton.disabled = true;
+                submitButton.textContent = 'Registering...';
+
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('/api/company/register', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) { // Status 200-299
+                        showMessage(result.message || 'Registration successful! Redirecting to login...', 'success');
+                        form.reset();
+                        setTimeout(() => {
+                            window.location.href = 'employerlogin.html';
+                        }, 2500);
+                    } else {
+                        // Display the specific error message from the server
+                        showMessage(result.error || `Error ${response.status}: Registration failed.`, 'danger');
+                    }
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    showMessage('An unexpected network error occurred. Please try again.', 'danger');
+                } finally {
+                    // Re-enable the button
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Register';
+                }
+            });
+
+            function showMessage(message, type) {
+                const wrapper = document.createElement('div');
+                wrapper.innerHTML = `
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        <span>${message}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`;
+                messageContainer.innerHTML = ''; // Clear previous messages
+                messageContainer.append(wrapper);
+                window.scrollTo(0, 0); // Scroll to top to make sure user sees the message
             }
         });
-
-        function showMessage(message, type) {
-            const wrapper = document.createElement('div');
-            wrapper.innerHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    <div>${message}</div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>`;
-            messageContainer.innerHTML = ''; // Clear previous messages
-            messageContainer.append(wrapper);
-        }
     </script>
 </body>
 </html>
-
