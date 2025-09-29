@@ -1,10 +1,33 @@
 // routes/jobs.js
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
+const jwt = require("jsonwebtoken");
 const { query } = require("../db");
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
+// --- Authentication Middleware ---
+// This ensures only a logged-in company can post a job.
+const authenticateToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) {
+        return res.status(401).json({ error: "No token provided." });
+    }
+
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(403).json({ error: "Invalid or expired token." });
+        }
+        req.user = user; // The decoded user payload (e.g., { id: 'company-id', role: 'company' })
+        next();
+    });
+};
+
+
+// --- Database Table Initialization with New Salary Fields ---
 (async function initJobsTable() {
   try {
     await query(`
@@ -22,6 +45,10 @@ const router = express.Router();
         state VARCHAR(100),
         city VARCHAR(100),
         zip_code VARCHAR(20),
+        salary_min INT,
+        salary_max INT,
+        salary_currency VARCHAR(10),
+        salary_period VARCHAR(20),
         job_data JSON,
         status ENUM('active','inactive') DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -29,20 +56,39 @@ const router = express.Router();
         FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
       )
     `);
-    console.log("✅ jobs table is ready.");
+    console.log("✅ jobs table is ready with new salary fields.");
   } catch (err) {
     console.error("❌ Error creating jobs table:", err.message);
   }
 })();
 
-// Post a new job
-router.post("/post", async (req, res) => {
+// Post a new job (Updated and Secured)
+router.post("/post", authenticateToken, async (req, res) => {
   try {
-    const { company_id, posted_by_name, posted_by_email, job_title, required_experience, job_description, required_skills, additional_skills, country, state, city, zip_code, job_data } = req.body;
+    const company_id = req.user.id; // Get company_id from the authenticated token
+    const { 
+        posted_by_name, posted_by_email, job_title, required_experience, 
+        job_description, required_skills, additional_skills, country, 
+        state, city, zip_code, salary_min, salary_max, 
+        salary_currency, salary_period, job_data 
+    } = req.body;
+    
     const id = uuidv4();
     await query(
-      `INSERT INTO jobs (id, company_id, posted_by_name, posted_by_email, job_title, required_experience, job_description, required_skills, additional_skills, country, state, city, zip_code, job_data, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')`,
-      [id, company_id, posted_by_name, posted_by_email, job_title, required_experience, job_description, required_skills, additional_skills, country, state, city, zip_code, job_data ? JSON.stringify(job_data) : null]
+      `INSERT INTO jobs (
+          id, company_id, posted_by_name, posted_by_email, job_title, 
+          required_experience, job_description, required_skills, 
+          additional_skills, country, state, city, zip_code, 
+          salary_min, salary_max, salary_currency, salary_period, 
+          job_data, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')`,
+      [
+          id, company_id, posted_by_name, posted_by_email, job_title, 
+          required_experience, job_description, required_skills, 
+          additional_skills, country, state, city, zip_code, 
+          salary_min || null, salary_max || null, salary_currency, salary_period, 
+          job_data ? JSON.stringify(job_data) : null
+      ]
     );
     res.json({ success: true, job_id: id });
   } catch (err) {
@@ -62,11 +108,14 @@ router.get("/active", async (_req, res) => {
   }
 });
 
-// --- NEW ---
-// GET all jobs for a specific company
-router.get("/company/:companyId", async (req, res) => {
+// GET all jobs for a specific company (for the dashboard)
+router.get("/company/:companyId", authenticateToken, async (req, res) => {
     try {
         const { companyId } = req.params;
+        // Security check: ensure the logged-in user is requesting their own jobs
+        if (req.user.id !== companyId) {
+            return res.status(403).json({ error: "Forbidden: You can only view your own company's jobs." });
+        }
         const rows = await query(
             `SELECT * FROM jobs WHERE company_id = ? ORDER BY created_at DESC`,
             [companyId]

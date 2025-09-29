@@ -19,7 +19,7 @@
         .content-section { display: none; animation: fadeIn 0.4s ease-out; }
         .content-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .card { border: none; border-radius: 0.75rem; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07); }
+        .card { border: none; border-radius: 0.75rem; box-shadow: 0 2px G(0, 0, 0, 0.07); }
         .placeholder-text { color: #6c757d; text-align: center; padding: 3rem; }
         input:read-only { background-color: #e9ecef; cursor: not-allowed; }
         
@@ -61,14 +61,40 @@
                     <form id="postJobForm">
                          <div class="row g-3">
                             <div class="col-md-6"><label for="jobTitle" class="form-label">Job Title</label><input type="text" class="form-control" id="jobTitle" required></div>
-                            <div class="col-md-6"><label for="requiredExperience" class="form-label">Required Experience</label><input type="text" class="form-control" id="requiredExperience"></div>
-                            <div class="col-md-6"><label for="postedByName" class="form-label">Contact Person</label><input type="text" class="form-control" id="postedByName" required></div>
+                            <div class="col-md-6"><label for="requiredExperience" class="form-label">Required Experience (e.g., 2+ Years)</label><input type="text" class="form-control" id="requiredExperience"></div>
+                            
+                            <!-- New Salary Fields -->
+                            <div class="col-md-3"><label for="salaryMin" class="form-label">Salary Minimum</label><input type="number" class="form-control" id="salaryMin" placeholder="e.g., 80000"></div>
+                            <div class="col-md-3"><label for="salaryMax" class="form-label">Salary Maximum</label><input type="number" class="form-control" id="salaryMax" placeholder="e.g., 120000"></div>
+                            <div class="col-md-3">
+                                <label for="salaryCurrency" class="form-label">Currency</label>
+                                <select id="salaryCurrency" class="form-select">
+                                    <option value="INR">₹ INR</option>
+                                    <option value="USD">$ USD</option>
+                                    <option value="EUR">€ EUR</option>
+                                    <option value="GBP">£ GBP</option>
+                                    <option value="AED">د.إ AED</option>
+                                    <option value="CAD">C$ CAD</option>
+                                    <option value="AUD">A$ AUD</option>
+                                </select>
+                            </div>
+                             <div class="col-md-3">
+                                <label for="salaryPeriod" class="form-label">Period</label>
+                                <select id="salaryPeriod" class="form-select">
+                                    <option value="Per Year">Per Year</option>
+                                    <option value="Per Month">Per Month</option>
+                                </select>
+                            </div>
+
+                            <hr class="my-3">
+
+                            <div class="col-md-6"><label for="postedByName" class="form-label">Hiring Manager / Contact Person</label><input type="text" class="form-control" id="postedByName" required></div>
                             <div class="col-md-6"><label for="postedByEmail" class="form-label">Contact Email</label><input type="email" class="form-control" id="postedByEmail" required></div>
                             <div class="col-md-4"><label for="country" class="form-label">Country</label><input type="text" class="form-control" id="country"></div>
                             <div class="col-md-4"><label for="state" class="form-label">State</label><input type="text" class="form-control" id="state"></div>
                             <div class="col-md-4"><label for="city" class="form-label">City</label><input type="text" class="form-control" id="city"></div>
                             <div class="col-12"><label for="jobDescription" class="form-label">Job Description</label><textarea class="form-control" id="jobDescription" rows="5" required></textarea></div>
-                            <div class="col-12"><label for="requiredSkills" class="form-label">Required Skills (comma-separated)</label><input type="text" class="form-control" id="requiredSkills" required></div>
+                            <div class="col-12"><label for="requiredSkills" class="form-label">Required Skills (comma-separated)</label><input type="text" class="form-control" id="requiredSkills" placeholder="e.g., JavaScript, React, Node.js" required></div>
                          </div>
                         <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4">Post Job</button></div>
                     </form>
@@ -94,45 +120,15 @@
                                     <input type="file" class="form-control" id="companyLogo" accept="image/*">
                                 </div>
                             </div>
-
-                            <div class="col-md-6">
-                                <label for="companyName" class="form-label">Company Name</label>
-                                <input type="text" class="form-control" id="companyName" required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="companyWebsite" class="form-label">Website</label>
-                                <input type="url" class="form-control" id="companyWebsite">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="companyEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="companyEmail" required readonly>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="personName" class="form-label">Person Name</label>
-                                <input type="text" class="form-control" id="personName">
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="phoneNumber" class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" id="phoneNumber">
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <label for="address" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="address">
-                            </div>
-
-                            <div class="col-12">
-                                <label for="companyDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="companyDescription" rows="4"></textarea>
-                            </div>
+                            <div class="col-md-6"><label for="companyName" class="form-label">Company Name</label><input type="text" class="form-control" id="companyName" required></div>
+                            <div class="col-md-6"><label for="companyWebsite" class="form-label">Website</label><input type="url" class="form-control" id="companyWebsite"></div>
+                            <div class="col-md-6"><label for="companyEmail" class="form-label">Email</label><input type="email" class="form-control" id="companyEmail" required readonly></div>
+                            <div class="col-md-6"><label for="personName" class="form-label">Person Name</label><input type="text" class="form-control" id="personName"></div>
+                            <div class="col-md-6"><label for="phoneNumber" class="form-label">Phone Number</label><input type="tel" class="form-control" id="phoneNumber"></div>
+                            <div class="col-md-6"><label for="address" class="form-label">Address</label><input type="text" class="form-control" id="address"></div>
+                            <div class="col-12"><label for="companyDescription" class="form-label">Description</label><textarea class="form-control" id="companyDescription" rows="4"></textarea></div>
                         </div>
-                        <div class="mt-4 text-end">
-                            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
-                        </div>
+                        <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4">Save Changes</button></div>
                     </form>
                 </div>
             </div>
@@ -147,6 +143,8 @@
                 return;
             }
 
+            let currentCompanyProfile = null; // Variable to store company profile
+
             // --- Toast Notification ---
             const toastContainer = document.getElementById('toastContainer');
             const showToast = (message, type = 'success') => {
@@ -157,43 +155,54 @@
                 if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
                 toast.innerHTML = `<i class="${iconClass}"></i><span>${message}</span>`;
                 toastContainer.appendChild(toast);
-                setTimeout(() => {
-                    toast.remove();
-                }, 5000);
+                setTimeout(() => { toast.remove(); }, 5000);
             };
 
             // --- API Fetch Helper ---
             const fetchData = async (url, options = {}) => {
                 try {
+                    const defaultHeaders = { 'Authorization': `Bearer ${token}` };
+                    // Only add Content-Type for JSON, not for FormData
+                    if (!(options.body instanceof FormData)) {
+                        defaultHeaders['Content-Type'] = 'application/json';
+                    }
+
                     const response = await fetch(url, {
                         ...options,
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`, 
-                            ...options.headers,
-                        },
+                        headers: { ...defaultHeaders, ...options.headers },
                     });
+
                     if (!response.ok) {
                         if (response.status === 401 || response.status === 403) {
+                            showToast('Session expired. Please log in again.', 'error');
                             sessionStorage.removeItem('authToken');
                             window.location.href = 'employerlogin.html';
                         }
-                        throw new Error(`Error: ${response.status} ${response.statusText}`);
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || `Error: ${response.status}`);
                     }
                     return await response.json();
                 } catch (error) {
                     console.error('API call failed:', error);
+                    showToast(error.message, 'error');
                     return null;
                 }
             };
 
             const fetchCompanyProfile = async () => {
                 const profile = await fetchData(`/api/company/profile`);
-                if (profile) renderCompanyProfile(profile);
+                if (profile) {
+                    currentCompanyProfile = profile; // Store the profile
+                    renderCompanyProfile(profile);
+                }
             };
 
             const fetchJobs = async () => {
-                const data = await fetchData(`/api/jobs/my-jobs`); 
+                if (!currentCompanyProfile || !currentCompanyProfile.id) {
+                    console.log("Company profile not loaded yet, can't fetch jobs.");
+                    return;
+                }
+                const data = await fetchData(`/api/jobs/company/${currentCompanyProfile.id}`); 
                 if (data && data.jobs) {
                     renderJobs(data.jobs);
                 } else {
@@ -208,17 +217,14 @@
                 const placeholderLogo = 'https://placehold.co/100x100/EFEFEF/AAAAAA&text=Logo';
                 const placeholderSidebarLogo = 'https://placehold.co/80x80/EFEFEF/AAAAAA&text=Logo';
 
-                // Update Sidebar Logo
                 const sidebarLogo = document.getElementById('sidebarLogo');
                 sidebarLogo.src = profile.logo_url ? profile.logo_url + timestamp : placeholderSidebarLogo;
                 sidebarLogo.onerror = () => { sidebarLogo.src = placeholderSidebarLogo; };
 
-                // Update Profile Form Logo Preview
                 const logoPreview = document.getElementById('logoPreview');
                 logoPreview.src = profile.logo_url ? profile.logo_url + timestamp : placeholderLogo;
                 logoPreview.onerror = () => { logoPreview.src = placeholderLogo; };
 
-                // Update Form fields
                 document.getElementById('companyName').value = profile.company_name || '';
                 document.getElementById('companyWebsite').value = profile.website || '';
                 document.getElementById('companyEmail').value = profile.user_email || '';
@@ -226,6 +232,8 @@
                 document.getElementById('phoneNumber').value = profile.contact_phone || '';
                 document.getElementById('address').value = profile.address || '';
                 document.getElementById('companyDescription').value = profile.description || '';
+                
+                // Pre-fill job contact details from company profile
                 document.getElementById('postedByName').value = profile.contact_person || '';
                 document.getElementById('postedByEmail').value = profile.user_email || '';
             };
@@ -236,25 +244,34 @@
                     container.innerHTML = '<p class="placeholder-text">You have not posted any jobs yet.</p>';
                     return;
                 }
-                container.innerHTML = jobs.map(job => `
+                container.innerHTML = jobs.map(job => {
+                    let salaryInfo = '';
+                    if (job.salary_min && job.salary_max && job.salary_currency && job.salary_period) {
+                        salaryInfo = `
+                        <div class="text-success fw-bold mt-1">
+                            <small>${job.salary_currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} ${job.salary_period}</small>
+                        </div>`;
+                    }
+
+                    return `
                     <div class="card mb-3">
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="card-title mb-1">${job.job_title}</h5>
-                                <h6 class="card-subtitle text-muted">${job.city || 'Remote'}, ${job.state || ''}</h6>
-                            </div>
-                            <span class="badge bg-${job.status === 'active' ? 'success' : 'secondary'}">${job.status}</span>
+                        <div class="card-body">
+                           <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5 class="card-title mb-1">${job.job_title}</h5>
+                                    <h6 class="card-subtitle text-muted"><i class="fas fa-map-marker-alt fa-fw me-1"></i>${job.city || 'Remote'}, ${job.country || ''}</h6>
+                                    ${salaryInfo}
+                                </div>
+                                <span class="badge bg-${job.status === 'active' ? 'success' : 'secondary'}">${job.status}</span>
+                           </div>
                         </div>
                     </div>
-                `).join('');
+                `}).join('');
             };
             
             document.getElementById('companyLogo').addEventListener('change', function() {
-                const file = this.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => { document.getElementById('logoPreview').src = e.target.result; }
-                    reader.readAsDataURL(file);
+                if (this.files[0]) {
+                    document.getElementById('logoPreview').src = URL.createObjectURL(this.files[0]);
                 }
             });
 
@@ -267,21 +284,26 @@
                 const jobData = {
                     job_title: document.getElementById('jobTitle').value,
                     required_experience: document.getElementById('requiredExperience').value,
+                    salary_min: document.getElementById('salaryMin').value || null,
+                    salary_max: document.getElementById('salaryMax').value || null,
+                    salary_currency: document.getElementById('salaryCurrency').value,
+                    salary_period: document.getElementById('salaryPeriod').value,
                     posted_by_name: document.getElementById('postedByName').value,
                     posted_by_email: document.getElementById('postedByEmail').value,
                     country: document.getElementById('country').value,
                     state: document.getElementById('state').value,
                     city: document.getElementById('city').value,
                     job_description: document.getElementById('jobDescription').value,
-                    required_skills: document.getElementById('requiredSkills').value.split(',').map(s => s.trim()),
+                    required_skills: document.getElementById('requiredSkills').value,
                 };
                 const result = await fetchData('/api/jobs/post', { method: 'POST', body: JSON.stringify(jobData) });
                 if (result && result.success) {
                     showToast('Job posted successfully!');
                     e.target.reset();
+                    // Pre-fill contact details again after reset
+                    document.getElementById('postedByName').value = currentCompanyProfile.contact_person || '';
+                    document.getElementById('postedByEmail').value = currentCompanyProfile.user_email || '';
                     fetchJobs(); 
-                } else {
-                    showToast('Failed to post job. Please try again.', 'error');
                 }
             });
 
@@ -294,39 +316,22 @@
                 formData.append('contact_phone', document.getElementById('phoneNumber').value);
                 formData.append('address', document.getElementById('address').value);
                 formData.append('description', document.getElementById('companyDescription').value);
-
                 const logoFile = document.getElementById('companyLogo').files[0];
-                if (logoFile) {
-                    formData.append('logo', logoFile);
-                }
+                if (logoFile) { formData.append('logo', logoFile); }
 
-                try {
-                    const response = await fetch(`/api/company/profile`, {
-                        method: 'PATCH',
-                        headers: { 'Authorization': `Bearer ${token}` },
-                        body: formData
-                    });
-
-                    const result = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(result.message || `Error: ${response.status}`);
-                    }
-
+                const result = await fetchData(`/api/company/profile`, { method: 'PATCH', body: formData });
+                if (result && result.success) {
                     showToast(result.message || 'Profile updated successfully!');
-                    
                     if (result.profile) {
+                        currentCompanyProfile = result.profile; // Update stored profile
                         renderCompanyProfile(result.profile);
                     } else {
-                        fetchCompanyProfile();
+                        fetchCompanyProfile(); // Fallback to refetch
                     }
-
-                } catch(error) {
-                    console.error('Profile update failed:', error);
-                    showToast(`Profile update failed: ${error.message}`, 'error');
                 }
             });
 
+            // --- Navigation Logic ---
             const navButtons = document.querySelectorAll('.nav-btn[data-section]');
             const contentSections = document.querySelectorAll('.content-section');
             const showSection = (sectionId) => {
@@ -337,18 +342,19 @@
                 button.addEventListener('click', () => showSection(button.dataset.section));
             });
 
+            // --- Logout ---
             document.getElementById('logoutButton').addEventListener('click', () => {
                 sessionStorage.removeItem('authToken');
                 window.location.href = 'employerlogin.html';
             });
 
-            const initializeDashboard = () => {
-                fetchCompanyProfile();
-                fetchJobs();
+            // --- Initialize Dashboard ---
+            const initializeDashboard = async () => {
+                await fetchCompanyProfile(); // Wait for profile to load first
+                fetchJobs(); // Then fetch jobs using the loaded profile ID
             };
             initializeDashboard();
         });
     </script>
 </body>
 </html>
-
