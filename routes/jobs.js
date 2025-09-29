@@ -41,7 +41,7 @@ const authenticateToken = (req, res, next) => {
         job_title VARCHAR(255) NOT NULL,
         required_experience VARCHAR(255),
         job_description TEXT NOT NULL,
-        required_skills TEXT NOT NULL,
+        required_skills TEXT,
         additional_skills TEXT,
         country VARCHAR(100),
         state VARCHAR(100),
@@ -70,6 +70,53 @@ const authenticateToken = (req, res, next) => {
       console.log("✅ Salary fields added to 'jobs' table successfully.");
     }
     
+    // Migration for new job fields
+    const jobTypeColumn = await query("SHOW COLUMNS FROM jobs WHERE Field = 'job_type'");
+    if (jobTypeColumn.length === 0) {
+        console.log("Schema migration started: Adding new fields and converting skill data...");
+
+        // Step 1: Add the new columns
+        await query(`
+            ALTER TABLE jobs
+            ADD COLUMN job_type VARCHAR(50) NULL,
+            ADD COLUMN work_location VARCHAR(50) NULL,
+            ADD COLUMN responsibilities TEXT NULL
+        `);
+        console.log(" -> Step 1/4: Added job_type, work_location, and responsibilities columns.");
+
+        // Step 2: Convert existing comma-separated skills into JSON array strings
+        await query(`
+            UPDATE jobs 
+            SET required_skills = CONCAT('["', REPLACE(TRIM(REPLACE(required_skills, ', ', ',')), ',', '","'), '"]')
+            WHERE required_skills IS NOT NULL AND TRIM(required_skills) <> '' AND JSON_VALID(required_skills) = 0;
+        `);
+        console.log(" -> Step 2/4: Converted data in required_skills.");
+
+        await query(`
+            UPDATE jobs 
+            SET additional_skills = CONCAT('["', REPLACE(TRIM(REPLACE(additional_skills, ', ', ',')), ',', '","'), '"]')
+            WHERE additional_skills IS NOT NULL AND TRIM(additional_skills) <> '' AND JSON_VALID(additional_skills) = 0;
+        `);
+         console.log(" -> Step 2/4 (cont.): Converted data in additional_skills.");
+
+        // Step 3: Now that the data is in a valid JSON string format, we can alter the column type.
+        await query(`
+            ALTER TABLE jobs
+            MODIFY COLUMN required_skills JSON NULL,
+            MODIFY COLUMN additional_skills JSON NULL
+        `);
+        console.log(" -> Step 3/4: Changed column types for skills to JSON.");
+
+        // Step 4: Drop the old job_data column
+        await query(`
+            ALTER TABLE jobs
+            DROP COLUMN job_data
+        `);
+        console.log(" -> Step 4/4: Removed old job_data column.");
+        
+        console.log("✅ Schema migration completed successfully.");
+    }
+    
     console.log("✅ jobs table is ready.");
   } catch (err) {
     console.error("❌ Error initializing jobs table:", err.message);
@@ -84,8 +131,11 @@ router.post("/post", authenticateToken, async (req, res) => {
         posted_by_name, posted_by_email, job_title, required_experience, 
         job_description, required_skills, additional_skills, country, 
         state, city, zip_code, salary_min, salary_max, 
-        salary_currency, salary_period, job_data 
+        salary_currency, salary_period, responsibilities, job_type, work_location 
     } = req.body;
+    
+    // Log the received data for debugging purposes
+    console.log('Received job post data:', req.body);
     
     const id = uuidv4();
     await query(
@@ -94,14 +144,14 @@ router.post("/post", authenticateToken, async (req, res) => {
           required_experience, job_description, required_skills, 
           additional_skills, country, state, city, zip_code, 
           salary_min, salary_max, salary_currency, salary_period, 
-          job_data, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')`,
+          responsibilities, job_type, work_location, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')`,
       [
           id, company_id, posted_by_name, posted_by_email, job_title, 
-          required_experience, job_description, required_skills, 
-          additional_skills, country, state, city, zip_code, 
+          required_experience, job_description, JSON.stringify(required_skills || []), 
+          JSON.stringify(additional_skills || []), country, state, city, zip_code, 
           salary_min || null, salary_max || null, salary_currency, salary_period, 
-          job_data ? JSON.stringify(job_data) : null
+          responsibilities, job_type, work_location
       ]
     );
     res.json({ success: true, job_id: id });
@@ -117,7 +167,7 @@ router.get("/active", async (_req, res) => {
     const rows = await query(`SELECT j.*, c.company_name, c.logo_url FROM jobs j JOIN companies c ON j.company_id = c.id WHERE j.status='active' ORDER BY j.created_at DESC`);
     res.json({ jobs: rows });
   } catch (err) {
-    console.error("Failed to fetch jobs:", err);
+    console.error("Failed to fetch active jobs:", err.message, err);
     res.status(500).json({ error: "Failed to fetch jobs" });
   }
 });
@@ -143,3 +193,4 @@ router.get("/company/:companyId", authenticateToken, async (req, res) => {
 });
 
 module.exports = router;
+
