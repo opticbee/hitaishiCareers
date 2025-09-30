@@ -48,7 +48,6 @@ router.post("/apply", authenticateUser, async (req, res) => {
             return res.status(400).json({ error: "Job ID is required." });
         }
 
-        // 1. Check if the user has already applied
         const [existingApplication] = await query(
             `SELECT id FROM job_applications WHERE user_id = ? AND job_id = ?`,
             [userId, jobId]
@@ -57,7 +56,6 @@ router.post("/apply", authenticateUser, async (req, res) => {
             return res.status(409).json({ error: "You have already applied for this job." });
         }
 
-        // 2. Fetch the user's FULL profile details to create a snapshot
         const [user] = await query('SELECT * FROM users WHERE email=?', [userEmail]);
         if (!user) {
             return res.status(404).json({ error: "Could not find your user profile to submit." });
@@ -66,7 +64,7 @@ router.post("/apply", authenticateUser, async (req, res) => {
         const safeParse = (v) => {
           if (!v) return null;
           if (typeof v === 'object') return v;
-          try { return JSON.parse(v); } catch (e) { return v; } // return as is if not json
+          try { return JSON.parse(v); } catch (e) { return v; }
         };
 
         const profileSnapshot = {
@@ -91,14 +89,12 @@ router.post("/apply", authenticateUser, async (req, res) => {
           noticePeriod: user.notice_period
         };
 
-        // 3. Get the job's company_id
         const [jobData] = await query(`SELECT company_id FROM jobs WHERE id = ?`, [jobId]);
         if (!jobData) {
             return res.status(404).json({ error: "Job not found. It may have been removed." });
         }
         const companyId = jobData.company_id;
 
-        // 4. Create and insert the new application
         const applicationId = uuidv4();
         await query(
             `INSERT INTO job_applications (id, job_id, user_id, company_id, user_profile_snapshot) VALUES (?, ?, ?, ?, ?)`,
@@ -113,4 +109,29 @@ router.post("/apply", authenticateUser, async (req, res) => {
     }
 });
 
+// --- Route to get all applications for a specific job ---
+router.get("/:jobId", async (req, res) => {
+    try {
+        const { jobId } = req.params;
+        const applications = await query(
+            `SELECT user_profile_snapshot FROM job_applications WHERE job_id = ?`,
+            [jobId]
+        );
+        
+        // FIXED: The database driver is likely already parsing the JSON field.
+        // We no longer need to call JSON.parse(). We just extract the object directly.
+        const applicants = applications
+            .map(app => app.user_profile_snapshot) // Directly use the object from the database
+            .filter(Boolean); // Filter out any null or empty entries
+
+        res.status(200).json({ success: true, applicants });
+
+    } catch (err) {
+        // This will now only catch database-level errors, not parsing errors.
+        console.error("Failed to fetch applications:", err);
+        res.status(500).json({ error: "An internal server error occurred.", message: err.message });
+    }
+});
+
 module.exports = router;
+
