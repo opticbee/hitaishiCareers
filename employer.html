@@ -68,25 +68,38 @@
                 <div class="card-body p-4">
                     <form id="postJobForm">
                         <div class="row g-3">
+                            <!-- Location fields moved to the top -->
+                            <div class="col-md-3"><label for="country" class="form-label">Country</label><input type="text" class="form-control" id="country"></div>
+                            <div class="col-md-3"><label for="state" class="form-label">State</label><input type="text" class="form-control" id="state"></div>
+                            <div class="col-md-3"><label for="city" class="form-label">City</label><input type="text" class="form-control" id="city"></div>
+                            <div class="col-md-3"><label for="zipCode" class="form-label">Zip Code</label><input type="text" class="form-control" id="zipCode"></div>
+                            
+                            <hr class="my-3">
+
                             <div class="col-md-6"><label for="jobTitle" class="form-label">Job Title</label><input type="text" class="form-control" id="jobTitle" required></div>
                             <div class="col-md-6"><label for="requiredExperience" class="form-label">Required Experience (e.g., 2+ Years)</label><input type="text" class="form-control" id="requiredExperience"></div>
                             
-                             <div class="col-md-6"><label for="jobType" class="form-label">Job Type</label><select id="jobType" class="form-select"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Internship">Internship</option></select></div>
+                            <div class="col-md-6"><label for="jobType" class="form-label">Job Type</label><select id="jobType" class="form-select"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Internship">Internship</option></select></div>
                             <div class="col-md-6"><label for="workLocation" class="form-label">Work Location</label><select id="workLocation" class="form-select"><option value="In-office">In-office</option><option value="Remote">Remote</option><option value="Hybrid">Hybrid</option></select></div>
-
+                            
+                            <!-- Updated Salary fields -->
                             <div class="col-md-3"><label for="salaryMin" class="form-label">Salary Minimum</label><input type="number" class="form-control" id="salaryMin" placeholder="e.g., 80000"></div>
                             <div class="col-md-3"><label for="salaryMax" class="form-label">Salary Maximum</label><input type="number" class="form-control" id="salaryMax" placeholder="e.g., 120000"></div>
-                            <div class="col-md-3"><label for="salaryCurrency" class="form-label">Currency</label><select id="salaryCurrency" class="form-select"><option value="INR">₹ INR</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option><option value="GBP">£ GBP</option><option value="AED">د.إ AED</option><option value="CAD">C$ CAD</option><option value="AUD">A$ AUD</option></select></div>
-                            <div class="col-md-3"><label for="salaryPeriod" class="form-label">Period</label><select id="salaryPeriod" class="form-select"><option value="Per Year">Per Year</option><option value="Per Month">Per Month</option></select></div>
+                            <div class="col-md-2"><label for="salaryCurrency" class="form-label">Currency</label><select id="salaryCurrency" class="form-select"><option value="INR">₹ INR</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option><option value="GBP">£ GBP</option><option value="AED">د.إ AED</option><option value="CAD">C$ CAD</option><option value="AUD">A$ AUD</option></select></div>
+                            <div class="col-md-2"><label for="salaryPeriod" class="form-label">Period</label><select id="salaryPeriod" class="form-select"><option value="Hourly">Hourly</option><option value="Monthly">Monthly</option><option value="Yearly">Yearly</option></select></div>
+                            <div class="col-md-2">
+                                <label for="salaryPeriodCount" class="form-label">Count</label>
+                                <div class="input-group">
+                                    <button class="btn btn-outline-secondary" type="button" id="decrementPeriodCount">-</button>
+                                    <input type="number" class="form-control text-center" id="salaryPeriodCount" value="1" min="1">
+                                    <button class="btn btn-outline-secondary" type="button" id="incrementPeriodCount">+</button>
+                                </div>
+                            </div>
 
                             <hr class="my-3">
 
                             <div class="col-md-6"><label for="postedByName" class="form-label">Hiring Manager / Contact Person</label><input type="text" class="form-control" id="postedByName" required></div>
                             <div class="col-md-6"><label for="postedByEmail" class="form-label">Contact Email</label><input type="email" class="form-control" id="postedByEmail" required></div>
-                            <div class="col-md-3"><label for="country" class="form-label">Country</label><input type="text" class="form-control" id="country"></div>
-                            <div class="col-md-3"><label for="state" class="form-label">State</label><input type="text" class="form-control" id="state"></div>
-                            <div class="col-md-3"><label for="city" class="form-label">City</label><input type="text" class="form-control" id="city"></div>
-                            <div class="col-md-3"><label for="zipCode" class="form-label">Zip Code</label><input type="text" class="form-control" id="zipCode"></div>
                             
                             <div class="col-12"><label for="jobDescription" class="form-label">Job Description</label><textarea class="form-control" id="jobDescription" rows="5" required></textarea></div>
                             <div class="col-12"><label for="responsibilities" class="form-label">Responsibilities</label><textarea class="form-control" id="responsibilities" rows="5" placeholder="List each responsibility on a new line..."></textarea></div>
@@ -172,7 +185,7 @@
                 constructor(containerId) {
                     this.container = document.getElementById(containerId);
                     this.skills = new Set();
-                    this.apiKey = "AIzaSyDqW6tsp_sUG5-Xf6aXFzYuqrvRiGehGXg";
+                    this.apiKey = "AIzaSyDqW6tsp_sUG5-Xf6aXFzYuqrvRiGehGXg"; // This seems to be a hardcoded key, consider environment variables for production.
                     this.apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${this.apiKey}`;
                     this._render();
                 }
@@ -269,7 +282,6 @@
             const requiredSkillsInput = new SkillsInput('requiredSkills');
             const additionalSkillsInput = new SkillsInput('additionalSkills');
 
-
             const fetchCompanyProfile = async () => {
                 const profile = await fetchData(`/api/company/profile`);
                 if (profile) {
@@ -309,7 +321,13 @@
                 container.innerHTML = jobs.map(job => {
                     let salaryInfo = '';
                     if (job.salary_min && job.salary_max) {
-                        salaryInfo = `<div class="text-success fw-bold mt-1"><small>${job.salary_currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} ${job.salary_period}</small></div>`;
+                        const periodCount = job.salary_period_count || 1;
+                        const period = job.salary_period || 'Year';
+                        let periodText = period;
+                        if (periodCount > 1) {
+                           periodText = `${periodCount} ${period.replace('ly','s')}`;
+                        }
+                        salaryInfo = `<div class="text-success fw-bold mt-1"><small>${job.salary_currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} per ${periodText}</small></div>`;
                     }
                     const skills = (job.required_skills && Array.isArray(job.required_skills)) ? job.required_skills.map(skill => `<span class="badge bg-secondary me-1">${skill}</span>`).join('') : '';
 
@@ -342,6 +360,7 @@
                     salary_max: document.getElementById('salaryMax').value || null,
                     salary_currency: document.getElementById('salaryCurrency').value,
                     salary_period: document.getElementById('salaryPeriod').value,
+                    salary_period_count: document.getElementById('salaryPeriodCount').value,
                     posted_by_name: document.getElementById('postedByName').value,
                     posted_by_email: document.getElementById('postedByEmail').value,
                     country: document.getElementById('country').value,
@@ -389,6 +408,47 @@
                 }
             });
             
+            // --- New Feature Logic ---
+            
+            // 1. Automatic Currency Selection
+            const countryToCurrency = {
+                'india': 'INR', 'republic of india': 'INR',
+                'united states': 'USD', 'usa': 'USD', 'america': 'USD',
+                'united kingdom': 'GBP', 'uk': 'GBP', 'great britain': 'GBP',
+                'germany': 'EUR', 'france': 'EUR', 'italy': 'EUR', 'spain': 'EUR', 'netherlands': 'EUR',
+                'united arab emirates': 'AED', 'uae': 'AED',
+                'canada': 'CAD',
+                'australia': 'AUD'
+            };
+            const countryInput = document.getElementById('country');
+            const currencySelect = document.getElementById('salaryCurrency');
+            countryInput.addEventListener('input', () => {
+                const countryName = countryInput.value.trim().toLowerCase();
+                const currency = Object.keys(countryToCurrency).find(key => countryName.includes(key));
+                if (currency && countryToCurrency[currency]) {
+                    currencySelect.value = countryToCurrency[currency];
+                }
+            });
+
+            // 2. Period Count Controls
+            const decrementBtn = document.getElementById('decrementPeriodCount');
+            const incrementBtn = document.getElementById('incrementPeriodCount');
+            const countInput = document.getElementById('salaryPeriodCount');
+
+            decrementBtn.addEventListener('click', () => {
+                let currentValue = parseInt(countInput.value, 10);
+                if (currentValue > 1) {
+                    countInput.value = currentValue - 1;
+                }
+            });
+
+            incrementBtn.addEventListener('click', () => {
+                let currentValue = parseInt(countInput.value, 10) || 0;
+                countInput.value = currentValue + 1;
+            });
+
+            // --- End New Feature Logic ---
+
             const navButtons = document.querySelectorAll('.nav-btn[data-section]');
             const contentSections = document.querySelectorAll('.content-section');
             const showSection = (sectionId) => {
@@ -413,4 +473,3 @@
     </script>
 </body>
 </html>
-
