@@ -234,6 +234,18 @@
             const searchButton = document.getElementById('searchButton');
             const resetFiltersButton = document.getElementById('resetFilters');
 
+            // --- Read search parameters from URL ---
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchQuery = urlParams.get('q');
+            const locationQuery = urlParams.get('location');
+
+            if (searchQuery) {
+                searchInput.value = searchQuery;
+            }
+            if (locationQuery) {
+                locationInput.value = locationQuery;
+            }
+
             // --- Helper Functions ---
             const timeAgo = (dateString) => {
                 if (!dateString) return '';
