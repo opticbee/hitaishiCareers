@@ -42,9 +42,27 @@
             border: none;
             padding: 0.75rem 0;
         }
+        .detail-item {
+            display: flex;
+            margin-bottom: 0.75rem;
+        }
+        .detail-item .icon {
+            font-size: 1rem;
+            color: #0d6efd;
+            width: 25px;
+            text-align: center;
+        }
+        .detail-item .text {
+            font-weight: 500;
+            color: #495057;
+        }
         #applyBtn {
             font-size: 1.1rem;
             padding: 0.75rem;
+        }
+        .skill-badge {
+            font-size: 0.8rem;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -63,7 +81,7 @@
           <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-              <li class="nav-item"><a class="nav-link active" href="jobs.html">Jobs</a></li>
+              <li class="nav-item"><a class="nav-link" href="jobs.html">Jobs</a></li>
             </ul>
           </div>
         </div>
@@ -72,7 +90,8 @@
 
     <main class="container py-5">
         <div id="page-content">
-            <!-- This container will be populated by JavaScript -->
+            <!-- Loading Spinner -->
+            <div class="text-center p-5"><div class="spinner-border" style="width: 3rem; height: 3rem;" role="status"><span class="visually-hidden">Loading...</span></div></div>
         </div>
     </main>
 
@@ -80,20 +99,150 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const pageContent = document.getElementById('page-content');
             
+            // --- Helper Functions ---
             const renderError = (message, showLoginButton = false) => {
-                let buttonHtml = '';
-                if (showLoginButton) {
-                    buttonHtml = `<a href="login.html" class="btn btn-primary mt-3">Go to Login</a>`;
-                }
+                let buttonHtml = showLoginButton ? `<a href="login.html" class="btn btn-primary mt-3">Go to Login</a>` : '';
                 pageContent.innerHTML = `
                     <div class="card p-5 text-center">
-                        <h3 class="text-danger">Error</h3>
-                        <p class="text-muted">${message}</p>
+                        <h3 class="text-danger"><i class="fas fa-exclamation-triangle me-2"></i>Error</h3>
+                        <p class="text-muted fs-5">${message}</p>
                         ${buttonHtml}
                     </div>
                 `;
             };
 
+            const formatSalary = (job) => {
+                if (job.salary_min && job.salary_max) {
+                    return `${job.salary_currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} per ${job.salary_period || 'annum'}`;
+                }
+                return 'Not Disclosed';
+            };
+
+            const formatSkills = (skills, title) => {
+                 const skillArray = skills && typeof skills === 'string' ? JSON.parse(skills) : skills;
+                if (!Array.isArray(skillArray) || skillArray.length === 0) return '';
+                return `
+                    <h3 class="section-title mt-4">${title}</h3>
+                    <div>
+                        ${skillArray.map(skill => `<span class="badge bg-secondary skill-badge me-1 mb-1">${skill}</span>`).join('')}
+                    </div>
+                `;
+            };
+
+            const getProfessionalSummary = (details) => {
+                if(!details || details.length === 0) return 'No professional details provided.';
+                const latest = details[0]; // Assuming the first is the most recent
+                return `${latest.designation} at ${latest.company} with ${details.totalExperience || 'N/A'} of experience.`;
+            }
+
+            // --- Page Rendering Function ---
+            function renderApplicationPage(job, user) {
+                const { personalDetails, professionalDetails, resume } = user;
+                const fullLocation = [job.city, job.state, job.country, job.zip_code].filter(Boolean).join(', ');
+
+                pageContent.innerHTML = `
+                    <div class="row g-4">
+                        <!-- Left Column: Job Details -->
+                        <div class="col-lg-7">
+                            <div class="card">
+                                <div class="card-body p-4">
+                                    <div class="job-header d-flex align-items-center mb-4 pb-4">
+                                        <img src="${job.logo_url || 'https://placehold.co/80x80/EFEFEF/AAAAAA&text=Logo'}" alt="${job.company_name} Logo" class="company-logo me-3">
+                                        <div>
+                                            <h2 class="h4 mb-1">${job.job_title}</h2>
+                                            <p class="text-muted mb-0">${job.company_name}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <div class="detail-item"><div class="icon"><i class="fas fa-map-marker-alt"></i></div><span class="text">${fullLocation}</span></div>
+                                        <div class="detail-item"><div class="icon"><i class="fas fa-money-bill-wave"></i></div><span class="text">${formatSalary(job)}</span></div>
+                                        <div class="detail-item"><div class="icon"><i class="fas fa-briefcase"></i></div><span class="text">${job.job_type || 'N/A'}</span></div>
+                                        <div class="detail-item"><div class="icon"><i class="fas fa-laptop-house"></i></div><span class="text">${job.work_location || 'N/A'}</span></div>
+                                        <div class="detail-item"><div class="icon"><i class="fas fa-chart-line"></i></div><span class="text">${job.required_experience || 'N/A'}</span></div>
+                                    </div>
+
+                                    <h3 class="section-title">Job Description</h3>
+                                    <p>${job.job_description ? job.job_description.replace(/\n/g, '<br>') : 'No description provided.'}</p>
+
+                                    ${job.responsibilities ? `<h3 class="section-title mt-4">Responsibilities</h3><p>${job.responsibilities.replace(/\n/g, '<br>')}</p>` : ''}
+                                    
+                                    ${formatSkills(job.required_skills, 'Required Skills')}
+                                    ${formatSkills(job.additional_skills, 'Additional Skills')}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: User Summary & Apply Button -->
+                        <div class="col-lg-5">
+                            <div class="card user-profile-card position-sticky" style="top: 20px;">
+                                <div class="card-body p-4">
+                                    <h3 class="section-title">Your Application</h3>
+                                    <div class="d-flex align-items-center mb-3">
+                                        <img src="${personalDetails.profilePhoto || 'https://placehold.co/60x60/0d6efd/ffffff&text=You'}" class="rounded-circle me-3" width="60" height="60">
+                                        <div>
+                                            <h5 class="mb-0">${personalDetails.fullName || 'N/A'}</h5>
+                                            <p class="text-muted mb-0">${personalDetails.email || 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    <ul class="list-group list-group-flush mb-3">
+                                        <li class="list-group-item"><strong>Phone:</strong> ${personalDetails.phone || 'N/A'}</li>
+                                        <li class="list-group-item"><strong>Professional Summary:</strong> ${getProfessionalSummary(professionalDetails)}</li>
+                                        ${resume ? `<li class="list-group-item"><strong>Resume:</strong> <a href="${resume.url}" target="_blank">${resume.name} <i class="fas fa-external-link-alt fa-xs"></i></a></li>` : '<li class="list-group-item text-warning"><strong>Resume:</strong> Not Uploaded</li>'}
+                                    </ul>
+
+                                    <div id="apply-section">
+                                        <p class="text-muted small">By clicking "Confirm & Apply", your full profile will be sent to the employer.</p>
+                                        <div class="d-grid">
+                                            <button id="applyBtn" class="btn btn-primary btn-lg">
+                                                <i class="fas fa-paper-plane me-2"></i>Confirm & Apply
+                                            </button>
+                                        </div>
+                                        <div id="apply-message" class="mt-3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('applyBtn').addEventListener('click', handleApply);
+            }
+
+            // --- Apply Logic ---
+            async function handleApply() {
+                const applyBtn = document.getElementById('applyBtn');
+                const applyMessage = document.getElementById('apply-message');
+                const urlParams = new URLSearchParams(window.location.search);
+                const jobId = urlParams.get('jobId');
+
+                applyBtn.disabled = true;
+                applyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Applying...`;
+                
+                try {
+                    const response = await fetch('/api/applicant/apply', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ jobId })
+                    });
+                    const result = await response.json();
+                    if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
+
+                    document.getElementById('apply-section').innerHTML = `
+                        <div class="alert alert-success text-center">
+                            <h4><i class="fas fa-check-circle"></i> Applied Successfully!</h4>
+                            <p class="mb-0">The employer has received your application.</p>
+                        </div>
+                    `;
+                } catch (error) {
+                    applyMessage.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+                    applyBtn.disabled = false;
+                    applyBtn.innerHTML = `<i class="fas fa-paper-plane me-2"></i>Confirm & Apply`;
+                }
+            }
+
+            // --- Initial Page Load Logic ---
             const userEmail = sessionStorage.getItem('email');
             if (!userEmail) {
                 renderError("Please login to continue.", true);
@@ -102,16 +251,12 @@
 
             const urlParams = new URLSearchParams(window.location.search);
             const jobId = urlParams.get('jobId');
-
             if (!jobId) {
-                renderError("No job specified. Please go back to the jobs page and select a job to apply for.");
+                renderError("No job specified. Go back and select a job.");
                 return;
             }
-            
-            pageContent.innerHTML = `<div class="text-center p-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
 
             try {
-                // Fetch job and user data in parallel
                 const [jobRes, userRes] = await Promise.all([
                     fetch(`/api/jobs/${jobId}`),
                     fetch(`/api/profile/full?email=${encodeURIComponent(userEmail)}`)
@@ -122,113 +267,14 @@
 
                 const { job } = await jobRes.json();
                 const user = await userRes.json();
-
+                
                 renderApplicationPage(job, user);
 
             } catch (error) {
                 renderError(error.message);
             }
         });
-
-        function renderApplicationPage(job, user) {
-            const pageContent = document.getElementById('page-content');
-            const { personalDetails, professionalDetails, education, skills, ctc } = user;
-
-            pageContent.innerHTML = `
-                <div class="row g-4">
-                    <!-- Left Column: Job Details -->
-                    <div class="col-lg-7">
-                        <div class="card">
-                            <div class="card-body p-4">
-                                <div class="job-header d-flex align-items-center mb-4 pb-4">
-                                    <img src="${job.logo_url || 'https://placehold.co/80x80/EFEFEF/AAAAAA&text=Logo'}" alt="${job.company_name} Logo" class="company-logo me-3">
-                                    <div>
-                                        <h2 class="h4 mb-1">${job.job_title}</h2>
-                                        <p class="text-muted mb-0">${job.company_name} - <i class="fas fa-map-marker-alt me-1"></i>${job.city || 'N/A'}, ${job.country || ''}</p>
-                                    </div>
-                                </div>
-
-                                <h3 class="section-title">Job Description</h3>
-                                <p>${job.job_description.replace(/\n/g, '<br>')}</p>
-
-                                <h3 class="section-title mt-4">Required Skills</h3>
-                                <div id="skills-container"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right Column: User Summary & Apply Button -->
-                    <div class="col-lg-5">
-                        <div class="card user-profile-card">
-                            <div class="card-body p-4">
-                                <h3 class="section-title">Your Profile Summary</h3>
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><strong>Name:</strong> ${personalDetails?.fullName || 'N/A'}</li>
-                                    <li class="list-group-item"><strong>Email:</strong> ${personalDetails?.email || 'N/A'}</li>
-                                    <li class="list-group-item"><strong>Experience:</strong> ${professionalDetails?.totalExperience || 'N/A'}</li>
-                                    <li class="list-group-item"><strong>Current CTC:</strong> ${ctc?.current || 'N/A'}</li>
-                                    <li class="list-group-item"><strong>Expected CTC:</strong> ${ctc?.expected || 'N/A'}</li>
-                                </ul>
-
-                                <div class="mt-4" id="apply-section">
-                                    <p class="text-muted small">By clicking "Confirm & Apply", your profile details will be shared with the employer.</p>
-                                    <div class="d-grid">
-                                        <button id="applyBtn" class="btn btn-primary btn-lg">
-                                            <i class="fas fa-paper-plane me-2"></i>Confirm & Apply
-                                        </button>
-                                    </div>
-                                    <div id="apply-message" class="mt-3"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Render skills
-            const skillsContainer = document.getElementById('skills-container');
-            const requiredSkills = typeof job.required_skills === 'string' ? JSON.parse(job.required_skills) : (job.required_skills || []);
-            if (requiredSkills.length > 0) {
-                 skillsContainer.innerHTML = requiredSkills.map(skill => `<span class="badge bg-secondary me-1 mb-1">${skill}</span>`).join('');
-            } else {
-                skillsContainer.innerHTML = `<p class="text-muted">No specific skills listed.</p>`;
-            }
-
-            // Add event listener for the apply button
-            document.getElementById('applyBtn').addEventListener('click', handleApply);
-        }
-
-        async function handleApply() {
-            const applyBtn = document.getElementById('applyBtn');
-            const applyMessage = document.getElementById('apply-message');
-            const urlParams = new URLSearchParams(window.location.search);
-            const jobId = urlParams.get('jobId');
-
-            applyBtn.disabled = true;
-            applyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Applying...`;
-            
-            try {
-                const response = await fetch('/api/applications/apply', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ jobId })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    applyMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-                    document.getElementById('apply-section').innerHTML = `<div class="alert alert-success text-center"><h4><i class="fas fa-check-circle"></i> Applied Successfully!</h4><p>The employer has received your application.</p></div>`
-                } else {
-                    throw new Error(result.error || 'An unknown error occurred.');
-                }
-
-            } catch (error) {
-                applyMessage.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
-                applyBtn.disabled = false;
-                applyBtn.innerHTML = `<i class="fas fa-paper-plane me-2"></i>Confirm & Apply`;
-            }
-        }
     </script>
 </body>
 </html>
+

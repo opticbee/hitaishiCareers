@@ -6,8 +6,8 @@ const router = express.Router();
 
 // --- User Authentication Middleware (Session Based) ---
 const authenticateUser = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.id) {
-        req.user = req.session.user; // Attach user info from session to the request object
+    if (req.session && req.session.user && req.session.user.id && req.session.user.email) {
+        req.user = req.session.user; // Attach user info from session
         next();
     } else {
         res.status(401).json({ error: "User not authenticated. Please log in." });
@@ -41,13 +41,14 @@ const authenticateUser = (req, res, next) => {
 router.post("/apply", authenticateUser, async (req, res) => {
     try {
         const { jobId } = req.body;
-        const userId = req.user.id; // From authenticateUser middleware
+        const userId = req.user.id;
+        const userEmail = req.user.email;
 
         if (!jobId) {
             return res.status(400).json({ error: "Job ID is required." });
         }
 
-        // 1. Check if the user has already applied for this job
+        // 1. Check if the user has already applied
         const [existingApplication] = await query(
             `SELECT id FROM job_applications WHERE user_id = ? AND job_id = ?`,
             [userId, jobId]
@@ -56,18 +57,44 @@ router.post("/apply", authenticateUser, async (req, res) => {
             return res.status(409).json({ error: "You have already applied for this job." });
         }
 
-        // 2. Fetch the user's full profile to create a snapshot
-        const [userProfile] = await query(`SELECT * FROM users WHERE id = ?`, [userId]);
-        if (!userProfile) {
-            return res.status(404).json({ error: "User profile not found." });
+        // 2. Fetch the user's FULL profile details to create a snapshot
+        const [user] = await query('SELECT * FROM users WHERE email=?', [userEmail]);
+        if (!user) {
+            return res.status(404).json({ error: "Could not find your user profile to submit." });
         }
-        // Remove sensitive info like password hash from the snapshot
-        const { password_hash, ...profileSnapshot } = userProfile;
+        
+        const safeParse = (v) => {
+          if (!v) return null;
+          if (typeof v === 'object') return v;
+          try { return JSON.parse(v); } catch (e) { return v; } // return as is if not json
+        };
+
+        const profileSnapshot = {
+          personalDetails: {
+            fullName: user.full_name,
+            email: user.email,
+            phone: user.mobile_number,
+            gender: user.gender,
+            experienceLevel: user.experience_level,
+            profilePhoto: user.profile_image_url || user.profile_image
+          },
+          professionalDetails: safeParse(user.professional_details),
+          projects: safeParse(user.projects),
+          skills: safeParse(user.skills),
+          education: safeParse(user.education),
+          certifications: safeParse(user.certifications),
+          languages: safeParse(user.languages),
+          resumeUrl: user.resume_url,
+          ctc: {
+            expected: user.ctc_expected
+          },
+          noticePeriod: user.notice_period
+        };
 
         // 3. Get the job's company_id
         const [jobData] = await query(`SELECT company_id FROM jobs WHERE id = ?`, [jobId]);
-         if (!jobData) {
-            return res.status(404).json({ error: "Job not found." });
+        if (!jobData) {
+            return res.status(404).json({ error: "Job not found. It may have been removed." });
         }
         const companyId = jobData.company_id;
 
@@ -82,13 +109,8 @@ router.post("/apply", authenticateUser, async (req, res) => {
 
     } catch (err) {
         console.error("Application submission failed:", err);
-        res.status(500).json({ error: "An internal server error occurred during application.", message: err.message });
+        res.status(500).json({ error: "An internal server error occurred.", message: err.message });
     }
 });
 
 module.exports = router;
-
-// IMPORTANT: Remember to add this new router to your main server file (e.g., server.js or app.js)
-// Example:
-// const jobApplicationsRoutes = require('./routes/jobApplications');
-// app.use('/api/applications', jobApplicationsRoutes);
