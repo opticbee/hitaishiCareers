@@ -748,7 +748,8 @@
   </section>
 
   <!-- Job Listings Section -->
-  <section class="py-5 ">
+  <!-- Job Listings Section -->
+  <section class="py-5">
     <div class="container">
       <h2 class="section-heading">Latest Job Openings</h2>
       <p class="text-center text-muted mb-5">Discover new opportunities that match your skills and interests</p>
@@ -758,7 +759,7 @@
         <div class="col-md-9">
           <div class="row g-2">
             <div class="col-sm-6 col-md-3">
-              <select class="form-select" id="posted-date">
+              <select class="form-select" id="posted-date-filter">
                 <option value="">Posted Date</option>
                 <option value="today">Today</option>
                 <option value="last-3-days">Last 3 Days</option>
@@ -767,228 +768,276 @@
             </div>
             
             <div class="col-sm-6 col-md-3">
-              <select class="form-select" id="employment-type">
+              <select class="form-select" id="employment-type-filter">
                 <option value="">Employment Type</option>
-                <option value="full-time">Full Time</option>
-                <option value="part-time">Part Time</option>
-                <option value="contractual-role">Contractual Role</option>
-                <option value="third-party">Third Party</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Internship">Internship</option>
               </select>
             </div>
             
             <div class="col-sm-6 col-md-3">
-              <select class="form-select" id="employer-type">
-                <option value="">Employer Type</option>
-                <option value="direct-hire">Direct Hire</option>
-                <option value="recruiter">Recruiter</option>
-              </select>
+                <!-- This filter seems to be a duplicate or custom logic not directly in the job data. Let's keep it simple for now -->
+                 <select class="form-select" id="work-settings-filter">
+                    <option value="">Work Settings</option>
+                    <option value="In-office">In-office</option>
+                    <option value="Hybrid">Hybrid</option>
+                    <option value="Remote">Remote</option>
+                  </select>
             </div>
             
             <div class="col-sm-6 col-md-3">
-              <select class="form-select" id="work-settings">
-                <option value="">Work Settings</option>
-                <option value="onsite">Onsite</option>
-                <option value="hybrid">Hybrid</option>
-                <option value="remote">Remote</option>
-              </select>
+                 <!-- This was employer-type, but work-settings is in the DB. I'll use work-settings -->
+                 <input type="text" class="form-control" id="location-filter" placeholder="Location (e.g., City)">
             </div>
           </div>
         </div>
         
         <div class="col-md-3">
-          <button id="search-jobs" class="btn btn-primary w-100">Apply Filters</button>
+          <button id="apply-filters-btn" class="btn btn-primary w-100">Apply Filters</button>
         </div>
       </div>
       
-      <!-- Job Cards -->
+      <!-- Job Cards Container -->
       <div id="job-list-container" class="row g-4">
-        <p id="placeholder-message" class="text-center text-muted my-5">Use the filters above to find relevant job opportunities.</p>
-        
-        <!-- Job Cards (initially hidden) -->
-        <div class="col-md-6 col-lg-4 job-card" data-posted-date="today" data-employment-type="full-time" 
-             data-employer-type="direct-hire" data-work-setting="onsite" data-company="TechCorp" 
-             data-package="₹6,00,000/year" style="display: none;">
-          <div class="card h-100 job-card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <span class="badge bg-success">New</span>
-                <button class="btn btn-sm btn-outline-primary"><i class="far fa-bookmark"></i></button>
-              </div>
-              <h5 class="card-title">Software Engineer</h5>
-              <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Hyderabad, IN</p>
-              <p class="card-text"><i class="fas fa-building me-2"></i>TechCorp</p>
-              <p class="card-text"><i class="fas fa-rupee-sign me-2"></i>₹6,00,000/year</p>
-              <div class="mt-3">
-                <span class="badge bg-light text-dark me-1">Java</span>
-                <span class="badge bg-light text-dark me-1">Spring Boot</span>
-                <span class="badge bg-light text-dark">MySQL</span>
-              </div>
-            </div>
-            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
-              <small class="text-muted">Posted today</small>
-              <a href="#" class="btn btn-sm btn-primary">Apply Now</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-md-6 col-lg-4 job-card" data-posted-date="last-3-days" data-employment-type="part-time" 
-             data-employer-type="recruiter" data-work-setting="remote" data-company="Innovate Solutions" 
-             data-package="₹4,00,000/year" style="display: none;">
-          <div class="card h-100 job-card">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-start mb-3">
-                <span class="badge bg-info">Remote</span>
-                <button class="btn btn-sm btn-outline-primary"><i class="far fa-bookmark"></i></button>
-              </div>
-              <h5 class="card-title">Project Manager</h5>
-              <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>Bangalore, IN</p>
-              <p class="card-text"><i class="fas fa-building me-2"></i>Innovate Solutions</p>
-              <p class="card-text"><i class="fas fa-rupee-sign me-2"></i>₹4,00,000/year</p>
-              <div class="mt-3">
-                <span class="badge bg-light text-dark me-1">Project Management</span>
-                <span class="badge bg-light text-dark me-1">Agile</span>
-                <span class="badge bg-light text-dark">Scrum</span>
-              </div>
-            </div>
-            <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
-              <small class="text-muted">Posted 2 days ago</small>
-              <a href="#" class="btn btn-sm btn-primary">Apply Now</a>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Additional job cards would go here -->
+          <!-- Job cards will be dynamically inserted here -->
       </div>
+
+       <!-- Placeholder Message -->
+      <p id="placeholder-message" class="text-center text-muted my-5" style="display: none;"></p>
       
       <div class="text-center mt-5">
-        <a href="jobs.html" class="btn btn-outline-primary btn-lg">View All Jobs</a>
+        <a href="jobs.html" id="view-all-jobs-link" class="btn btn-outline-primary btn-lg">View All Jobs</a>
+      </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let allJobs = [];
+            const jobListContainer = document.getElementById('job-list-container');
+            const placeholderMessage = document.getElementById('placeholder-message');
+            const applyFiltersBtn = document.getElementById('apply-filters-btn');
+            const viewAllJobsLink = document.getElementById('view-all-jobs-link');
+
+            const postedDateFilter = document.getElementById('posted-date-filter');
+            const employmentTypeFilter = document.getElementById('employment-type-filter');
+            const workSettingsFilter = document.getElementById('work-settings-filter');
+            const locationFilterInput = document.getElementById('location-filter');
+
+            // --- Helper Functions ---
+            const timeAgo = (dateString) => {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                const seconds = Math.floor((new Date() - date) / 1000);
+                let interval = seconds / 86400;
+                if (interval > 1) return Math.floor(interval) + " days ago";
+                interval = seconds / 3600;
+                if (interval > 1) return Math.floor(interval) + " hours ago";
+                return "Just now";
+            };
+
+            const formatSalary = (job) => {
+                if (job.salary_min && job.salary_max) {
+                    return `<i class="fas fa-rupee-sign me-2"></i>${job.salary_currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} ${job.salary_period}`;
+                }
+                return 'Salary Not Disclosed';
+            };
+
+            const renderSkills = (skills) => {
+                 try {
+                    const skillArray = typeof skills === 'string' ? JSON.parse(skills) : skills;
+                    if (!Array.isArray(skillArray) || skillArray.length === 0) return '';
+                    return skillArray.slice(0, 3).map(skill => `<span class="badge bg-light text-dark me-1">${skill}</span>`).join('');
+                } catch (e) {
+                    return ''; 
+                }
+            };
+            
+            const createJobCard = (job) => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+
+                const card = document.createElement('div');
+                card.className = 'card h-100 job-card';
+                card.innerHTML = `
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <img src="${job.logo_url || 'https://placehold.co/50x50/EFEFEF/AAAAAA&text=Logo'}" alt="${job.company_name} logo" style="width: 50px; height: 50px; border-radius: 8px; object-fit: contain;">
+                        <button class="btn btn-sm btn-outline-primary"><i class="far fa-bookmark"></i></button>
+                      </div>
+                      <h5 class="card-title">${job.job_title}</h5>
+                      <p class="card-text text-muted"><i class="fas fa-building me-2"></i>${job.company_name}</p>
+                      <p class="card-text"><i class="fas fa-map-marker-alt me-2"></i>${job.city || 'N/A'}, ${job.country || ''}</p>
+                      <p class="card-text fw-bold text-success">${formatSalary(job)}</p>
+                      <div class="mt-3">
+                        ${renderSkills(job.required_skills)}
+                      </div>
+                    </div>
+                    <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
+                      <small class="text-muted">Posted ${timeAgo(job.created_at)}</small>
+                      <a href="#" class="btn btn-sm btn-primary">Apply Now</a>
+                    </div>
+                `;
+                col.appendChild(card);
+                return col;
+            };
+
+            const renderJobs = (jobs) => {
+                jobListContainer.innerHTML = '';
+                if (jobs.length === 0) {
+                    placeholderMessage.textContent = 'No jobs match your criteria. Try different filters.';
+                    placeholderMessage.style.display = 'block';
+                } else {
+                    placeholderMessage.style.display = 'none';
+                    // Display only the top 3 jobs
+                    jobs.slice(0, 3).forEach(job => {
+                        jobListContainer.appendChild(createJobCard(job));
+                    });
+                }
+            };
+            
+            const applyAllFilters = () => {
+                let filteredJobs = [...allJobs];
+                const dateFilter = postedDateFilter.value;
+                const typeFilter = employmentTypeFilter.value;
+                const settingFilter = workSettingsFilter.value;
+                const locationTerm = locationFilterInput.value.toLowerCase();
+
+                // Date filter logic
+                if (dateFilter) {
+                    const now = new Date();
+                    let days;
+                    if (dateFilter === 'today') days = 1;
+                    if (dateFilter === 'last-3-days') days = 3;
+                    if (dateFilter === 'last-7-days') days = 7;
+                    if (days) {
+                         const cutoffDate = new Date();
+                         cutoffDate.setDate(now.getDate() - days);
+                         filteredJobs = filteredJobs.filter(job => new Date(job.created_at) >= cutoffDate);
+                    }
+                }
+
+                // Other filters
+                if (typeFilter) {
+                    filteredJobs = filteredJobs.filter(job => job.job_type === typeFilter);
+                }
+                if (settingFilter) {
+                    filteredJobs = filteredJobs.filter(job => job.work_location === settingFilter);
+                }
+                if (locationTerm) {
+                    filteredJobs = filteredJobs.filter(job => 
+                        (job.city && job.city.toLowerCase().includes(locationTerm)) ||
+                        (job.country && job.country.toLowerCase().includes(locationTerm))
+                    );
+                }
+
+                renderJobs(filteredJobs);
+                updateViewAllLink();
+            };
+
+            const updateViewAllLink = () => {
+                const params = new URLSearchParams();
+                if (postedDateFilter.value) params.set('posted', postedDateFilter.value);
+                if (employmentTypeFilter.value) params.set('type', employmentTypeFilter.value);
+                if (workSettingsFilter.value) params.set('setting', workSettingsFilter.value);
+                if (locationFilterInput.value) params.set('location', locationFilterInput.value);
+
+                viewAllJobsLink.href = `jobs.html?${params.toString()}`;
+            };
+
+
+            const fetchAndDisplayJobs = async () => {
+                try {
+                    const response = await fetch('/api/jobs/active');
+                    if (!response.ok) throw new Error('Failed to fetch jobs.');
+                    const data = await response.json();
+                    allJobs = data.jobs || [];
+
+                    if (allJobs.length === 0) {
+                        placeholderMessage.textContent = 'No job openings at the moment. Please check back later!';
+                        placeholderMessage.style.display = 'block';
+                    } else {
+                        renderJobs(allJobs); // Initially render the latest 3
+                    }
+                } catch (error) {
+                    console.error('Error fetching jobs:', error);
+                    placeholderMessage.textContent = 'Could not load job listings. Please try again.';
+                    placeholderMessage.style.display = 'block';
+                }
+            };
+
+            // Event Listeners
+            applyFiltersBtn.addEventListener('click', applyAllFilters);
+
+            // Initial load
+            fetchAndDisplayJobs();
+        });
+    </script>
+  </section>
+
+
+  <!-- Find the Perfect Job for YOU Section -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-5">Find the Perfect Job for YOU</h2>
+      
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="card pj-service-card h-100 text-center">
+            <div class="card-body">
+              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/boost.svg" alt="Highlight Profile" class="img-fluid mb-3" style="height: 80px;">
+              <h5 class="card-title"><a href="network.html#industry" class="text-decoration-none text-dark">Highlight</a></h5>
+              <p class="card-text">Stand out to employers with a highlighted profile</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+          <div class="card pj-service-card h-100 text-center">
+            <div class="card-body">
+              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Interview Preparation" class="img-fluid mb-3" style="height: 80px;">
+              <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Prep</a></h5>
+              <p class="card-text">Up your interview success rate with our preparation resources</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+          <div class="card pj-service-card h-100 text-center">
+            <div class="card-body">
+              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/skill-assessment.svg" alt="Learn Skills" class="img-fluid mb-3" style="height: 80px;">
+              <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Learn</a></h5>
+              <p class="card-text">Upskill to get ahead in your career</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-6 col-lg-3">
+          <div class="card pj-service-card h-100 text-center">
+            <div class="card-body">
+              <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Network" class="img-fluid mb-3" style="height: 80px;">
+              <h5 class="card-title"><a href="network.html" class="text-decoration-none text-dark">Network</a></h5>
+              <p class="card-text">Grow with peers & mentors in your industry</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-<!-- Find the Perfect Job for YOU Section -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <h2 class="text-center mb-5">Find the Perfect Job for YOU</h2>
-    
-    <div class="row g-4">
-      <div class="col-md-6 col-lg-3">
-        <div class="card pj-service-card h-100 text-center">
-          <div class="card-body">
-            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/boost.svg" alt="Highlight Profile" class="img-fluid mb-3" style="height: 80px;">
-            <h5 class="card-title"><a href="network.html#industry" class="text-decoration-none text-dark">Highlight</a></h5>
-            <p class="card-text">Stand out to employers with a highlighted profile</p>
-          </div>
-        </div>
-      </div>
+  <!-- Popular Categories Section -->
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-center mb-5">Popular Categories</h2>
       
-      <div class="col-md-6 col-lg-3">
-        <div class="card pj-service-card h-100 text-center">
-          <div class="card-body">
-            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Interview Preparation" class="img-fluid mb-3" style="height: 80px;">
-            <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Prep</a></h5>
-            <p class="card-text">Up your interview success rate with our preparation resources</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-md-6 col-lg-3">
-        <div class="card pj-service-card h-100 text-center">
-          <div class="card-body">
-            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/skill-assessment.svg" alt="Learn Skills" class="img-fluid mb-3" style="height: 80px;">
-            <h5 class="card-title"><a href="preparation.html" class="text-decoration-none text-dark">Learn</a></h5>
-            <p class="card-text">Upskill to get ahead in your career</p>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-md-6 col-lg-3">
-        <div class="card pj-service-card h-100 text-center">
-          <div class="card-body">
-            <img src="https://media.foundit.in/trex/public/default/images/career-services/service/interview-preparation.svg" alt="Network" class="img-fluid mb-3" style="height: 80px;">
-            <h5 class="card-title"><a href="network.html" class="text-decoration-none text-dark">Network</a></h5>
-            <p class="card-text">Grow with peers & mentors in your industry</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Popular Categories Section -->
-<section class="py-5">
-  <div class="container">
-    <h2 class="text-center mb-5">Popular Categories</h2>
-    
-    <div class="row g-4">
-      <!-- Initial 6 categories -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center">
-          <div class="card-body">
-            <img src="https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" alt="Banking" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Banking</h6>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center">
-          <div class="card-body">
-            <img src="https://static.vecteezy.com/system/resources/thumbnails/046/596/525/small_2x/work-from-home-logo-vector.jpg" alt="Work From Home" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Work From Home</h6>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=123787&format=png" alt="HR" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">HR</h6>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=70641&format=png" alt="Sales" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Sales</h6>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=22447&format=png" alt="Accounting" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Accounting</h6>
-          </div>
-        </div>
-      </div>
-      
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center">
-          <div class="card-body">
-            <img src="https://image.shutterstock.com/image-vector/customer-service-icon-user-laptop-260nw-520867126.jpg" alt="Customer Support" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Customer Support</h6>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="text-center mt-4" id="viewMoreButton">
-      <button class="btn btn-primary" id="toggleCategories">View More Categories</button>
-    </div>
-    
-    <div class="collapse mt-4" id="moreCategories">
       <div class="row g-4">
-        <!-- Additional 6 categories -->
+        <!-- Initial 6 categories -->
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=98963&format=png" alt="Marketing" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Marketing</h6>
+              <img src="https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" alt="Banking" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Banking</h6>
             </div>
           </div>
         </div>
@@ -996,8 +1045,8 @@
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=59878&format=png" alt="IT" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">IT</h6>
+              <img src="https://static.vecteezy.com/system/resources/thumbnails/046/596/525/small_2x/work-from-home-logo-vector.jpg" alt="Work From Home" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Work From Home</h6>
             </div>
           </div>
         </div>
@@ -1005,8 +1054,8 @@
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=98960&format=png" alt="Engineering" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Engineering</h6>
+              <img src="https://img.icons8.com/?size=100&id=123787&format=png" alt="HR" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">HR</h6>
             </div>
           </div>
         </div>
@@ -1014,8 +1063,8 @@
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=59892&format=png" alt="Healthcare" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Healthcare</h6>
+              <img src="https://img.icons8.com/?size=100&id=70641&format=png" alt="Sales" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Sales</h6>
             </div>
           </div>
         </div>
@@ -1023,8 +1072,8 @@
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=59885&format=png" alt="Education" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Education</h6>
+              <img src="https://img.icons8.com/?size=100&id=22447&format=png" alt="Accounting" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Accounting</h6>
             </div>
           </div>
         </div>
@@ -1032,203 +1081,265 @@
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=59895&format=png" alt="Design" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Design</h6>
+              <img src="https://image.shutterstock.com/image-vector/customer-service-icon-user-laptop-260nw-520867126.jpg" alt="Customer Support" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Customer Support</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center mt-4" id="viewMoreButton">
+        <button class="btn btn-primary" id="toggleCategories">View More Categories</button>
+      </div>
+      
+      <div class="collapse mt-4" id="moreCategories">
+        <div class="row g-4">
+          <!-- Additional 6 categories -->
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="pc-category-box card h-100 text-center">
+              <div class="card-body">
+                <img src="https://img.icons8.com/?size=100&id=98963&format=png" alt="Marketing" class="img-fluid mb-2" style="height: 50px;">
+                <h6 class="card-title">Marketing</h6>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="pc-category-box card h-100 text-center">
+              <div class="card-body">
+                <img src="https://img.icons8.com/?size=100&id=59878&format=png" alt="IT" class="img-fluid mb-2" style="height: 50px;">
+                <h6 class="card-title">IT</h6>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="pc-category-box card h-100 text-center">
+              <div class="card-body">
+                <img src="https://img.icons8.com/?size=100&id=98960&format=png" alt="Engineering" class="img-fluid mb-2" style="height: 50px;">
+                <h6 class="card-title">Engineering</h6>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="pc-category-box card h-100 text-center">
+              <div class="card-body">
+                <img src="https://img.icons8.com/?size=100&id=59892&format=png" alt="Healthcare" class="img-fluid mb-2" style="height: 50px;">
+                <h6 class="card-title">Healthcare</h6>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="pc-category-box card h-100 text-center">
+              <div class="card-body">
+                <img src="https://img.icons8.com/?size=100&id=59885&format=png" alt="Education" class="img-fluid mb-2" style="height: 50px;">
+                <h6 class="card-title">Education</h6>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-6 col-md-4 col-lg-2">
+            <div class="pc-category-box card h-100 text-center">
+              <div class="card-body">
+                <img src="https://img.icons8.com/?size=100&id=59895&format=png" alt="Design" class="img-fluid mb-2" style="height: 50px;">
+                <h6 class="card-title">Design</h6>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <style>
-    /* Perfect Job (pj) Section Styles */
-    .pj-service-card {
-      transition: transform 0.3s ease;
-      height: 100%;
-    }
-    
-    .pj-service-card:hover {
-      transform: translateY(-10px);
-    }
-    
-    /* Popular Categories (pc) Section Styles */
-    .pc-category-box {
-      transition: all 0.3s ease;
-    }
-    
-    .pc-category-box:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    /* Animation for category boxes */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
+    <style>
+      /* Perfect Job (pj) Section Styles */
+      .pj-service-card {
+        transition: transform 0.3s ease;
+        height: 100%;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .pc-category-box {
-      animation: fadeInUp 0.5s ease forwards;
-    }
-  </style>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleButton = document.getElementById('toggleCategories');
-      const moreCategories = document.getElementById('moreCategories');
-      const viewMoreButton = document.getElementById('viewMoreButton');
       
-      toggleButton.addEventListener('click', function() {
-        // Show the additional categories
-        moreCategories.classList.add('show');
+      .pj-service-card:hover {
+        transform: translateY(-10px);
+      }
+      
+      /* Popular Categories (pc) Section Styles */
+      .pc-category-box {
+        transition: all 0.3s ease;
+      }
+      
+      .pc-category-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+      
+      /* Animation for category boxes */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .pc-category-box {
+        animation: fadeInUp 0.5s ease forwards;
+      }
+    </style>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const toggleButton = document.getElementById('toggleCategories');
+        const moreCategories = document.getElementById('moreCategories');
+        const viewMoreButton = document.getElementById('viewMoreButton');
         
-        // Hide the button after a short delay to allow the collapse animation
-        setTimeout(function() {
-          viewMoreButton.style.display = 'none';
-        }, 300);
+        toggleButton.addEventListener('click', function() {
+          // Show the additional categories
+          moreCategories.classList.add('show');
+          
+          // Hide the button after a short delay to allow the collapse animation
+          setTimeout(function() {
+            viewMoreButton.style.display = 'none';
+          }, 300);
+        });
       });
-    });
-  </script>
-</section>
+    </script>
+  </section>
 
-<!-- Browse By Section -->
-<section class="py-5 bg-light">
-  <div class="container">
-    <h2 class="text-center mb-4">Browse Jobs By</h2>
-    
-    <ul class="nav nav-pills justify-content-center mb-4" id="browseTab" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab">Skills</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="location-tab" data-bs-toggle="pill" data-bs-target="#location" type="button" role="tab">Location</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="industry-tab" data-bs-toggle="pill" data-bs-target="#industry" type="button" role="tab">Industry</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="functions-tab" data-bs-toggle="pill" data-bs-target="#functions" type="button" role="tab">Functions</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="roles-tab" data-bs-toggle="pill" data-bs-target="#roles" type="button" role="tab">Roles</button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="company-tab" data-bs-toggle="pill" data-bs-target="#company" type="button" role="tab">Company</button>
-      </li>
-    </ul>
-    
-    <div class="tab-content" id="browseTabContent">
-      <div class="tab-pane fade show active" id="skills" role="tabpanel">
-        <div class="d-flex flex-wrap gap-2">
-          <a href="#" class="skill-box btn btn-outline-secondary">Python</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">SQL</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">Sales</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">Java</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">NodeJs</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">C++</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">MySQL</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">PHP</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">Communication</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">JavaScript</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">AWS</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">Git</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">Negotiation</a>
-          <a href="#" class="skill-box btn btn-outline-secondary">Excel</a>
-        </div>
-      </div>
+  <!-- Browse By Section -->
+  <section class="py-5 bg-light">
+    <div class="container">
+      <h2 class="text-center mb-4">Browse Jobs By</h2>
       
-      <div class="tab-pane fade" id="location" role="tabpanel">
-        <div class="d-flex flex-wrap gap-2">
-          <a href="#" class="location-box btn btn-outline-secondary">Bengaluru / Bangalore</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Hyderabad / Secunderabad</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Mumbai</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Pune</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Chennai</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Gurgaon / Gurugram</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Delhi</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Noida</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Ahmedabad</a>
-          <a href="#" class="location-box btn btn-outline-secondary">Kolkata</a>
-        </div>
-      </div>
+      <ul class="nav nav-pills justify-content-center mb-4" id="browseTab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab">Skills</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="location-tab" data-bs-toggle="pill" data-bs-target="#location" type="button" role="tab">Location</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="industry-tab" data-bs-toggle="pill" data-bs-target="#industry" type="button" role="tab">Industry</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="functions-tab" data-bs-toggle="pill" data-bs-target="#functions" type="button" role="tab">Functions</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="roles-tab" data-bs-toggle="pill" data-bs-target="#roles" type="button" role="tab">Roles</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="company-tab" data-bs-toggle="pill" data-bs-target="#company" type="button" role="tab">Company</button>
+        </li>
+      </ul>
       
-      <div class="tab-pane fade" id="industry" role="tabpanel">
-        <div class="d-flex flex-wrap gap-2">
-          <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Hardware & Networking</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Software</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Banking/Accounting/Financial Services</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Hospitals/Healthcare/Diagnostics</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Banking</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Information Technology</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Insurance</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Software</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Entertainment/Media/Publishing</a>
-          <a href="#" class="industry-box btn btn-outline-secondary">Finance</a>
+      <div class="tab-content" id="browseTabContent">
+        <div class="tab-pane fade show active" id="skills" role="tabpanel">
+          <div class="d-flex flex-wrap gap-2">
+            <a href="#" class="skill-box btn btn-outline-secondary">Python</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">SQL</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">Sales</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">Java</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">NodeJs</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">C++</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">MySQL</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">PHP</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">Communication</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">JavaScript</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">AWS</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">Git</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">Negotiation</a>
+            <a href="#" class="skill-box btn btn-outline-secondary">Excel</a>
+          </div>
         </div>
-      </div>
-      
-      <div class="tab-pane fade" id="functions" role="tabpanel">
-        <div class="d-flex flex-wrap gap-2">
-          <a href="#" class="function-box btn btn-outline-secondary">Technology</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Sales</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Finance</a>
-          <a href="#" class="function-box btn btn-outline-secondary">IT</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Engineering</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Education</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Healthcare</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Business Support and Management</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Marketing</a>
-          <a href="#" class="function-box btn btn-outline-secondary">Software Development</a>
+        
+        <div class="tab-pane fade" id="location" role="tabpanel">
+          <div class="d-flex flex-wrap gap-2">
+            <a href="#" class="location-box btn btn-outline-secondary">Bengaluru / Bangalore</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Hyderabad / Secunderabad</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Mumbai</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Pune</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Chennai</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Gurgaon / Gurugram</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Delhi</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Noida</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Ahmedabad</a>
+            <a href="#" class="location-box btn btn-outline-secondary">Kolkata</a>
+          </div>
         </div>
-      </div>
-      
-      <div class="tab-pane fade" id="roles" role="tabpanel">
-        <div class="d-flex flex-wrap gap-2">
-          <a href="#" class="role-box btn btn-outline-secondary">Fresher</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Software Engineer/Programmer</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Team Leader/Technical Leader</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Software Developer</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Business Analyst</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Technical Support Executive</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Sales Executive</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Project Leader/Project Manager</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Accountant</a>
-          <a href="#" class="role-box btn btn-outline-secondary">Customer Service Executive (Voice)</a>
+        
+        <div class="tab-pane fade" id="industry" role="tabpanel">
+          <div class="d-flex flex-wrap gap-2">
+            <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Hardware & Networking</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Software</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Banking/Accounting/Financial Services</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Hospitals/Healthcare/Diagnostics</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Banking</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Information Technology</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Insurance</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Software</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Entertainment/Media/Publishing</a>
+            <a href="#" class="industry-box btn btn-outline-secondary">Finance</a>
+          </div>
         </div>
-      </div>
-      
-      <div class="tab-pane fade" id="company" role="tabpanel">
-        <div class="d-flex flex-wrap gap-2">
-          <a href="#" class="company-box btn btn-outline-secondary">Axis Bank</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Kotak Mahindra Bank Limited</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Accenture Services Pvt Ltd</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Infosys Limited</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Genpact</a>
-          <a href="#" class="company-box btn btn-outline-secondary">myGwork - LGBTQ+ Business Community</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Robotics Technologies</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Mount Talent Consulting</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Tata Capital</a>
-          <a href="#" class="company-box btn btn-outline-secondary">PwC India</a>
-          <a href="#" class="company-box btn btn-outline-secondary">RARR Technologies</a>
-          <a href="#" class="company-box btn btn-outline-secondary">WSP in India</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Capital Placement Services</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Cadila Pharmaceuticals Limited</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Turfng</a>
-          <a href="#" class="company-box btn btn-outline-secondary">EXL IT Service Management</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Mycityband</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Coders Brain</a>
-          <a href="#" class="company-box btn btn-outline-secondary">Global Act</a>
+        
+        <div class="tab-pane fade" id="functions" role="tabpanel">
+          <div class="d-flex flex-wrap gap-2">
+            <a href="#" class="function-box btn btn-outline-secondary">Technology</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Sales</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Finance</a>
+            <a href="#" class="function-box btn btn-outline-secondary">IT</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Engineering</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Education</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Healthcare</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Business Support and Management</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Marketing</a>
+            <a href="#" class="function-box btn btn-outline-secondary">Software Development</a>
+          </div>
+        </div>
+        
+        <div class="tab-pane fade" id="roles" role="tabpanel">
+          <div class="d-flex flex-wrap gap-2">
+            <a href="#" class="role-box btn btn-outline-secondary">Fresher</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Software Engineer/Programmer</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Team Leader/Technical Leader</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Software Developer</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Business Analyst</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Technical Support Executive</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Sales Executive</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Project Leader/Project Manager</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Accountant</a>
+            <a href="#" class="role-box btn btn-outline-secondary">Customer Service Executive (Voice)</a>
+          </div>
+        </div>
+        
+        <div class="tab-pane fade" id="company" role="tabpanel">
+          <div class="d-flex flex-wrap gap-2">
+            <a href="#" class="company-box btn btn-outline-secondary">Axis Bank</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Kotak Mahindra Bank Limited</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Accenture Services Pvt Ltd</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Infosys Limited</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Genpact</a>
+            <a href="#" class="company-box btn btn-outline-secondary">myGwork - LGBTQ+ Business Community</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Robotics Technologies</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Mount Talent Consulting</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Tata Capital</a>
+            <a href="#" class="company-box btn btn-outline-secondary">PwC India</a>
+            <a href="#" class="company-box btn btn-outline-secondary">RARR Technologies</a>
+            <a href="#" class="company-box btn btn-outline-secondary">WSP in India</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Capital Placement Services</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Cadila Pharmaceuticals Limited</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Turfng</a>
+            <a href="#" class="company-box btn btn-outline-secondary">EXL IT Service Management</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Mycityband</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Coders Brain</a>
+            <a href="#" class="company-box btn btn-outline-secondary">Global Act</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
   <!-- Services Section -->
   <section class="py-5">

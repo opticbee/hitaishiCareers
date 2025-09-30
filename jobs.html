@@ -331,6 +331,9 @@
                                     <div class="mt-2">${renderSkills(job.required_skills)}</div>
                                 </div>
                             </div>
+                            <div class="d-flex justify-content-end mt-3 border-top pt-3">
+                                <button class="btn btn-primary apply-now-btn" data-job-id="${job.id}">Apply Now</button>
+                            </div>
                         `;
                         jobListContainer.appendChild(jobCard);
                     });
@@ -396,6 +399,21 @@
             };
 
             // --- Event Listeners ---
+            jobListContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('apply-now-btn')) {
+                    e.preventDefault();
+                    const jobId = e.target.dataset.jobId;
+                    // Check if user is logged in by looking for email in sessionStorage
+                    const userEmail = sessionStorage.getItem('email');
+                    if (userEmail) {
+                        window.location.href = `jobApplication.html?jobId=${jobId}`;
+                    } else {
+                        alert('Please login to continue.');
+                        // You could also redirect to login.html
+                    }
+                }
+            });
+
             document.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.addEventListener('change', applyFilters);
             });

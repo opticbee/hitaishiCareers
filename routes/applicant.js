@@ -1,149 +1,94 @@
-// routes/applicant.js
 const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
-const { query } = require("../db");   // <-- use query() helper, not pool.getConnection()
+const { query } = require("../db");
 
 const router = express.Router();
-const saltRounds = 10;
-const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-/**
- * Ensure the applicants & applications tables exist.
- * Uses query() so connections are automatically managed.
- */
-(async function initApplicantTables() {
+// --- User Authentication Middleware (Session Based) ---
+const authenticateUser = (req, res, next) => {
+    if (req.session && req.session.user && req.session.user.id) {
+        req.user = req.session.user; // Attach user info from session to the request object
+        next();
+    } else {
+        res.status(401).json({ error: "User not authenticated. Please log in." });
+    }
+};
+
+// --- Database Table Initialization ---
+(async function initApplicationsTable() {
   try {
     await query(`
-      CREATE TABLE IF NOT EXISTS applicants (
-        id CHAR(36) PRIMARY KEY,
-        email VARCHAR(255) NOT NULL UNIQUE,
-        password_hash VARCHAR(255) NOT NULL,
-        full_name VARCHAR(255),
-        phone VARCHAR(50),
-        resume_url VARCHAR(500),
-        headline VARCHAR(255),
-        skills TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-      )
-    `);
-
-    await query(`
-      CREATE TABLE IF NOT EXISTS applications (
+      CREATE TABLE IF NOT EXISTS job_applications (
         id CHAR(36) PRIMARY KEY,
         job_id CHAR(36) NOT NULL,
-        applicant_id CHAR(36) NOT NULL,
+        user_id INT NOT NULL,
         company_id CHAR(36) NOT NULL,
-        cover_letter TEXT,
-        resume_url VARCHAR(500),
-        status ENUM('applied','shortlisted','rejected','hired') DEFAULT 'applied',
+        status ENUM('applied','viewed','shortlisted', 'rejected') DEFAULT 'applied',
         applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        user_profile_snapshot JSON,
         FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
-        FOREIGN KEY (applicant_id) REFERENCES applicants(id) ON DELETE CASCADE,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE
       )
     `);
-
-    console.log("✅ applicants & applications tables ready");
+    console.log("✅ job_applications table is ready.");
   } catch (err) {
-    console.error("❌ Error creating applicant tables:", err.message);
+    console.error("❌ Error initializing job_applications table:", err.message);
   }
 })();
 
-/**
- * POST /api/applicant/register
- * Register a new applicant
- */
-router.post("/register", async (req, res) => {
-  try {
-    const { email, password, full_name, phone, resume_url, headline, skills } = req.body;
-    const id = uuidv4();
-    const hashed = await bcrypt.hash(password, saltRounds);
+// --- Route to apply for a job ---
+router.post("/apply", authenticateUser, async (req, res) => {
+    try {
+        const { jobId } = req.body;
+        const userId = req.user.id; // From authenticateUser middleware
 
-    await query(
-      `INSERT INTO applicants
-       (id, email, password_hash, full_name, phone, resume_url, headline, skills)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [id, email, hashed, full_name, phone, resume_url, headline, skills]
-    );
+        if (!jobId) {
+            return res.status(400).json({ error: "Job ID is required." });
+        }
 
-    res.json({ success: true, applicant_id: id });
-  } catch (err) {
-    console.error("Applicant registration failed:", err);
-    res.status(500).json({ error: "Applicant registration failed" });
-  }
-});
+        // 1. Check if the user has already applied for this job
+        const [existingApplication] = await query(
+            `SELECT id FROM job_applications WHERE user_id = ? AND job_id = ?`,
+            [userId, jobId]
+        );
+        if (existingApplication) {
+            return res.status(409).json({ error: "You have already applied for this job." });
+        }
 
-/**
- * POST /api/applicant/login
- * Applicant login, returns JWT token
- */
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
+        // 2. Fetch the user's full profile to create a snapshot
+        const [userProfile] = await query(`SELECT * FROM users WHERE id = ?`, [userId]);
+        if (!userProfile) {
+            return res.status(404).json({ error: "User profile not found." });
+        }
+        // Remove sensitive info like password hash from the snapshot
+        const { password_hash, ...profileSnapshot } = userProfile;
 
-    const rows = await query(
-      `SELECT * FROM applicants WHERE email=?`,
-      [email]
-    );
-    if (!rows.length) return res.status(404).json({ error: "Applicant not found" });
+        // 3. Get the job's company_id
+        const [jobData] = await query(`SELECT company_id FROM jobs WHERE id = ?`, [jobId]);
+         if (!jobData) {
+            return res.status(404).json({ error: "Job not found." });
+        }
+        const companyId = jobData.company_id;
 
-    const applicant = rows[0];
-    const match = await bcrypt.compare(password, applicant.password_hash);
-    if (!match) return res.status(401).json({ error: "Invalid password" });
+        // 4. Create and insert the new application
+        const applicationId = uuidv4();
+        await query(
+            `INSERT INTO job_applications (id, job_id, user_id, company_id, user_profile_snapshot) VALUES (?, ?, ?, ?, ?)`,
+            [applicationId, jobId, userId, companyId, JSON.stringify(profileSnapshot)]
+        );
 
-    const token = jwt.sign({ id: applicant.id, role: "applicant" }, JWT_SECRET, {
-      expiresIn: "7d"
-    });
+        res.status(201).json({ success: true, message: "Application submitted successfully!", applicationId });
 
-    res.json({ success: true, token, applicant_id: applicant.id });
-  } catch (err) {
-    console.error("Login failed:", err);
-    res.status(500).json({ error: "Login failed" });
-  }
-});
-
-/**
- * POST /api/applicant/apply
- * Applicant applies to a job
- */
-router.post("/apply", async (req, res) => {
-  try {
-    const { job_id, applicant_id, company_id, cover_letter, resume_url } = req.body;
-    const id = uuidv4();
-
-    await query(
-      `INSERT INTO applications
-       (id, job_id, applicant_id, company_id, cover_letter, resume_url, status)
-       VALUES (?, ?, ?, ?, ?, ?, 'applied')`,
-      [id, job_id, applicant_id, company_id, cover_letter, resume_url]
-    );
-
-    res.json({ success: true, application_id: id });
-  } catch (err) {
-    console.error("Application failed:", err);
-    res.status(500).json({ error: "Application failed" });
-  }
-});
-
-/**
- * GET /api/applicant/:applicantId/applications
- * Get all applications for a specific applicant
- */
-router.get("/:applicantId/applications", async (req, res) => {
-  try {
-    const rows = await query(
-      `SELECT * FROM applications WHERE applicant_id=? ORDER BY applied_at DESC`,
-      [req.params.applicantId]
-    );
-    res.json({ applications: rows });
-  } catch (err) {
-    console.error("Failed to fetch applications:", err);
-    res.status(500).json({ error: "Failed to fetch applications" });
-  }
+    } catch (err) {
+        console.error("Application submission failed:", err);
+        res.status(500).json({ error: "An internal server error occurred during application.", message: err.message });
+    }
 });
 
 module.exports = router;
+
+// IMPORTANT: Remember to add this new router to your main server file (e.g., server.js or app.js)
+// Example:
+// const jobApplicationsRoutes = require('./routes/jobApplications');
+// app.use('/api/applications', jobApplicationsRoutes);

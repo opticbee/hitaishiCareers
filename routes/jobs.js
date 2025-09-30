@@ -164,6 +164,28 @@ router.get("/active", async (_req, res) => {
   }
 });
 
+// Get a single job by ID (for application page)
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const [job] = await query(`
+      SELECT j.*, c.company_name, c.logo_url 
+      FROM jobs j 
+      JOIN companies c ON j.company_id = c.id 
+      WHERE j.id = ? AND j.status = 'active'
+    `, [id]);
+    
+    if (!job) {
+      return res.status(404).json({ error: "Job not found or is no longer active." });
+    }
+    
+    res.json({ job });
+  } catch (err) {
+    console.error(`Failed to fetch job with id ${req.params.id}:`, err.message, err);
+    res.status(500).json({ error: "Failed to fetch job" });
+  }
+});
+
 
 // GET all jobs for a specific company (for the dashboard)
 router.get("/company/:companyId", authenticateToken, async (req, res) => {
