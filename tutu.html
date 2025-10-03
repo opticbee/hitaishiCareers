@@ -465,225 +465,93 @@
 
 
 
-    <footer style="background-color: #1a1a1a; color: #fff; padding: 20px;">
-        <div style="display: flex; justify-content: space-between;">
-            <!-- Left Side Links -->
-            <div style="margin-left: 10%; width: 30%;" id="left-links">
-                <a href="#" onclick="loadSection('job-categories')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">Job Categories</h4>
-                </a>
-                <a href="#" onclick="loadSection('employers')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">Employers</h4>
-                 </a>
-                <a href="#" onclick="loadSection('job-seekers')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">Job Seekers</h4>
-                </a>
-                <a href="#" onclick="loadSection('career-advice')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">Career Advice</h4>
-                </a>
-                <a href="#" onclick="loadSection('company-info')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">Company Info</h4>
-                </a>
-                <a href="#" onclick="loadSection('IT Jobs')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">IT Jobs</h4>
-                </a><a href="#" onclick="loadSection('Non-IT Jobs')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">Non-IT Jobs</h4>
-                </a><a href="#" onclick="loadSection('Partnerships')" style="color: #fff; text-decoration: none;">
-                    <h4 style="margin-bottom: 10px;">Partnerships</h4>
-                </a>
+    <!-- Footer -->
+    <footer class="text-white py-5">
+        <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+            <div class="mb-4">
+                <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
+                <span class="fw-bold fs-4">Hitaishi Careers</span>
             </div>
-    
-            <!-- Dynamic Section -->
-            <div style="width: 50%; margin-right: 5%; gap: 20px;" id="dynamic-section">
-                <p style="color: #fff; margin-bottom: 20px;">Hitaishi Careers empowers individuals with exceptional career opportunities and professional growth pathways.</p>
-                <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 40px; ">
-                    <strong><a href="#" style="color: #fff; font-size: 18px; text-decoration: none;">Services</a></strong>
-                    <strong><a href="#" style="color: #fff; font-size: 18px; text-decoration: none;">Resume Writing</a></strong>
-                    <strong><a href="#" style="color: #fff; font-size: 18px; text-decoration: none;">Interview Preparation</a></strong>
-                    <strong><a href="#" style="color: #fff; font-size: 18px; text-decoration: none;">Mock Interview</a></strong>
-                    <strong><a href="#" style="color: #fff; font-size: 18px; text-decoration: none;">Degree Programs</a></strong>
-                    <strong><a href="#" style="color: #fff; font-size: 18px; text-decoration: none;">Certifications</a></strong>
-                </div>
+            <p class="mb-4">Connecting talented professionals with their dream jobs since 2022. Our mission is to make job searching efficient and effective for everyone.</p>
+            <div class="d-flex gap-3">
+                <a href="#" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+            </div>
             </div>
             
-    
-            <!-- Right Side Info -->
-            <div style="width: 30%;">
-                <h4 style="margin-bottom: 10px;">Selected Country: 
-                    <span>
-                        <select id="countrySelect" onchange="updateContactInfo()">
-                            <option value="">Select Country</option>
-                            <option value="India">India</option>
-                            <option value="USA">USA</option>
-                            <option value="UK">UK</option>
-                            <option value="Canada">Canada</option>
-                            <option value="Australia">Australia</option>
-                        </select>
-                    </span>
-                </h4>
-                <h4 id="contactInfo" style="margin-bottom: 10px;">
-                    Toll No: <span id="tollNo">+91 9876543210</span> | 
-                    <br>
-                    Toll Free No: <span id="tollFreeNo">1800-630-630</span>
-                </h4>
-                <h4 style="margin-bottom: 10px;"><a href="mailto:info@hitaishi.in" style="color: #fff; text-decoration: none;">info@hitaishi.in</a></h4>
-                <h4 style="margin-bottom: 10px;">Download The App</h4>
-                <div style="display: flex;">
-                    <a href="https://www.apple.com/app-store/">
-                        <img src="https://img.icons8.com/?size=96&id=63788&format=png" alt="App Store" style="width: 30px; height: 30px; margin-right: 10px;">
-                    </a>
-                    <a href="https://play.google.com/store/games?hl=en">
-                        <img src="https://img.icons8.com/?size=96&id=30368&format=png" alt="Google Play" style="width: 30px; height: 30px;">
-                    </a>
-                </div>
-                <h4 style="margin-bottom: 10px;">Stay Connected</h4>
-                <div style="display: flex; gap: 20px;">
-                    <a href="https://www.facebook.com/" style="color: #fff; text-decoration: none;"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://x.com/?lang=en" style="color: #fff; text-decoration: none;"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.linkedin.com/feed/" style="color: #fff; text-decoration: none;"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://www.instagram.com/" style="color: #fff; text-decoration: none;"><i class="fab fa-instagram"></i></a>
-                </div>
-                <div>
-                    <p style="font-size: 12px;">Security & Fraud | Privacy Policy | Terms of Use | Beware of Fraudsters | Be Safe</p>
-                    <p style="font-size: 12px;">Complaints |</p>
-                    <p style="font-size: 12px;">© 2025 Hitaishi | All rights Reserved</p>
-                </div>
+            <div class="col-lg-2 col-md-6">
+            <h5 class="mb-4">Quick Links</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="index.html" class="text-white-50">Home</a></li>
+                <li class="mb-2"><a href="jobs.html" class="text-white-50">Browse Jobs</a></li>
+                <li class="mb-2"><a href="employer.html" class="text-white-50">For Employers</a></li>
+                <li class="mb-2"><a href="about.html" class="text-white-50">About Us</a></li>
+                <li class="mb-2"><a href="contact.html" class="text-white-50">Contact</a></li>
+            </ul>
             </div>
             
-            <script>
-                function updateContactInfo() {
-                    const country = document.getElementById("countrySelect").value;
-                    const tollNo = document.getElementById("tollNo");
-                    const tollFreeNo = document.getElementById("tollFreeNo");
-
-                    const contactDetails = {
-                        "India": { toll: "+91 9876543210", tollFree: "1800-630-630" },
-                        "USA": { toll: "+1 123-456-7890", tollFree: "1800-123-4567" },
-                        "UK": { toll: "+44 20 7946 0958", tollFree: "0800-456-789" },
-                        "Canada": { toll: "+1 647-555-0123", tollFree: "1-800-456-1234" },
-                        "Australia": { toll: "+61 2 9876 5432", tollFree: "1800-654-321" }
-                    };
-
-                    if (country && contactDetails[country]) {
-                        tollNo.textContent = contactDetails[country].toll;
-                        tollFreeNo.textContent = contactDetails[country].tollFree;
-                    } else {
-                        tollNo.textContent = "N/A";
-                        tollFreeNo.textContent = "N/A";
-                    }
-                }
-            </script>
+            <div class="col-lg-3 col-md-6">
+            <h5 class="mb-4">Job Seeker Resources</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="resumebuild.html" class="text-white-50">Resume Builder</a></li>
+                <li class="mb-2"><a href="preparation.html" class="text-white-50">Interview Tips</a></li>
+                <li class="mb-2"><a href="careerbooster.html" class="text-white-50">Career Advice</a></li>
+                <li class="mb-2"><a href="featuredprofile.html" class="text-white-50">Featured Profile</a></li>
+                <li class="mb-2"><a href="tutu.html" class="text-white-50">Apply with AI</a></li>
+            </ul>
+            </div>
             
+            <div class="col-lg-3 col-md-6">
+            <h5 class="mb-4">Contact Us</h5>
+            <ul class="list-unstyled">
+                <li class="mb-3 d-flex align-items-start">
+                <i class="fas fa-map-marker-alt me-3 mt-1"></i>
+                <span class="text-white-50">985 pragathi nagar, Pragathi Nagar, Hyderabad, TS 500090</span>
+                </li>
+                <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-phone me-3"></i>
+                <a href="tel:+919876543210" class="text-white-50">+91 99087 93602</a>,  
+                <a href="tel:+919876543210" class="text-white-50">+91 87901 70525</a>
+                </li>
+                <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-envelope me-3"></i>
+                <a href="mailto:info@hitashicareers.com" class="text-white-50">info@hitashicareers.com</a>
+                </li>
+            </ul>
+            </div>
         </div>
-    
-        <script>
-            const sections = {
-                "job-categories": `
-                    <h4 style="color: #fff;">Job Categories</h4>
-                    <p style="color: #fff;">
-                        Dive into the world of technology with jobs in software development, data analysis, and cybersecurity. Embrace cutting-edge innovation and build a rewarding career in IT.
-                        <br><br>Discover opportunities in education, hospitality, and creative industries. Unlock your potential with roles tailored to diverse skill sets beyond technology.
-                        <br><br>Shape the future of financial services with roles in accounting, investment banking, and risk management. Find stability and growth in the dynamic world of finance.
-                        </p>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5xUy-gfM92uVE7CPX5ppdCQRWHEBXnZ55ZA&s" alt="Job Categories Image" style="width: 80px; height: 60px; padding: 10px">
-                    <img src="https://png.pngtree.com/png-vector/20190119/ourmid/pngtree-cartoon-cartoon-occupation-business-business-career-png-image_473126.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://e7.pngegg.com/pngimages/702/318/png-clipart-working-men-jobs-the-man-thumbnail.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://png.pngtree.com/element_our/png/20181107/job-promotion-job-search-elements-cartoon-illustration-png_228191.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `,
-
-                "employers": `<h4 style="color: #fff;">Employers</h4>
-                    <p style="color: #fff;">
-                        Find top talent across the globe with ease. Discover skilled professionals ready to meet your organization's needs.
-                        <br><br>
-                        Unlock opportunities in IT, Non-IT, and beyond with a global talent pool. Simplify hiring and build your dream team effortlessly.   
-                        <br><br>
-                        Discover roles tailored to your skills and ambitions. Start your journey to a brighter career today.    
-                    </p>
-                    <img src="https://png.pngtree.com/png-vector/20210825/ourmid/pngtree-job-interview-concept-with-two-man-having-conversation-png-image_3830549.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://png.pngtree.com/png-clipart/20220724/ourmid/pngtree-job-interview-recruitment-find-work-meeting-illustration-png-image_6050073.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.kindpng.com/picc/m/150-1500375_transparent-interview-png-job-interview-images-cartoon-png.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.dynamicdelta.net/wp-content/uploads/2020/06/interview-clipart-hr-interview.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `,
-                
-                "job-seekers": `<h4 style="color: #fff;">Job Seekers</h4>
-                    <p style="color: #fff;">
-                        Browse a wide range of job opportunities across multiple industries. Whether you're looking for a full-time role or a freelance gig, find the perfect fit today.
-                        <br><br>Upload your resume and showcase your skills to potential employers. Get noticed and open doors to new career opportunities with just a few clicks.
-                        <br><br>Whether you're a recent graduate or an experienced professional, explore positions that match your career aspirations. Start your job search today and take the next step in your career.    
-                    </p>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQ_vOR-wxXJ_C8WgL6C5AjUtykTbaFXTWuiw&s " alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://img.freepik.com/premium-vector/job-seeker-illustration-concept_225067-151.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://static.vecteezy.com/system/resources/thumbnails/042/689/763/small/illustration-of-hiring-with-3d-words-of-hire-and-briefcase-for-the-metaphor-of-the-struggle-of-applicants-and-job-seekers-in-looking-for-vacancies-free-vector.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://contentstatic.timesjobs.com/img/61950097/Master.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    
-                    `,
-                
-                "career-advice": `<h4 style="color: #fff;">Career Advice</h4>
-                    <p style="color: #fff;">
-                        Get expert advice on acing job interviews, writing resumes, and building a successful career. Learn from industry professionals and take your career to new heights.
-                        <br><br>Discover tips and tricks to help you succeed in your job search. From resume writing to interview preparation, get the guidance you need to land your dream job.
-                        <br><br>Explore career paths and find the right job for you. Get insights into different industries and roles to make informed career decisions.  
-                    </p>
-                    <img src="https://png.pngtree.com/png-vector/20210825/ourmid/pngtree-job-interview-concept-with-two-man-having-conversation-png-image_3830549.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://png.pngtree.com/png-clipart/20220724/ourmid/pngtree-job-interview-recruitment-find-work-meeting-illustration-png-image_6050073.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.kindpng.com/picc/m/150-1500375_transparent-interview-png-job-interview-images-cartoon-png.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.dynamicdelta.net/wp-content/uploads/2020/06/interview-clipart-hr-interview.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `,
-               
-                "company-info": `<h4 style="color: #fff;">Company Info</h4>
-                    <p style="color: #fff;">
-                        Learn more about Hitaishi and our mission to connect job seekers with employers. Discover our values and commitment to helping you build a successful career.
-                        <br><br>Find out how Hitaishi can help you find the right job or the perfect candidate. Explore our services and learn how we can support your career goals.
-                        <br><br>Get in touch with us to learn more about our platform and how we can help you succeed. Connect with our team and start your journey to a brighter future.    
-                    </p>
-                    <img src="https://png.pngtree.com/png-vector/20210825/ourmid/pngtree-job-interview-concept-with-two-man-having-conversation-png-image_3830549.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://png.pngtree.com/png-clipart/20220724/ourmid/pngtree-job-interview-recruitment-find-work-meeting-illustration-png-image_6050073.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.kindpng.com/picc/m/150-1500375_transparent-interview-png-job-interview-images-cartoon-png.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.dynamicdelta.net/wp-content/uploads/2020/06/interview-clipart-hr-interview.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `,
-                    
-                "IT Jobs": `<h4 style="color: #fff;">IT Jobs</h4>
-                    <p style="color: #fff;">
-                        Explore a wide range of IT jobs across different industries. Find roles in software development, data analysis, cybersecurity, and more.
-                        <br><br>Discover opportunities in IT consulting, software engineering, and project management. Build a rewarding career in technology and innovation.
-                        <br><br>Unlock your potential with roles in cloud computing, artificial intelligence, and machine learning. Find the perfect job to match your skills and ambitions.    
-                    </p>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQ_vOR-wxXJ_C8WgL6C5AjUtykTbaFXTWuiw&s " alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://img.freepik.com/premium-vector/job-seeker-illustration-concept_225067-151.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://static.vecteezy.com/system/resources/thumbnails/042/689/763/small/illustration-of-hiring-with-3d-words-of-hire-and-briefcase-for-the-metaphor-of-the-struggle-of-applicants-and-job-seekers-in-looking-for-vacancies-free-vector.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://contentstatic.timesjobs.com/img/61950097/Master.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `,
-
-                "Non-IT Jobs": `<h4 style="color: #fff;">Non-IT Jobs</h4>
-                    <p style="color: #fff;">
-                         Discover a variety of Non-IT job opportunities in fields like marketing, finance, and human resources. Find roles that match your skills and interests.
-                         <br><br>Explore positions in sales, customer service, and administration. Build a successful career outside of technology with roles that offer growth and stability.
-                         <br><br>Unlock your potential with jobs in education, healthcare, and creative industries. Find the perfect role to start your career journey.    
-                    </p>
-                    <img src="https://png.pngtree.com/png-vector/20210825/ourmid/pngtree-job-interview-concept-with-two-man-having-conversation-png-image_3830549.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://png.pngtree.com/png-clipart/20220724/ourmid/pngtree-job-interview-recruitment-find-work-meeting-illustration-png-image_6050073.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.kindpng.com/picc/m/150-1500375_transparent-interview-png-job-interview-images-cartoon-png.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://www.dynamicdelta.net/wp-content/uploads/2020/06/interview-clipart-hr-interview.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `,
-
-                "Partnerships": `<h4 style="color: #fff;">Partnerships</h4>
-                    <p style="color: #fff;">
-                        Partner with Hitaishi to expand your reach and connect with top talent. Join our network of employers and job seekers to build a successful career ecosystem.
-                        <br><br>Collaborate with us to create customized solutions for your hiring needs. Discover how our platform can help you find the right candidates and grow your business.
-                        <br><br>Get in touch to explore partnership opportunities and learn how we can support your organization. Connect with us to start a successful partnership.    
-                    </p>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQ_vOR-wxXJ_C8WgL6C5AjUtykTbaFXTWuiw&s " alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://img.freepik.com/premium-vector/job-seeker-illustration-concept_225067-151.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://static.vecteezy.com/system/resources/thumbnails/042/689/763/small/illustration-of-hiring-with-3d-words-of-hire-and-briefcase-for-the-metaphor-of-the-struggle-of-applicants-and-job-seekers-in-looking-for-vacancies-free-vector.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://contentstatic.timesjobs.com/img/61950097/Master.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `
-            };
-
-            function loadSection(section) {
-                const dynamicSection = document.getElementById("dynamic-section");
-                dynamicSection.innerHTML = sections[section] || `<p style="color: #fff;">Select a category to learn more.</p>`;
-            }
-        </script>
+        
+        <hr class="my-5">
+        
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 Hitaishi Careers. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+            <a href="PrivacyPolicy.html" class="text-white-50 me-3">Privacy Policy</a>
+            <a href="Terms-Conditions.html" class="text-white-50 me-3">Terms of Service</a>
+            <a href="cookiesPolicy.html" class="text-white-50">Cookie Policy</a>
+            </div>
+        </div>
+        </div>
+        <style>
+            footer {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        }
+        
+        footer a {
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: var(--secondary-color) !important;
+        }
+        </style>
     </footer>
 
     <!-- Bootstrap JS -->
