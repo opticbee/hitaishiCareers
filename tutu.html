@@ -5,9 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Tutu AI Job Assistant - Upload your resume and let Tutu apply to jobs for you">
   <title>Tutu - AI Resume Auto Apply</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
     :root {
+      /* Styles from tutu.html */
       --primary-bg: #0e0b1c;
       --secondary-bg: #2a1155;
       --button-bg: linear-gradient(90deg, #6e3aff, #3a1aff);
@@ -19,17 +26,79 @@
       --shadow: 0 8px 20px rgba(106, 58, 255, 0.4);
       --border-radius: 50px;
       --transition: all 0.3s ease;
+
+      /* Added from index.html for navbar */
+      --primary-color: #6a0dad;
+      --secondary-color: #d653c9;
+      --dark-text: #333333;
     }
 
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background: var(--primary-bg);
       color: var(--text-primary);
       line-height: 1.6;
-      height: auto;
+      /* Added padding to prevent content from being hidden by the fixed navbar */
+      padding-top: 70px; 
     }
 
+    /* Updated Navbar styles to match image */
+    .navbar {
+      background: linear-gradient(135deg, #6a0dad, #d653c9) !important;
+      padding: 0.5rem 0;
+    }
+    
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    
+    .navbar-nav .nav-link {
+      color: white !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s ease;
+    }
+    
+    .navbar-nav .nav-link:hover {
+      color: #ffcc00 !important;
+    }
+    
+    .navbar-nav .nav-link.active {
+      color: #ffcc00 !important;
+      font-weight: 600;
+    }
+    
+    .dropdown-menu {
+      background-color: white;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 0.5rem 0;
+    }
+    
+    .dropdown-item {
+      color: #333;
+      padding: 0.5rem 1.5rem;
+      transition: all 0.2s ease;
+    }
+    
+    .dropdown-item:hover {
+      background-color: rgba(106, 13, 173, 0.1);
+      color: #6a0dad;
+    }
+    
+    .navbar-toggler {
+      border: none;
+      padding: 0.25rem 0.5rem;
+    }
+    
+    .navbar-toggler:focus {
+      box-shadow: none;
+    }
+
+    /* Original tutu.html styles */
     .container {
       padding: 5rem 2rem;
       text-align: center;
@@ -96,7 +165,7 @@
 
     .popup-container {
       position: fixed;
-      top: 20px;
+      top: 80px; /* Adjusted for navbar height */
       right: 20px;
       z-index: 999;
     }
@@ -121,167 +190,110 @@
   </style>
 </head>
 
-
 <body>
-
-    <!-- navbar -->
-    <div style="max-width: 100%; width: 100%; background: linear-gradient(45deg, #6a0dad, #d653c9); padding: 10px; display: flex; justify-content: space-between; align-items: center; position: fixed; top: 0; z-index: 999;">
-        <a href="JP.html"> 
-            <div style="font-size: 24px; font-weight: bold; color: white; display: flex; align-items: center;">
-                <img src="images/Logo1.PNG" alt="Logo" style="height: 50px; margin-right: 5px;">
-                Hitaishi Careers
-            </div>
+  <!-- Updated Header/Navbar -->
+  <header>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="index.html">
+          <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
+          <span class="fw-bold">Hitaishi Careers</span>
         </a>
-    
-        <ul style="list-style: none; display: flex; margin-left: -80px; padding: 0;">
-            <li style="margin-right: 20px;"><a href="JP.html" style="text-decoration: none; color: white;">Home</a></li>
-            <li style="margin-right: 20px;"><a href="jobs.html" style="text-decoration: none; color: white;">Jobs</a></li>
-            <li style="margin-right: 20px; position: relative;">
-                <a href="#" style="text-decoration: none; color: white;">Service</a>
-                <ul style="width: 200px; list-style: none; padding: 10px; margin: 0; position: absolute; top: 100%; left: 0; background-color: #f0f0f0; border: 1px solid #ddd; display: none; box-shadow: 0 4px 6px rgba(244, 244, 244, 0.1);">
-                    <li style="margin: 0;"><a href="featuredprofile.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Featured profile</a></li>
-                    <li style="margin: 0;"><a href="featuredprofile.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Profile highlighter</a></li>
-                    <li style="margin: 0;"><a href="careerbooster.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Career Booster</a></li>
-                    <li style="margin: 0;"><a href="resumebuild.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Resume Writing</a></li>
-                    <li style="margin: 0;"><a href="resumebuild.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Resume builder</a></li>
-                    <li style="margin: 0;"><a href="network.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Linkedin Makeover</a></li>
-                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Mock interview</a></li>
-                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Interview preparation</a></li>
-                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Skill Assessment</a></li>
-                    <li style="margin: 0;"><a href="preparation.html" style="text-decoration: none; color: purple; display: block; padding: 5px 10px;">Degree Programs</a></li>
-                </ul>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
             </li>
-            <li style="margin-right: 20px;"><a href="employerlogin.html" style="text-decoration: none; color: white;">Post Jobs</a></li>
-            <li style="margin-right: 20px;"><a href="employer.html" style="text-decoration: none; color: white;">Employers</a></li>
-            <li style="margin-right: 20px;"><a href="#" id="uploadResumeLink" style="text-decoration: none; color: white;">Upload Resume</a></li>
-            <li style="margin-right: 20px;"><a href="tutu.html" style="text-decoration: none; color: white;">Apply with AI</a></li>
-        </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="jobs.html">Jobs</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                Services
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                <li><a class="dropdown-item" href="featuredprofile.html">Featured Profile</a></li>
+                <li><a class="dropdown-item" href="featuredprofile.html">Profile Highlighter</a></li>
+                <li><a class="dropdown-item" href="careerbooster.html">Career Booster</a></li>
+                <li><a class="dropdown-item" href="resumebuild.html">Resume Writing</a></li>
+                <li><a class="dropdown-item" href="resumebuild.html">Resume Builder</a></li>
+                <li><a class="dropdown-item" href="network.html">LinkedIn Makeover</a></li>
+                <li><a class="dropdown-item" href="preparation.html">Mock Interview</a></li>
+                <li><a class="dropdown-item" href="preparation.html">Interview Preparation</a></li>
+                <li><a class="dropdown-item" href="preparation.html">Skill Assessment</a></li>
+                <li><a class="dropdown-item" href="preparation.html">Degree Programs</a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="employerlogin.html">Post Jobs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="employer.html">Employers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" id="uploadResumeLink">Upload Resume</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="tutu.html">Apply with AI</a>
+            </li>
+          </ul>
+          
+          <!-- Profile / Avatar -->
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center" href="login.html" id="profileLink">
+                <!-- Default Icon -->
+                <i id="profile-icon" class="fas fa-user-circle fa-2x text-white"></i>
+                <!-- User Avatar (hidden by default) -->
+                <img id="profile-avatar" src="" alt="User Avatar"
+                    class="rounded-circle d-none" width="40" height="40">
+              </a>
+            </li>
+          </ul>
 
-
-        <div style="text-align: center; margin-top: 20px;">
-            <button style="padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer; background-color: #333; color: white;"
-                id="loginButton">Login</button>
-            <button style="padding: 10px 20px; border: none; border-radius: 5px; margin-right: 10px; cursor: pointer; background-color: orange; color: white;"
-                id="registerButton">Register</button>
-            <button style="padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; background-color: transparent;"></button>
         </div>
+      </div>
+    </nav>
+    <script>
+      async function loadNavbarProfile() {
+        const email = sessionStorage.getItem("email");
+        if (!email) {
+          console.log("User not logged in → showing default icon.");
+          return;
+        }
 
-        <!-- Overlay Background -->
-        <div id="overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 1000;"></div>
+        try {
+          const res = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
+          if (!res.ok) {
+            console.error("Failed to fetch profile:", res.status);
+            return;
+          }
 
-            <!-- Login Form -->
-            <div id="loginForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; border-radius: 8px;">
-                <h2 style="margin: 0 0 20px; text-align: center;">Login</h2>
-                <form id="loginFormData" onsubmit="submitLogin(event)">
-                    <input type="email" id="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
-                    <input type="password" id="password" placeholder="Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
-                    <button type="submit" style="width: 100%; padding: 10px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">Login</button>
-                </form>
-                <button id="closeLoginForm" style="margin-top: 10px; width: 100%; padding: 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-            </div>
+          const data = await res.json();
+          const profilePhoto = data.personalDetails?.profilePhoto;
 
-            <!-- Registration Form -->
-            <div id="registerForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; padding: 20px; background-color: white; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); z-index: 1001; border-radius: 8px;">
-                <h2 style="margin: 0 0 20px; text-align: center;">Register</h2>
-                <form>
-                    <input type="text" placeholder="Full Name" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
-                    <input type="email" placeholder="Email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
-                    <input type="password" placeholder="Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
-                    <input type="password" placeholder="Confirm Password" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px;">
-                    <button type="submit" style="width: 100%; padding: 10px; background-color: orange; color: white; border: none; border-radius: 5px; cursor: pointer;">Register</button>
-                </form>
-                <button id="closeRegisterForm" style="margin-top: 10px; width: 100%; padding: 10px; background-color: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
-            </div>
-            <!-- upload resume form -->
-            <div id="uploadResumeForm" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fff; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); border-radius: 10px; z-index: 1000; width: 300px;">
-                <h2 style="margin-bottom: 20px; color: green; text-align: center;">Upload Resume</h2>
-                <form>
-                    <input type="file" accept=".pdf,.doc,.docx" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
-                    <button type="submit" style="width: 100%; padding: 10px; background-color: green; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Submit</button>
-                </form>
-                <a href="#" id="closeUploadResumeForm" style="display: block; text-align: center; color: #333; margin-top: 10px; text-decoration: none; font-size: 14px;">Close</a>
-            </div>
+          if (profilePhoto) {
+            // Hide the default font-awesome icon
+            document.getElementById("profile-icon").classList.add("d-none");
 
-            <!-- JavaScript -->
-            <script>
-                const loginButton = document.getElementById('loginButton');
-                const registerButton = document.getElementById('registerButton');
-                const closeLoginForm = document.getElementById('closeLoginForm');
-                const closeRegisterForm = document.getElementById('closeRegisterForm');
-                const loginForm = document.getElementById('loginForm');
-                const registerForm = document.getElementById('registerForm');
-                const overlay = document.getElementById('overlay');
-                const uploadResumeLink = document.getElementById('uploadResumeLink');
-                const uploadResumeForm = document.getElementById('uploadResumeForm');
-                const closeUploadResumeForm = document.getElementById('closeUploadResumeForm');
+            // Show user's actual avatar
+            const avatar = document.getElementById("profile-avatar");
+            avatar.src = profilePhoto;
+            avatar.classList.remove("d-none");
+          }
+        } catch (err) {
+          console.error("Error loading navbar profile:", err);
+        }
+      }
 
-
-                // Open Login Form
-                loginButton.addEventListener('click', () => {
-                    overlay.style.display = 'block';
-                    loginForm.style.display = 'block';
-                });
-
-                // Open Registration Form
-                registerButton.addEventListener('click', () => {
-                    overlay.style.display = 'block';
-                    registerForm.style.display = 'block';
-                });
-
-                // Close Login Form
-                closeLoginForm.addEventListener('click', () => {
-                    overlay.style.display = 'none';
-                    loginForm.style.display = 'none';
-                });
-
-                // Show upload resume form
-                uploadResumeLink.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    uploadResumeForm.style.display = 'block';
-                    overlay.style.display = 'block';
-                });
-
-                // Hide upload resume form
-                closeUploadResumeForm.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    uploadResumeForm.style.display = 'none';
-                    overlay.style.display = 'none';
-                });
-
-                // Close Registration Form
-                closeRegisterForm.addEventListener('click', () => {
-                    overlay.style.display = 'none';
-                    registerForm.style.display = 'none';
-                });
-
-                // Close forms by clicking on the overlay
-                overlay.addEventListener('click', () => {
-                    overlay.style.display = 'none';
-                    loginForm.style.display = 'none';
-                    uploadResumeForm.style.display = 'none';
-                    registerForm.style.display = 'none';
-                });
-
-                // Simulate Login Validation
-                function submitLogin(event) {
-                    event.preventDefault();
-                    const email = document.getElementById('email').value;
-                    const password = document.getElementById('password').value;
-
-                    // Check for correct credentials (you can replace this with actual validation)
-                    if (email === 'banothnaveen@gmail.com' && password === 'Tej2142') {
-                        // Redirect to profile page (replace 'profile.html' with your actual profile page URL)
-                        window.location.href = 'profile.html'; 
-                    } else {
-                        alert('Invalid login credentials!');
-                    }
-                }
-            </script>
-    </div>
-
-
-
-
+      document.addEventListener("DOMContentLoaded", loadNavbarProfile);
+    </script>
+  </header>
 
     <main class="container">
         <h1 class="title">Tutu AI Job Assistant</h1>
@@ -542,7 +554,7 @@
                     const country = document.getElementById("countrySelect").value;
                     const tollNo = document.getElementById("tollNo");
                     const tollFreeNo = document.getElementById("tollFreeNo");
-            
+
                     const contactDetails = {
                         "India": { toll: "+91 9876543210", tollFree: "1800-630-630" },
                         "USA": { toll: "+1 123-456-7890", tollFree: "1800-123-4567" },
@@ -550,7 +562,7 @@
                         "Canada": { toll: "+1 647-555-0123", tollFree: "1-800-456-1234" },
                         "Australia": { toll: "+61 2 9876 5432", tollFree: "1800-654-321" }
                     };
-            
+
                     if (country && contactDetails[country]) {
                         tollNo.textContent = contactDetails[country].toll;
                         tollFreeNo.textContent = contactDetails[country].tollFree;
@@ -643,99 +655,37 @@
 
                 "Non-IT Jobs": `<h4 style="color: #fff;">Non-IT Jobs</h4>
                     <p style="color: #fff;">
-                         Discover a variety of Non-IT job opportunities across multiple industries. Whether you are looking for roles in finance, marketing, healthcare, or education, we have something for everyone.
-                        <br><br>Explore positions in management, sales, customer service, and more. Find the perfect job that matches your skills and interests.
-                        <br><br>Unlock your potential with roles in human resources, administration, and operations. Build a rewarding career outside the IT sector.
+                         Discover a variety of Non-IT job opportunities in fields like marketing, finance, and human resources. Find roles that match your skills and interests.
+                         <br><br>Explore positions in sales, customer service, and administration. Build a successful career outside of technology with roles that offer growth and stability.
+                         <br><br>Unlock your potential with jobs in education, healthcare, and creative industries. Find the perfect role to start your career journey.    
                     </p>
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQ_vOR-wxXJ_C8WgL6C5AjUtykTbaFXTWuiw&s " alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://img.freepik.com/premium-vector/job-seeker-illustration-concept_225067-151.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://static.vecteezy.com/system/resources/thumbnails/042/689/763/small/illustration-of-hiring-with-3d-words-of-hire-and-briefcase-for-the-metaphor-of-the-struggle-of-applicants-and-job-seekers-in-looking-for-vacancies-free-vector.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    <img src="https://contentstatic.timesjobs.com/img/61950097/Master.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
+                    <img src="https://png.pngtree.com/png-vector/20210825/ourmid/pngtree-job-interview-concept-with-two-man-having-conversation-png-image_3830549.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
+                    <img src="https://png.pngtree.com/png-clipart/20220724/ourmid/pngtree-job-interview-recruitment-find-work-meeting-illustration-png-image_6050073.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
+                    <img src="https://www.kindpng.com/picc/m/150-1500375_transparent-interview-png-job-interview-images-cartoon-png.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
+                    <img src="https://www.dynamicdelta.net/wp-content/uploads/2020/06/interview-clipart-hr-interview.png" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
                     `,
-                
+
                 "Partnerships": `<h4 style="color: #fff;">Partnerships</h4>
                     <p style="color: #fff;">
-                        At Hitaishi, we believe in the power of collaboration. Our partnerships with leading organizations help us provide the best opportunities for job seekers and employers alike.
-                        <br><br>We work with a diverse range of partners across various industries to bring you the latest job openings and career resources. Our partners include top companies in finance, healthcare, technology, and more.
-                        <br><br>Join our network of partners and benefit from our extensive reach and expertise. Together, we can help you achieve your career goals and build a brighter future.
+                        Partner with Hitaishi to expand your reach and connect with top talent. Join our network of employers and job seekers to build a successful career ecosystem.
+                        <br><br>Collaborate with us to create customized solutions for your hiring needs. Discover how our platform can help you find the right candidates and grow your business.
+                        <br><br>Get in touch to explore partnership opportunities and learn how we can support your organization. Connect with us to start a successful partnership.    
                     </p>
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQ_vOR-wxXJ_C8WgL6C5AjUtykTbaFXTWuiw&s " alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
                     <img src="https://img.freepik.com/premium-vector/job-seeker-illustration-concept_225067-151.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
                     <img src="https://static.vecteezy.com/system/resources/thumbnails/042/689/763/small/illustration-of-hiring-with-3d-words-of-hire-and-briefcase-for-the-metaphor-of-the-struggle-of-applicants-and-job-seekers-in-looking-for-vacancies-free-vector.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
                     <img src="https://contentstatic.timesjobs.com/img/61950097/Master.jpg" alt="Job Categories Image" style="width: 60px; height: 60px;  padding: 10px">
-                    `,
-            
+                    `
             };
-    
+
             function loadSection(section) {
                 const dynamicSection = document.getElementById("dynamic-section");
-                dynamicSection.innerHTML = sections[section] || "<p style='color: #fff;'>Content not available.</p>";
+                dynamicSection.innerHTML = sections[section] || `<p style="color: #fff;">Select a category to learn more.</p>`;
             }
         </script>
     </footer>
-    
 
-    <script>
-        // JavaScript to handle dropdown menu hover effect
-        const dropdowns = document.querySelectorAll("ul > li");
-    
-        dropdowns.forEach((dropdown) => {
-            dropdown.addEventListener("mouseenter", () => {
-                const submenu = dropdown.querySelector("ul");
-                if (submenu) submenu.style.display = "block";
-            });
-            dropdown.addEventListener("mouseleave", () => {
-                const submenu = dropdown.querySelector("ul");
-                if (submenu) submenu.style.display = "none";
-            });
-        });
-
-
-        
-    </script>
-    
-
-    <div id="google_translate_element" style="display: none;"></div>
-
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement(
-      {
-        pageLanguage: 'en',
-        includedLanguages: 'en,hi,fr,es,de,zh,ar',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-      },
-      'google_translate_element'
-    );
-  }
-</script>
-
-<script type="text/javascript"
-  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-</script>
-
-<script>
-  function fireTranslation(lang) {
-    const select = document.querySelector('.goog-te-combo');
-    if (select) {
-      select.value = lang;
-      select.dispatchEvent(new Event('change'));
-    }
-  }
-
-  window.addEventListener('load', () => {
-    const userLang = navigator.language || navigator.userLanguage; // e.g., "fr-FR"
-    const langCode = userLang.split('-')[0]; // e.g., "fr"
-    const supportedLangs = ['en', 'hi', 'fr', 'es', 'de', 'zh', 'ar'];
-
-    if (supportedLangs.includes(langCode) && langCode !== 'en') {
-      setTimeout(() => {
-        fireTranslation(langCode);
-      }, 2000); // Wait for Translate dropdown to load
-    }
-  });
-</script>
-
-
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

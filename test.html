@@ -1,118 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Auto Translate by Country</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px;
-      background-color: #f0f0f0;
-      color: #333;
-    }
-
-    h1 {
-      color: #2c3e50;
-    }
-
-    p {
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .location {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #555;
-    }
-
-    .note {
-      margin-top: 40px;
-      font-style: italic;
-      color: #999;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0.375rem;
+            border-width: 1px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transform: translateY(0);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .login-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        .form-input {
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.2);
+        }
+        .submit-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        .submit-btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .floating-label {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        .floating-input {
+            width: 100%;
+            padding: 1rem 0.75rem 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+        .floating-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .floating-label-text {
+            position: absolute;
+            top: 50%;
+            left: 0.75rem;
+            transform: translateY(-50%);
+            color: #6b7280;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+        .floating-input:focus + .floating-label-text,
+        .floating-input:not(:placeholder-shown) + .floating-label-text {
+            top: 0.25rem;
+            font-size: 0.75rem;
+            color: #3b82f6;
+        }
+        .nav-item {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-item:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+        .nav-item:hover:after {
+            width: 100%;
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-md py-4 px-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-briefcase text-blue-600 text-2xl"></i>
+                <span class="text-xl font-bold text-gray-800">JobConnect</span>
+            </div>
+            <div class="hidden md:flex space-x-8">
+                <a href="#" class="nav-item text-gray-600 hover:text-blue-600">Home</a>
+                <a href="#" class="nav-item text-gray-600 hover:text-blue-600">Find Jobs</a>
+                <a href="#" class="nav-item text-gray-600 hover:text-blue-600">Employers</a>
+                <a href="#" class="nav-item text-gray-600 hover:text-blue-600">About</a>
+                <a href="#" class="nav-item text-gray-600 hover:text-blue-600">Contact</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="employerRegistration.html" class="text-blue-600 hover:text-blue-800 font-medium">Register</a>
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Post a Job</a>
+            </div>
+        </div>
+    </nav>
 
-  <h1>Welcome to Our Global Website!</h1>
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-6xl w-full flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-12">
+            <!-- Left side - Features -->
+            <div class="w-full md:w-1/2 space-y-8">
+                <h1 class="text-4xl font-bold text-gray-800 leading-tight">Welcome Back, Employer</h1>
+                <p class="text-lg text-gray-600">Access your employer dashboard to manage job postings, review applications, and connect with top talent.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div class="feature-card bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-users text-blue-500 text-xl mr-3"></i>
+                            <h3 class="text-lg font-semibold">Manage Candidates</h3>
+                        </div>
+                        <p class="text-gray-600">Review and manage all your job applications in one place.</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-bullhorn text-green-500 text-xl mr-3"></i>
+                            <h3 class="text-lg font-semibold">Post Jobs</h3>
+                        </div>
+                        <p class="text-gray-600">Create and publish new job listings to attract talent.</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-chart-line text-purple-500 text-xl mr-3"></i>
+                            <h3 class="text-lg font-semibold">Track Performance</h3>
+                        </div>
+                        <p class="text-gray-600">Monitor your job posting performance with analytics.</p>
+                    </div>
+                    
+                    <div class="feature-card bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-comments text-yellow-500 text-xl mr-3"></i>
+                            <h3 class="text-lg font-semibold">Direct Messaging</h3>
+                        </div>
+                        <p class="text-gray-600">Communicate directly with candidates through our platform.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right side - Login Form -->
+            <div class="w-full md:w-1/2 max-w-md">
+                <div class="login-card p-8">
+                    <div class="text-center mb-8">
+                        <h2 class="text-3xl font-bold text-gray-800">Employer Login</h2>
+                        <p class="text-gray-600 mt-2">Sign in to your employer account</p>
+                    </div>
+                    
+                    <div id="message-container"></div>
 
-  <p>
-    This site automatically translates content to match your location. Whether you're in India, the USA, or Saudi Arabia, the language will adjust accordingly to enhance your browsing experience.
-  </p>
+                    <form id="login-form">
+                        <div class="floating-label">
+                            <input type="email" id="email" name="email" class="floating-input" placeholder=" " required>
+                            <label for="email" class="floating-label-text">
+                                <i class="fas fa-envelope mr-2"></i>Email Address
+                            </label>
+                        </div>
+                        
+                        <div class="floating-label">
+                            <input type="password" id="password" name="password" class="floating-input" placeholder=" " required>
+                            <label for="password" class="floating-label-text">
+                                <i class="fas fa-lock mr-2"></i>Password
+                            </label>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                <label for="remember" class="ml-2 block text-sm text-gray-700">Remember me</label>
+                            </div>
+                            <a href="#" class="text-sm text-blue-600 hover:text-blue-800">Forgot password?</a>
+                        </div>
+                        
+                        <button type="submit" id="submit-button" class="w-full submit-btn bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300 font-medium">
+                            Login to Dashboard
+                        </button>
+                    </form>
+                    
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <p class="text-center text-gray-600 text-sm">
+                            Don't have an account? 
+                            <a href="employerRegistration.html" class="text-blue-600 hover:underline font-medium">Register here</a>
+                        </p>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <div class="relative">
+                            <div class="absolute inset-0 flex items-center">
+                                <div class="w-full border-t border-gray-300"></div>
+                            </div>
+                            <div class="relative flex justify-center text-sm">
+                                <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 grid grid-cols-2 gap-3">
+                            <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-300">
+                                <i class="fab fa-google text-red-500 mr-2"></i> Google
+                            </button>
+                            <button type="button" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition duration-300">
+                                <i class="fab fa-linkedin text-blue-700 mr-2"></i> LinkedIn
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <p>
-    Using intelligent location detection and Google Translate, we aim to make this website accessible for everyone, everywhere.
-  </p>
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-  <div class="location" id="user-location">Detecting your location...</div>
+            const messageContainer = document.getElementById('message-container');
+            const submitButton = document.getElementById('submit-button');
+            messageContainer.innerHTML = ''; 
 
-  <div class="note">
-    This demo uses IP-based geolocation and Google Translate to deliver content in Hindi, Arabic, or English.
-  </div>
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-  <!-- Google Translate Element (Hidden) -->
-  <div id="google_translate_element" style="display:none;"></div>
+            submitButton.disabled = true;
+            submitButton.textContent = 'Logging in...';
 
-  <!-- Google Translate Script -->
-  <script type="text/javascript">
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement(
-        {
-          pageLanguage: 'en',
-          includedLanguages: 'en,hi,ar',
-          layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-        },
-        'google_translate_element'
-      );
-    }
-  </script>
+            try {
+                const response = await fetch('/api/company/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
 
-  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                const result = await response.json();
 
-  <!-- Location Detection and Auto-Translation -->
-  
-  
- <script>
-  const countryLangMap = {
-    IN: 'hi', // India -> Hindi
-    US: 'en', // United States -> English
-    SA: 'ar'  // Saudi Arabia -> Arabic
-  };
+                if (response.ok && result.success) {
+                    // --- CHANGED ---
+                    // On successful login, store only the token in sessionStorage.
+                    // This is more secure as no IDs are exposed on the client side.
+                    // The session ends when the browser tab is closed.
+                    sessionStorage.setItem('authToken', result.token);
+                    
+                    window.location.href = 'employer.html'; 
+                } else {
+                    showMessage(result.error || `Error ${response.status}: Login failed.`);
+                }
 
-  fetch('https://ipapi.co/json/')
-    .then(response => response.json())
-    .then(data => {
-      const countryCode = data.country_code;
-      const city = data.city;
-      const region = data.region;
-      const country = data.country_name;
+            } catch (error) {
+                console.error('Login error:', error);
+                showMessage('An unexpected network error occurred. Please try again.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Login to Dashboard';
+            }
+        });
 
-      document.getElementById('user-location').textContent =
-        `You are visiting from ${city}, ${region}, ${country}.`;
-
-      const targetLang = countryLangMap[countryCode] || 'en';
-
-      const observer = new MutationObserver(() => {
-        const select = document.querySelector('.goog-te-combo');
-        if (select && select.length > 1) {
-          select.value = targetLang;
-          select.dispatchEvent(new Event('change'));
-          observer.disconnect(); // Stop observing once done
+        function showMessage(message) {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = `<div class="alert alert-danger" role="alert">${message}</div>`;
         }
-      });
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true
-      });
-    })
-    .catch(() => {
-      document.getElementById('user-location').textContent =
-        'Unable to detect location. Default language applied.';
-    });
-</script>
-
-
+    </script>
 </body>
 </html>
