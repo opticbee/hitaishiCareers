@@ -67,6 +67,25 @@ router.post("/apply", authenticateUser, async (req, res) => {
           try { return JSON.parse(v); } catch (e) { return v; }
         };
 
+        // --- START: New logic to determine current role ---
+        const professionalDetails = safeParse(user.professional_details);
+        let currentRole = null;
+
+        // Check if professional details exist, look at the first entry ('0'), 
+        // and extract the first role from its 'roles' array.
+        if (professionalDetails && 
+            professionalDetails['0'] && 
+            Array.isArray(professionalDetails['0'].roles) && 
+            professionalDetails['0'].roles.length > 0) {
+            currentRole = professionalDetails['0'].roles[0];
+        }
+        
+        // If professional details exist, add/update the currentRole property.
+        if (professionalDetails) {
+            professionalDetails.currentRole = currentRole;
+        }
+        // --- END: New logic ---
+
         const profileSnapshot = {
           personalDetails: {
             fullName: user.full_name,
@@ -76,7 +95,8 @@ router.post("/apply", authenticateUser, async (req, res) => {
             experienceLevel: user.experience_level,
             profilePhoto: user.profile_image_url || user.profile_image
           },
-          professionalDetails: safeParse(user.professional_details),
+          // Use the MODIFIED professionalDetails object here
+          professionalDetails: professionalDetails,
           projects: safeParse(user.projects),
           skills: safeParse(user.skills),
           education: safeParse(user.education),
@@ -118,21 +138,16 @@ router.get("/:jobId", async (req, res) => {
             [jobId]
         );
         
-        // FIXED: The database driver is likely already parsing the JSON field.
-        // We no longer need to call JSON.parse(). We just extract the object directly.
         const applicants = applications
-            .map(app => app.user_profile_snapshot) // Directly use the object from the database
-            .filter(Boolean); // Filter out any null or empty entries
+            .map(app => app.user_profile_snapshot) 
+            .filter(Boolean); 
 
         res.status(200).json({ success: true, applicants });
 
     } catch (err) {
-        // This will now only catch database-level errors, not parsing errors.
         console.error("Failed to fetch applications:", err);
         res.status(500).json({ error: "An internal server error occurred.", message: err.message });
     }
 });
 
 module.exports = router;
-
- 
