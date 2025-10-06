@@ -8,109 +8,652 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="navbar.css">
     <style>
-        body {
-            background-color: #f8f9fa;
+        :root {
+            --primary-color: #6a0dad;
+            --secondary-color: #d653c9;
+            --accent-color: #ff6b00;
+            --light-bg: #f9f7ff;
+            --dark-text: #333333;
+            --light-text: #6c757d;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --hover-shadow: 0 15px 40px rgba(106, 13, 173, 0.15);
         }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f9f7ff 0%, #ffffff 100%);
+            color: var(--dark-text);
+            padding-top: 70px;
+            min-height: 100vh;
+        }
+
+        
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .navbar-nav .nav-link {
+            color: white !important;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: #ffcc00 !important;
+        }
+        
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 50%;
+            background-color: #ffcc00;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover::after {
+            width: 80%;
+            left: 10%;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 10px 0;
+        }
+        
+        .dropdown-item {
+            padding: 8px 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: rgba(106, 13, 173, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .profile-sidebar {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: sticky;
+            top: 90px;
+        }
+        
+        .profile-sidebar:hover {
+            box-shadow: var(--hover-shadow);
+            transform: translateY(-5px);
+        }
+        
+        .profile-sidebar .card-body {
+            padding: 25px;
+        }
+        
+        .profile-sidebar .nav-link {
+            color: var(--dark-text) !important;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-sidebar .nav-link:hover {
+            background-color: rgba(106, 13, 173, 0.08);
+            color: var(--primary-color) !important;
+            transform: translateX(5px);
+        }
+        
+        .profile-sidebar .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white !important;
+            box-shadow: 0 5px 15px rgba(106, 13, 173, 0.3);
+        }
+        
+        .profile-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .profile-content:hover {
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .profile-content .card-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 25px;
+            border-bottom: none;
+        }
+        
+        .profile-content .card-body {
+            padding: 30px;
+        }
+        
+        .section-content {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .section-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
+        
+        .section-header h2 {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+            position: relative;
+        }
+        
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            bottom: -15px;
+            left: 0;
+            border-radius: 2px;
+        }
+        
+        .edit-btn {
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
         .profile-photo-preview {
             width: 150px;
             height: 150px;
             object-fit: cover;
             border-radius: 50%;
-            border: 3px solid #dee2e6;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
+        
+        .profile-photo-preview:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
         .dynamic-section, .view-section {
-            border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
             position: relative;
             background-color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.03);
         }
+        
+        .dynamic-section:hover, .view-section:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+        
         .remove-btn {
             position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
+            top: 15px;
+            right: 15px;
+            background: #000000;
+            border: none;
+            border-radius: 15%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            transition: all 0.3s ease;
         }
+        
+        .remove-btn:hover {
+            background: #ff0000;
+            color: white;
+            transform: scale(1.1);
+        }
+        
         .skill-rating {
             display: flex;
             align-items: center;
             gap: 10px;
         }
+        
         .skill-rating input {
             flex: 1;
         }
+        
         .resume-preview {
-            background-color: #e9ecef;
-            border-radius: 0.375rem;
-            padding: 0.75rem;
-            margin-top: 0.5rem;
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border: 1px solid #dee2e6;
+            gap: 15px;
+            border: 1px solid rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
         }
+        
+        .resume-preview:hover {
+            background-color: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
         .toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1055;
         }
+        
         .tag {
             display: inline-block;
-            background-color: #e9ecef;
-            padding: 0.3rem 0.6rem;
-            border-radius: 0.375rem;
-            margin: 0.25rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            margin: 5px;
             font-size: 0.875rem;
-            border: 1px solid #ced4da;
+            border: none;
+            transition: all 0.3s ease;
         }
+        
+        .tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(106, 13, 173, 0.3);
+        }
+        
         .tag .bi-x {
             cursor: pointer;
-            margin-left: 0.25rem;
+            margin-left: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
         }
-        .nav-link.active {
-            background-color: #0d6efd;
-            color: white !important;
+        
+        .tag .bi-x:hover {
+            transform: scale(1.2);
         }
-        .section-content {
-            display: none;
+        
+        .action-buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
         }
-        .section-content.active {
-            display: block;
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
-        .section-header {
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 13, 173, 0.3);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            border-radius: 30px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 13, 173, 0.3);
+        }
+        
+        .form-control, .form-select {
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(106, 13, 173, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--dark-text);
+        }
+        
+        .input-group .btn {
+            border-radius: 0 12px 12px 0;
+        }
+        
+        .input-group .form-control {
+            border-radius: 12px 0 0 12px;
+        }
+        
+        .progress {
+            height: 8px;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+        }
+        
+        .floating-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .floating-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .profile-completion {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .completion-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 15px;
         }
-        .action-buttons {
-            margin-top: 1.5rem;
+        
+        .completion-percentage {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
         }
-
+        
+        .completion-text {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .completion-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .completion-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        .completion-section:hover {
+            background: #e9ecef;
+            transform: translateY(-3px);
+        }
+        
+        .completion-section.completed {
+            background: rgba(40, 167, 69, 0.1);
+        }
+        
+        .completion-section.completed .section-status {
+            color: #28a745;
+        }
+        
+        .section-status {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+        
+        .section-status.completed {
+            background: #28a745;
+            color: white;
+        }
+        
         @media (max-width: 991px) {
+            .profile-sidebar {
+                position: static;
+                margin-bottom: 20px;
+            }
+            
             .nav-pills {
                 flex-direction: row;
                 overflow-x: auto;
                 white-space: nowrap;
                 flex-wrap: nowrap;
+                padding-bottom: 10px;
             }
+            
             .nav-pills .nav-link {
                 display: inline-block;
                 width: auto;
+                min-width: 150px;
             }
+        }
+        
+        /* Animation for form elements */
+        .form-group {
+            animation: slideInUp 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes slideInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Stagger animation for form groups */
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+        
+        /* Pulse animation for save buttons */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .btn-primary:focus {
+            animation: pulse 0.5s ease;
         }
     </style>
 </head>
 <body>
-    <div class="container my-4">
+    <!-- Header/Navbar from index.html -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary fixed-top py-2">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="index.html">
+                    <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
+                    <span class="fw-bold">Hitaishi Careers</span>
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="jobs.html">Jobs</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
+                                Services
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
+                                <li><a class="dropdown-item" href="featuredprofile.html">Featured Profile</a></li>
+                                <li><a class="dropdown-item" href="featuredprofile.html">Profile Highlighter</a></li>
+                                <li><a class="dropdown-item" href="careerbooster.html">Career Booster</a></li>
+                                <li><a class="dropdown-item" href="resumebuild.html">Resume Writing</a></li>
+                                <li><a class="dropdown-item" href="resumebuild.html">Resume Builder</a></li>
+                                <li><a class="dropdown-item" href="network.html">LinkedIn Makeover</a></li>
+                                <li><a class="dropdown-item" href="preparation.html">Mock Interview</a></li>
+                                <li><a class="dropdown-item" href="preparation.html">Interview Preparation</a></li>
+                                <li><a class="dropdown-item" href="preparation.html">Skill Assessment</a></li>
+                                <li><a class="dropdown-item" href="preparation.html">Degree Programs</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="employerlogin.html">Post Jobs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="employers.html">Employers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="tutu.html">Apply with AI</a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Profile / Avatar -->
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link d-flex align-items-center" href="userProfile.html" id="profileLink">
+                                <!-- Default Icon -->
+                                <i id="profile-icon" class="fas fa-user-circle fa-2x text-white"></i>
+                                <!-- User Avatar (hidden by default) -->
+                                <img id="profile-avatar" src="" alt="User Avatar"
+                                    class="rounded-circle d-none" width="40" height="40">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Profile Completion Indicator -->
+    <div class="profile-container">
+        <div class="profile-completion">
+            <div class="completion-header">
+                <div>
+                    <h4 class="mb-1">Profile Completion</h4>
+                    <p class="completion-text mb-0">Complete your profile to increase visibility to employers</p>
+                </div>
+                <div class="completion-percentage">0%</div>
+            </div>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="completion-sections">
+                <div class="completion-section">
+                    <div class="section-status"><i class="fas fa-times"></i></div>
+                    <div>Personal Details</div>
+                </div>
+                <div class="completion-section">
+                    <div class="section-status"><i class="fas fa-times"></i></div>
+                    <div>Professional</div>
+                </div>
+                <div class="completion-section">
+                    <div class="section-status"><i class="fas fa-times"></i></div>
+                    <div>Projects</div>
+                </div>
+                <div class="completion-section">
+                    <div class="section-status"><i class="fas fa-times"></i></div>
+                    <div>Resume</div>
+                </div>
+                <div class="completion-section">
+                    <div class="section-status"><i class="fas fa-times"></i></div>
+                    <div>Skills</div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <!-- Sidebar Navigation -->
             <div class="col-lg-3 mb-4">
-                <div class="card shadow-sm">
+                <div class="profile-sidebar">
                     <div class="card-body">
-                        <h5 class="card-title">Profile Sections</h5>
+                        <h5 class="card-title mb-4">Profile Sections</h5>
                         <nav class="nav nav-pills flex-column" id="profileNav">
                             <a class="nav-link active" href="#" data-section="personalDetails"><i class="bi bi-person me-2"></i>Personal Details</a>
                             <a class="nav-link" href="#" data-section="professionalDetails"><i class="bi bi-briefcase me-2"></i>Professional</a>
@@ -128,9 +671,9 @@
             
             <!-- Main Content Area -->
             <div class="col-lg-9">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white">
-                        <h1 class="mb-0 h4">My Profile</h1>
+                <div class="profile-content">
+                    <div class="card-header">
+                        <h1 class="mb-0 h4"><i class="fas fa-user-circle me-2"></i>My Profile</h1>
                     </div>
                     <div class="card-body">
                         <!-- Toast Container for Notifications -->
@@ -230,11 +773,17 @@
         </div>
     </div>
 
+    <!-- Floating Notification -->
+    <div class="floating-notification" id="floatingNotification">
+        <i class="fas fa-check-circle text-success"></i>
+        <span>Profile updated successfully!</span>
+    </div>
+
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Global state
+        // Global state - KEEPING YOUR ORIGINAL STRUCTURE
         let profileData = {};
         let nextEntryId = 1;
 
@@ -243,6 +792,7 @@
             setupNavigation();
             loadProfileData();
             setupEventListeners();
+            updateProfileCompletion();
         });
 
         function setupNavigation() {
@@ -275,8 +825,6 @@
             try {
                 const email = sessionStorage.getItem("email");
                 if (!email) {
-                    // Redirect to login if email is not in session storage.
-                    // window.location.href = "login.html"; 
                     console.warn("No email found in session storage. Please log in.");
                     showToast("Authentication error. Please log in again.", "danger");
                     return;
@@ -287,6 +835,7 @@
 
                 profileData = await response.json();
                 populateAllSections();
+                updateProfileCompletion();
             } catch (error) {
                 console.error("Error loading profile data:", error);
                 showToast("Error loading your profile. Please try again.", "danger");
@@ -301,7 +850,6 @@
             renderDynamicSection('education', 'Education', profileData.education, renderEducationView, 'addEducationEntry', 'saveEducation');
             renderDynamicSection('certifications', 'Certifications', profileData.certifications, renderCertificationView, 'addCertificationEntry', 'saveCertifications');
             renderDynamicSection('languages', 'Languages', profileData.languages, renderLanguageView, 'addLanguageEntry', 'saveLanguages');
-            // Special handling for resume section
             renderResumeSection();
         }
         
@@ -342,7 +890,6 @@
             document.getElementById('ctcExpected').value = pd.ctcExpected || '';
             document.getElementById('profilePhotoPreview').src = pd.profilePhoto || 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo';
         }
-
 
         // --- Generic Section Rendering ---
         function renderDynamicSection(id, title, data, renderViewFn, addEntryFnName, saveFnName) {
@@ -403,7 +950,6 @@
         const renderLanguageView = item => `<div class="view-section d-flex justify-content-between align-items-center"><span>${item.languageName || 'N/A'}</span><span class="text-capitalize text-muted">${item.proficiency || 'N/A'}</span></div>`;
         const renderResumeView = item => `<div class="resume-preview"><i class="bi bi-file-earmark-text fs-4"></i> <span>${item.name || 'No resume uploaded'}</span> ${item.url ? `<a href="${item.url}" target="_blank" class="ms-auto btn btn-sm btn-outline-secondary">View</a>` : ''}</div>`;
 
-
         // --- UI State Management ---
         function toggleEdit(sectionId, isEditing) {
             const view = document.getElementById(`${sectionId}View`);
@@ -436,7 +982,7 @@
 
                 if (Array.isArray(data) && data.length > 0) {
                     data.forEach(item => addFn(item));
-                } else if (sectionId === 'resume' && data) { // Resume is an object, not array
+                } else if (sectionId === 'resume' && data) {
                     addFn(data);
                 } else {
                     addFn(); // Add one empty entry for user to fill
@@ -550,7 +1096,7 @@
             const id = nextEntryId++;
             const html = `
                 <div class="dynamic-section" id="entry-${id}">
-                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()">X</button>
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Company</label><input type="text" class="form-control" id="companyName-${id}" value="${data.companyName || ''}"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Company Link</label><input type="url" class="form-control" id="companyLink-${id}" value="${data.companyLink || ''}"></div>
@@ -566,7 +1112,7 @@
             const id = nextEntryId++;
             const html = `
                 <div class="dynamic-section" id="entry-${id}">
-                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()">X</button>
                     <div class="row align-items-center">
                         <div class="col-md-6 mb-3"><label class="form-label">Skill Name</label><input type="text" class="form-control" id="skillName-${id}" value="${data.skillName || ''}"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Rating: <span id="ratingVal-${id}">${data.rating || 5}</span></label><input type="range" class="form-range" id="skillRating-${id}" min="1" max="10" value="${data.rating || 5}" oninput="document.getElementById('ratingVal-${id}').textContent = this.value"></div>
@@ -579,7 +1125,7 @@
             const id = nextEntryId++;
             const html = `
                 <div class="dynamic-section" id="entry-${id}">
-                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()">X</button>
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Project Title</label><input type="text" class="form-control" id="projectTitle-${id}" value="${data.projectTitle || ''}"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Client</label><input type="text" class="form-control" id="client-${id}" value="${data.client || ''}"></div>
@@ -601,7 +1147,7 @@
             const id = nextEntryId++;
             const html = `
                 <div class="dynamic-section" id="entry-${id}">
-                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()">X</button>
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Degree</label><input type="text" class="form-control" id="degree-${id}" value="${data.degree || ''}"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Institution</label><input type="text" class="form-control" id="institution-${id}" value="${data.institution || ''}"></div>
@@ -617,7 +1163,7 @@
             const id = nextEntryId++;
             const html = `
                 <div class="dynamic-section" id="entry-${id}">
-                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()">X</button>
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Certification Name</label><input type="text" class="form-control" id="certificationName-${id}" value="${data.certificationName || ''}"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Issuing Organization</label><input type="text" class="form-control" id="issuingOrganization-${id}" value="${data.issuingOrganization || ''}"></div>
@@ -633,7 +1179,7 @@
             const id = nextEntryId++;
             const html = `
                 <div class="dynamic-section" id="entry-${id}">
-                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()">X</button>
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Language</label><input type="text" class="form-control" id="languageName-${id}" value="${data.languageName || ''}"></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Proficiency</label>
@@ -704,6 +1250,48 @@
             }
         }
 
+        // --- Profile Completion ---
+        function updateProfileCompletion() {
+            let completedSections = 0;
+            const totalSections = 5; // personal, professional, projects, resume, skills
+            
+            if (profileData.personalDetails && profileData.personalDetails.fullName) completedSections++;
+            if (profileData.professionalDetails && profileData.professionalDetails.length > 0) completedSections++;
+            if (profileData.projects && profileData.projects.length > 0) completedSections++;
+            if (profileData.resume) completedSections++;
+            if (profileData.skills && profileData.skills.length > 0) completedSections++;
+            
+            const percentage = Math.round((completedSections / totalSections) * 100);
+            
+            // Update progress bar
+            const progressBar = document.querySelector('.progress-bar');
+            progressBar.style.width = percentage + '%';
+            progressBar.setAttribute('aria-valuenow', percentage);
+            
+            // Update percentage text
+            document.querySelector('.completion-percentage').textContent = percentage + '%';
+            
+            // Update section completion status
+            const sections = document.querySelectorAll('.completion-section');
+            sections[0].classList.toggle('completed', profileData.personalDetails && profileData.personalDetails.fullName);
+            sections[1].classList.toggle('completed', profileData.professionalDetails && profileData.professionalDetails.length > 0);
+            sections[2].classList.toggle('completed', profileData.projects && profileData.projects.length > 0);
+            sections[3].classList.toggle('completed', profileData.resume);
+            sections[4].classList.toggle('completed', profileData.skills && profileData.skills.length > 0);
+            
+            // Update status icons
+            sections.forEach((section, index) => {
+                const statusIcon = section.querySelector('.section-status i');
+                if (section.classList.contains('completed')) {
+                    statusIcon.className = 'fas fa-check';
+                    section.querySelector('.section-status').classList.add('completed');
+                } else {
+                    statusIcon.className = 'fas fa-times';
+                    section.querySelector('.section-status').classList.remove('completed');
+                }
+            });
+        }
+
         // --- Utilities ---
         function showToast(message, type = 'info') {
             const toastContainer = document.querySelector('.toast-container');
@@ -715,6 +1303,16 @@
             const toast = new bootstrap.Toast(document.getElementById(toastId), { delay: 4000 });
             toast.show();
             document.getElementById(toastId).addEventListener('hidden.bs.toast', e => e.target.remove());
+        }
+
+        function showFloatingNotification(message) {
+            const notification = document.getElementById('floatingNotification');
+            notification.querySelector('span').textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
     </script>
 </body>
