@@ -95,22 +95,26 @@
                             <div class="col-md-3"><label for="city" class="form-label">City</label><input type="text" class="form-control" id="city"></div>
                             <div class="col-md-3"><label for="zipCode" class="form-label">Zip Code</label><input type="text" class="form-control" id="zipCode"></div>
                             <hr class="my-3">
-                            <div class="col-md-6"><label for="jobTitle" class="form-label">Job Title</label><input type="text" class="form-control" id="jobTitle" required></div>
-                            <div class="col-md-6"><label for="requiredExperience" class="form-label">Required Experience (e.g., 2+ Years)</label><input type="text" class="form-control" id="requiredExperience"></div>
-                            <div class="col-md-6"><label for="jobType" class="form-label">Job Type</label><select id="jobType" class="form-select"><option value="Full-time">Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Internship">Internship</option></select></div>
+                            <div class="col-md-4"><label for="postJobCompanyName" class="form-label">Company Name</label><input type="text" class="form-control" id="postJobCompanyName" readonly></div>
+                            <div class="col-md-4"><label for="jobTitle" class="form-label">Job Title</label><input type="text" class="form-control" id="jobTitle" required></div>
+                            <div class="col-md-4"><label for="requiredExperience" class="form-label">Required Experience</label><input type="text" class="form-control" id="requiredExperience" placeholder="e.g., 2+ Years"></div>
+                            
+                            <div class="col-md-6"><label for="jobType" class="form-label">Job Type</label><select id="jobType" class="form-select"><option value="Full-time" selected>Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Internship">Internship</option></select></div>
                             <div class="col-md-6"><label for="workLocation" class="form-label">Work Location</label><select id="workLocation" class="form-select"><option value="In-office">In-office</option><option value="Remote">Remote</option><option value="Hybrid">Hybrid</option></select></div>
+                            
                             <div class="col-md-3"><label for="salaryMin" class="form-label">Salary Minimum</label><input type="number" class="form-control" id="salaryMin" placeholder="e.g., 80000"></div>
                             <div class="col-md-3"><label for="salaryMax" class="form-label">Salary Maximum</label><input type="number" class="form-control" id="salaryMax" placeholder="e.g., 120000"></div>
                             <div class="col-md-2"><label for="salaryCurrency" class="form-label">Currency</label><select id="salaryCurrency" class="form-select"><option value="INR">₹ INR</option><option value="USD">$ USD</option><option value="EUR">€ EUR</option><option value="GBP">£ GBP</option><option value="AED">د.إ AED</option><option value="CAD">C$ CAD</option><option value="AUD">A$ AUD</option></select></div>
-                            <div class="col-md-2"><label for="salaryPeriod" class="form-label">Period</label><select id="salaryPeriod" class="form-select"><option value="Hourly">Hourly</option><option value="Monthly">Monthly</option><option value="Yearly">Yearly</option></select></div>
-                            <div class="col-md-2"><label for="salaryPeriodCount" class="form-label">Count</label><div class="input-group"><button class="btn btn-outline-secondary" type="button" id="decrementPeriodCount">-</button><input type="number" class="form-control text-center" id="salaryPeriodCount" value="1" min="1"><button class="btn btn-outline-secondary" type="button" id="incrementPeriodCount">+</button></div></div>
+                            <div class="col-md-2"><label for="salaryPeriod" class="form-label">Period</label><select id="salaryPeriod" class="form-select"><option value="Hourly">Hourly</option><option value="Monthly">Monthly</option><option value="Yearly" selected>Yearly</option></select></div>
+                            <div class="col-md-2"><label for="salaryPeriodCount" class="form-label" id="salaryPeriodCountLabel">No. of Years</label><div class="input-group"><button class="btn btn-outline-secondary" type="button" id="decrementPeriodCount">-</button><input type="number" class="form-control text-center" id="salaryPeriodCount" value="1" min="1"><button class="btn btn-outline-secondary" type="button" id="incrementPeriodCount">+</button></div></div>
                             <hr class="my-3">
-                            <div class="col-md-6"><label for="postedByName" class="form-label">Hiring Manager / Contact Person</label><input type="text" class="form-control" id="postedByName" required></div>
-                            <div class="col-md-6"><label for="postedByEmail" class="form-label">Contact Email</label><input type="email" class="form-control" id="postedByEmail" required></div>
+                            <div class="col-md-4"><label for="postedByName" class="form-label">Contact Person</label><input type="text" class="form-control" id="postedByName" required></div>
+                            <div class="col-md-4"><label for="postedByEmail" class="form-label">Contact Email</label><input type="email" class="form-control" id="postedByEmail" required></div>
+                            <div class="col-md-4"><label for="postedByPhone" class="form-label">Contact Mobile</label><input type="tel" class="form-control" id="postedByPhone" readonly></div>
                             <div class="col-12"><label for="jobDescription" class="form-label">Job Description</label><textarea class="form-control" id="jobDescription" rows="5" required></textarea></div>
                             <div class="col-12"><label for="responsibilities" class="form-label">Responsibilities</label><textarea class="form-control" id="responsibilities" rows="5" placeholder="List each responsibility on a new line..."></textarea></div>
-                            <div class="col-12"><label class="form-label">Required Skills</label><div id="requiredSkills" class="skills-input-container"></div></div>
-                            <div class="col-12"><label class="form-label">Additional Skills</label><div id="additionalSkills" class="skills-input-container"></div></div>
+                            <div class="col-12"><label class="form-label">Primary Skills</label><div id="requiredSkills" class="skills-input-container"></div></div>
+                            <div class="col-12"><label class="form-label">Secondary Skills</label><div id="additionalSkills" class="skills-input-container"></div></div>
                         </div>
                         <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4">Post Job</button></div>
                     </form>
@@ -257,15 +261,20 @@
                 const timestamp = '?t=' + new Date().getTime();
                 document.getElementById('sidebarLogo').src = profile.logo_url ? profile.logo_url + timestamp : 'https://placehold.co/80x80/EFEFEF/AAAAAA&text=Logo';
                 document.getElementById('logoPreview').src = profile.logo_url ? profile.logo_url + timestamp : 'https://placehold.co/100x100/EFEFEF/AAAAAA&text=Logo';
+                
                 document.getElementById('companyName').value = profile.company_name || '';
+                document.getElementById('postJobCompanyName').value = profile.company_name || '';
+
                 document.getElementById('companyWebsite').value = profile.website || '';
                 document.getElementById('companyEmail').value = profile.user_email || '';
                 document.getElementById('personName').value = profile.contact_person || '';
                 document.getElementById('phoneNumber').value = profile.contact_phone || '';
                 document.getElementById('address').value = profile.address || '';
                 document.getElementById('companyDescription').value = profile.description || '';
+                
                 document.getElementById('postedByName').value = profile.contact_person || '';
                 document.getElementById('postedByEmail').value = profile.user_email || '';
+                document.getElementById('postedByPhone').value = profile.contact_phone || '';
             };
 
             const renderJobs = (jobs) => {
@@ -443,6 +452,8 @@
                     additionalSkillsInput.reset();
                     document.getElementById('postedByName').value = currentCompanyProfile.contact_person || '';
                     document.getElementById('postedByEmail').value = currentCompanyProfile.user_email || '';
+                    document.getElementById('postedByPhone').value = currentCompanyProfile.contact_phone || '';
+                    document.getElementById('postJobCompanyName').value = currentCompanyProfile.company_name || '';
                     fetchJobs(); 
                 }
             });
@@ -462,6 +473,46 @@
                 if (result && result.success) { showToast(result.message || 'Profile updated successfully!'); if (result.profile) { currentCompanyProfile = result.profile; renderCompanyProfile(result.profile); } else { fetchCompanyProfile(); } }
             });
             
+            const jobTypeSelect = document.getElementById('jobType');
+            const salaryPeriodSelect = document.getElementById('salaryPeriod');
+            const salaryPeriodCountLabel = document.getElementById('salaryPeriodCountLabel');
+
+            const updateCountLabel = () => {
+                const selectedPeriod = salaryPeriodSelect.value;
+                switch (selectedPeriod) {
+                    case 'Hourly':
+                        salaryPeriodCountLabel.textContent = 'No. of Hours';
+                        break;
+                    case 'Monthly':
+                        salaryPeriodCountLabel.textContent = 'No. of Months';
+                        break;
+                    case 'Yearly':
+                        salaryPeriodCountLabel.textContent = 'No. of Years';
+                        break;
+                    default:
+                        salaryPeriodCountLabel.textContent = 'Count';
+                }
+            };
+
+            jobTypeSelect.addEventListener('change', () => {
+                const selectedJobType = jobTypeSelect.value;
+                switch (selectedJobType) {
+                    case 'Contract':
+                        salaryPeriodSelect.value = 'Hourly';
+                        break;
+                    case 'Part-time':
+                    case 'Internship':
+                        salaryPeriodSelect.value = 'Monthly';
+                        break;
+                    case 'Full-time':
+                        salaryPeriodSelect.value = 'Yearly';
+                        break;
+                }
+                salaryPeriodSelect.dispatchEvent(new Event('change'));
+            });
+
+            salaryPeriodSelect.addEventListener('change', updateCountLabel);
+
             const countryToCurrency = { 'india': 'INR', 'republic of india': 'INR', 'united states': 'USD', 'usa': 'USD', 'america': 'USD', 'united kingdom': 'GBP', 'uk': 'GBP', 'great britain': 'GBP', 'germany': 'EUR', 'france': 'EUR', 'italy': 'EUR', 'spain': 'EUR', 'netherlands': 'EUR', 'united arab emirates': 'AED', 'uae': 'AED', 'canada': 'CAD', 'australia': 'AUD' };
             const countryInput = document.getElementById('country');
             const currencySelect = document.getElementById('salaryCurrency');
@@ -524,9 +575,11 @@
             const initializeDashboard = async () => {
                 await fetchCompanyProfile();
                 fetchJobs();
+                jobTypeSelect.dispatchEvent(new Event('change'));
             };
             initializeDashboard();
         });
     </script>
 </body>
 </html>
+
