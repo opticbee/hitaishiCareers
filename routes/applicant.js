@@ -67,24 +67,11 @@ router.post("/apply", authenticateUser, async (req, res) => {
           try { return JSON.parse(v); } catch (e) { return v; }
         };
 
-        // --- START: New logic to determine current role ---
         const professionalDetails = safeParse(user.professional_details);
-        let currentRole = null;
-
-        // Check if professional details exist, look at the first entry ('0'), 
-        // and extract the first role from its 'roles' array.
-        if (professionalDetails && 
-            professionalDetails['0'] && 
-            Array.isArray(professionalDetails['0'].roles) && 
-            professionalDetails['0'].roles.length > 0) {
-            currentRole = professionalDetails['0'].roles[0];
-        }
         
-        // If professional details exist, add/update the currentRole property.
-        if (professionalDetails) {
-            professionalDetails.currentRole = currentRole;
+        if (professionalDetails && professionalDetails['0'] && professionalDetails['0'].role) {
+            professionalDetails.roles = professionalDetails['0'].role;
         }
-        // --- END: New logic ---
 
         const profileSnapshot = {
           personalDetails: {
@@ -95,7 +82,6 @@ router.post("/apply", authenticateUser, async (req, res) => {
             experienceLevel: user.experience_level,
             profilePhoto: user.profile_image_url || user.profile_image
           },
-          // Use the MODIFIED professionalDetails object here
           professionalDetails: professionalDetails,
           projects: safeParse(user.projects),
           skills: safeParse(user.skills),
@@ -138,8 +124,22 @@ router.get("/:jobId", async (req, res) => {
             [jobId]
         );
         
+        // FIX: The user_profile_snapshot is stored as a JSON string in the database.
+        // It must be parsed into an object before being sent to the frontend.
+        // This ensures the frontend can access properties like `professionalDetails.roles`.
         const applicants = applications
-            .map(app => app.user_profile_snapshot) 
+            .map(app => {
+                const snapshot = app.user_profile_snapshot;
+                if (typeof snapshot === 'string') {
+                    try {
+                        return JSON.parse(snapshot);
+                    } catch (e) {
+                        console.error("Failed to parse user_profile_snapshot:", snapshot, e);
+                        return null; 
+                    }
+                }
+                return snapshot; // Already an object
+            })
             .filter(Boolean); 
 
         res.status(200).json({ success: true, applicants });
@@ -151,3 +151,4 @@ router.get("/:jobId", async (req, res) => {
 });
 
 module.exports = router;
+
