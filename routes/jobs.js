@@ -205,4 +205,20 @@ router.get("/company/:companyId", authenticateToken, async (req, res) => {
     }
 });
 
+// GET all ACTIVE jobs for a specific company (for public employers page)
+router.get("/by-company/:companyId", async (req, res) => {
+    try {
+        const { companyId } = req.params;
+        const jobs = await query(
+            `SELECT * FROM jobs WHERE company_id = ? AND status = 'active' ORDER BY created_at DESC`,
+            [companyId]
+        );
+        res.json({ jobs });
+    } catch (err) {
+        console.error("Failed to fetch public company jobs:", err);
+        res.status(500).json({ error: "Failed to fetch company jobs" });
+    }
+});
+
+
 module.exports = router;

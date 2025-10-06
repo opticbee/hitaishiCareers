@@ -1,7 +1,7 @@
 // routes/company.js
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const jwt =require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const multer = require('multer');
 const path = require('path');
@@ -142,6 +142,19 @@ router.post("/login", async (req, res) => {
     }
 });
 
+// GET all companies (for public employers page)
+router.get("/all", async (_req, res) => {
+    try {
+        const companies = await query(
+            `SELECT id, company_name, logo_url FROM companies ORDER BY company_name ASC`
+        );
+        res.json({ companies });
+    } catch (err) {
+        console.error("Failed to fetch all companies:", err);
+        res.status(500).json({ error: "Failed to fetch companies." });
+    }
+});
+
 // GET the logged-in company's profile
 router.get("/profile", authenticateToken, async (req, res) => {
     try {
@@ -226,4 +239,3 @@ router.patch("/profile", authenticateToken, upload, async (req, res) => {
 });
 
 module.exports = router;
-

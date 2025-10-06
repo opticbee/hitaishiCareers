@@ -8,569 +8,109 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="navbar.css">
-    <!-- Font Awesome for additional icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="https://winjob.in/images/favicon.ico" type="image/x-icon">
     <style>
-        :root {
-            --primary-color: #0d6efd;
-            --primary-hover: #0b5ed7;
-            --secondary-color: #6c757d;
-            --light-color: #f8f9fa;
-            --border-color: #dee2e6;
-            --success-color: #198754;
-            --success-hover: #157347;
-            --danger-color: #dc3545;
-            --danger-hover: #bb2d3b;
-            --warning-color: #ffc107;
-            --info-color: #0dcaf0;
-            --dark-color: #212529;
-            --card-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            --card-shadow-hover: 0 1rem 2rem rgba(0, 0, 0, 0.15);
-            --transition: all 0.3s ease;
-            --border-radius: 0.75rem;
-            --gradient-primary: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
-            --gradient-secondary: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-            --gradient-success: linear-gradient(135deg, #198754 0%, #146c43 100%);
-        }
-        
         body {
             background-color: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 80px;
         }
-        
-        .card {
-            border: none;
-            box-shadow: var(--card-shadow);
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-            overflow: hidden;
-        }
-        
-        .card:hover {
-            box-shadow: var(--card-shadow-hover);
-            transform: translateY(-5px);
-        }
-        
-        .card-header {
-            background: var(--gradient-primary);
-            color: white;
-            border-bottom: none;
-            padding: 1.5rem 1.5rem;
-            border-radius: var(--border-radius) var(--border-radius) 0 0 !important;
-        }
-        
         .profile-photo-preview {
             width: 150px;
             height: 150px;
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
-            transition: var(--transition);
+            border: 3px solid #dee2e6;
         }
-        
-        .profile-photo-preview:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-        }
-        
         .dynamic-section, .view-section {
-            border: 1px solid var(--border-color);
-            border-radius: 0.75rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
             padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             position: relative;
             background-color: #fff;
-            transition: var(--transition);
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.05);
         }
-        
-        .dynamic-section:hover, .view-section:hover {
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            transform: translateY(-3px);
-            border-color: var(--primary-color);
-        }
-        
         .remove-btn {
             position: absolute;
             top: 0.75rem;
             right: 0.75rem;
-            opacity: 0.7;
-            transition: var(--transition);
-            background: rgba(220, 53, 69, 0.1);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        
-        .remove-btn:hover {
-            opacity: 1;
-            background: rgba(220, 53, 69, 0.2);
-            transform: scale(1.1);
-        }
-        
         .skill-rating {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
         .skill-rating input {
             flex: 1;
         }
-        
         .resume-preview {
             background-color: #e9ecef;
-            border-radius: 0.75rem;
-            padding: 1rem;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
             margin-top: 0.5rem;
             display: flex;
             align-items: center;
-            gap: 15px;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
+            gap: 10px;
+            border: 1px solid #dee2e6;
         }
-        
-        .resume-preview:hover {
-            background-color: #dee2e6;
-            transform: translateX(5px);
-        }
-        
         .toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1055;
         }
-        
         .tag {
-            display: inline-flex;
-            align-items: center;
+            display: inline-block;
             background-color: #e9ecef;
-            padding: 0.4rem 0.8rem;
-            border-radius: 50px;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.375rem;
             margin: 0.25rem;
             font-size: 0.875rem;
             border: 1px solid #ced4da;
-            transition: var(--transition);
         }
-        
-        .tag:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-        }
-        
         .tag .bi-x {
             cursor: pointer;
-            margin-left: 0.5rem;
-            opacity: 0.7;
-            transition: var(--transition);
+            margin-left: 0.25rem;
         }
-        
-        .tag .bi-x:hover {
-            opacity: 1;
-            transform: scale(1.2);
-        }
-        
-        .nav-link {
-            color: var(--secondary-color);
-            border-radius: 0.75rem;
-            margin-bottom: 0.5rem;
-            transition: var(--transition);
-            padding: 0.75rem 1rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .nav-link:hover {
-            background: rgba(13, 110, 253, 0.1);
-            color: var(--primary-color);
-            transform: translateX(5px);
-        }
-        
         .nav-link.active {
-            background: var(--gradient-primary);
+            background-color: #0d6efd;
             color: white !important;
-            box-shadow: 0 0.25rem 0.5rem rgba(13, 110, 253, 0.3);
         }
-        
         .section-content {
             display: none;
-            animation: fadeIn 0.5s ease;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         .section-content.active {
             display: block;
         }
-        
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--border-color);
         }
-        
         .action-buttons {
             margin-top: 1.5rem;
-            display: flex;
-            gap: 0.5rem;
         }
-        
-        .form-label {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--dark-color);
-        }
-        
-        .view-section h5 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-        
-        .badge {
-            font-size: 0.75rem;
-            padding: 0.4em 0.8em;
-            border-radius: 50px;
-        }
-        
-        .btn {
-            border-radius: 0.75rem;
-            padding: 0.5rem 1.25rem;
-            font-weight: 500;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .btn-primary {
-            background: var(--gradient-primary);
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.3);
-        }
-        
-        .btn-success {
-            background: var(--gradient-success);
-            border: none;
-        }
-        
-        .btn-success:hover {
-            background: var(--success-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(25, 135, 84, 0.3);
-        }
-        
-        .btn-outline-primary {
-            border: 2px solid var(--primary-color);
-            color: var(--primary-color);
-        }
-        
-        .btn-outline-primary:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.3);
-        }
-        
-        .form-control, .form-select {
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-        }
-        
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-            transform: translateY(-2px);
-        }
-        
-        .progress {
-            height: 8px;
-            border-radius: 10px;
-            margin-top: 5px;
-        }
-        
-        .progress-bar {
-            border-radius: 10px;
-        }
-        
-        .rating-stars {
-            display: flex;
-            gap: 5px;
-            margin-top: 5px;
-        }
-        
-        .rating-star {
-            color: #ddd;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .rating-star.active {
-            color: #ffc107;
-        }
-        
-        .rating-star:hover {
-            transform: scale(1.2);
-        }
-        
+
         @media (max-width: 991px) {
             .nav-pills {
                 flex-direction: row;
                 overflow-x: auto;
                 white-space: nowrap;
                 flex-wrap: nowrap;
-                padding-bottom: 10px;
             }
-            
             .nav-pills .nav-link {
                 display: inline-block;
                 width: auto;
             }
-            
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .action-buttons .btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-        
-        /* Enhanced Education Section Styles */
-        .education-entry {
-            position: relative;
-        }
-        
-        .education-entry .row {
-            margin-bottom: 1rem;
-        }
-        
-        .education-entry .form-control:focus,
-        .education-entry .form-select:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-        }
-        
-        /* Custom file upload button */
-        .custom-file-upload {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            background: var(--gradient-primary);
-            color: white;
-            border-radius: 0.75rem;
-            transition: var(--transition);
-            font-weight: 500;
-            text-align: center;
-        }
-        
-        .custom-file-upload:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(13, 110, 253, 0.3);
-        }
-        
-        /* Profile completion indicator */
-        .profile-completion {
-            margin-bottom: 2rem;
-        }
-        
-        .completion-bar {
-            height: 10px;
-            border-radius: 10px;
-            background-color: #e9ecef;
-            overflow: hidden;
-        }
-        
-        .completion-fill {
-            height: 100%;
-            background: var(--gradient-primary);
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-        
-        /* Section icons */
-        .section-icon {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(13, 110, 253, 0.1);
-            border-radius: 50%;
-            margin-right: 15px;
-            color: var(--primary-color);
-            font-size: 1.25rem;
-        }
-        
-        /* Loading spinner */
-        .spinner-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 200px;
-        }
-        
-        /* Empty state styling */
-        .empty-state {
-            text-align: center;
-            padding: 2rem;
-            color: var(--secondary-color);
-        }
-        
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: #dee2e6;
         }
     </style>
 </head>
 <body>
-
-<!-- header -->
-  <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary fixed-top py-2">
-      <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="index.html">
-          <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
-          <span class="fw-bold">Hitaishi Careers</span>
-        </a>
-        
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <div class="collapse navbar-collapse" id="navbarContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" href="index.html">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="jobs.html">Jobs</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
-                Services
-              </a>
-              <ul class="dropdown-menu" aria-labelledby="servicesDropdown">
-                <li><a class="dropdown-item" href="featuredprofile.html">Featured Profile</a></li>
-                <li><a class="dropdown-item" href="featuredprofile.html">Profile Highlighter</a></li>
-                <li><a class="dropdown-item" href="careerbooster.html">Career Booster</a></li>
-                <li><a class="dropdown-item" href="resumebuild.html">Resume Writing</a></li>
-                <li><a class="dropdown-item" href="resumebuild.html">Resume Builder</a></li>
-                <li><a class="dropdown-item" href="network.html">LinkedIn Makeover</a></li>
-                <li><a class="dropdown-item" href="preparation.html">Mock Interview</a></li>
-                <li><a class="dropdown-item" href="preparation.html">Interview Preparation</a></li>
-                <li><a class="dropdown-item" href="preparation.html">Skill Assessment</a></li>
-                <li><a class="dropdown-item" href="preparation.html">Degree Programs</a></li>
-              </ul>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="employerlogin.html">Post Jobs</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="employer.html">Employers</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" id="uploadResumeLink">Upload Resume</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="tutu.html">Apply with AI</a>
-            </li>
-          </ul>
-          
-          <!-- Profile / Avatar -->
-          <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-              <a class="nav-link d-flex align-items-center" href="login.html" id="profileLink">
-                <!-- Default Icon -->
-                <i id="profile-icon" class="fas fa-user-circle fa-2x text-white"></i>
-                <!-- User Avatar (hidden by default) -->
-                <img id="profile-avatar" src="" alt="User Avatar"
-                    class="rounded-circle d-none" width="40" height="40">
-              </a>
-            </li>
-          </ul>
-
-        </div>
-      </div>
-    </nav>
-    <script>
-        async function loadNavbarProfile() {
-        const email = sessionStorage.getItem("email");
-        if (!email) {
-            console.log("User not logged in → showing default icon.");
-            return;
-        }
-
-        try {
-            // Call your backend to get profile
-            const res = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
-            if (!res.ok) {
-            console.error("Failed to fetch profile:", res.status);
-            return;
-            }
-
-            const data = await res.json();
-            const profilePhoto = data.personalDetails?.profilePhoto;
-
-            if (profilePhoto) {
-            // Hide the default font-awesome icon
-            document.getElementById("profile-icon").classList.add("d-none");
-
-            // Show user's actual avatar
-            const avatar = document.getElementById("profile-avatar");
-            avatar.src = profilePhoto;
-            avatar.classList.remove("d-none");
-            }
-        } catch (err) {
-            console.error("Error loading navbar profile:", err);
-        }
-        }
-
-        document.addEventListener("DOMContentLoaded", loadNavbarProfile);
-    </script>
-
-  </header>
-
     <div class="container my-4">
         <div class="row">
             <!-- Sidebar Navigation -->
             <div class="col-lg-3 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title mb-3">Profile Sections</h5>
+                        <h5 class="card-title">Profile Sections</h5>
                         <nav class="nav nav-pills flex-column" id="profileNav">
                             <a class="nav-link active" href="#" data-section="personalDetails"><i class="bi bi-person me-2"></i>Personal Details</a>
                             <a class="nav-link" href="#" data-section="professionalDetails"><i class="bi bi-briefcase me-2"></i>Professional</a>
@@ -584,45 +124,22 @@
                         </nav>
                     </div>
                 </div>
-                
-                <!-- Profile Completion Card -->
-                <div class="card shadow-sm mt-4">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">Profile Completion</h5>
-                        <div class="profile-completion">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Complete your profile</span>
-                                <span id="completionPercentage">0%</span>
-                            </div>
-                            <div class="completion-bar">
-                                <div class="completion-fill" id="completionFill" style="width: 0%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
             
             <!-- Main Content Area -->
             <div class="col-lg-9">
                 <div class="card shadow-sm">
-                    <div class="card-header">
+                    <div class="card-header bg-white">
                         <h1 class="mb-0 h4">My Profile</h1>
                     </div>
                     <div class="card-body">
                         <!-- Toast Container for Notifications -->
                         <div class="toast-container"></div>
                         
-                        <!-- Loading Spinner -->
-                        <div class="spinner-container d-none" id="loadingSpinner">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        </div>
-                        
                         <!-- Personal Details Section -->
                         <div class="section-content active" id="personalDetails">
                             <div class="section-header">
-                                <h2 class="h5 mb-0"><i class="bi bi-person me-2"></i>Personal Details</h2>
+                                <h2 class="h5 mb-0">Personal Details</h2>
                                 <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('personalDetails', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
                             </div>
                             <div id="personalDetailsView"></div>
@@ -667,20 +184,14 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="profilePhoto" class="form-label">Profile Photo</label>
-                                    <div class="d-flex align-items-center">
-                                        <label for="profilePhoto" class="custom-file-upload me-3">
-                                            <i class="bi bi-cloud-upload me-1"></i> Choose File
-                                        </label>
-                                        <input type="file" class="form-control d-none" id="profilePhoto" accept="image/*">
-                                        <span id="profilePhotoName">No file chosen</span>
-                                    </div>
-                                    <div class="mt-3 text-center">
+                                    <input type="file" class="form-control" id="profilePhoto" accept="image/*">
+                                    <div class="mt-2">
                                         <img id="profilePhotoPreview" src="https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo" alt="Profile Photo Preview" class="profile-photo-preview">
                                     </div>
                                 </div>
                                 <div class="action-buttons">
-                                    <button type="button" class="btn btn-primary" onclick="savePersonalDetails()"><i class="bi bi-check-lg me-1"></i> Save</button>
-                                    <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('personalDetails', false)"><i class="bi bi-x-lg me-1"></i> Cancel</button>
+                                    <button type="button" class="btn btn-primary" onclick="savePersonalDetails()">Save</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('personalDetails', false)">Cancel</button>
                                 </div>
                             </form>
                         </div>
@@ -696,15 +207,12 @@
 
                         <!-- Change Password Section -->
                         <div class="section-content" id="password">
-                            <div class="section-header">
-                                <h2 class="h5 mb-0"><i class="bi bi-shield-lock me-2"></i>Change Password</h2>
-                            </div>
+                            <div class="section-header"><h2 class="h5 mb-0">Change Password</h2></div>
                             <form id="changePasswordForm" onsubmit="event.preventDefault(); updatePassword();">
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="newPassword" class="form-label">New Password</label>
                                         <input type="password" id="newPassword" class="form-control" minlength="6" required>
-                                        <div class="form-text">Password must be at least 6 characters long.</div>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="confirmPassword" class="form-label">Confirm Password</label>
@@ -712,7 +220,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3">
-                                    <button type="submit" class="btn btn-primary"><i class="bi bi-key me-1"></i> Update Password</button>
+                                    <button type="submit" class="btn btn-primary">Update Password</button>
                                 </div>
                             </form>
                         </div>
@@ -754,7 +262,6 @@
         function setupEventListeners() {
             document.getElementById('profilePhoto').addEventListener('change', e => {
                 const file = e.target.files[0];
-                document.getElementById('profilePhotoName').textContent = file ? file.name : 'No file chosen';
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = e => { document.getElementById('profilePhotoPreview').src = e.target.result; };
@@ -766,12 +273,12 @@
         // --- Data Loading & Population ---
         async function loadProfileData() {
             try {
-                showLoading(true);
                 const email = sessionStorage.getItem("email");
                 if (!email) {
+                    // Redirect to login if email is not in session storage.
+                    // window.location.href = "login.html"; 
                     console.warn("No email found in session storage. Please log in.");
                     showToast("Authentication error. Please log in again.", "danger");
-                    showLoading(false);
                     return;
                 }
 
@@ -780,12 +287,9 @@
 
                 profileData = await response.json();
                 populateAllSections();
-                updateProfileCompletion();
-                showLoading(false);
             } catch (error) {
                 console.error("Error loading profile data:", error);
                 showToast("Error loading your profile. Please try again.", "danger");
-                showLoading(false);
             }
         }
 
@@ -814,14 +318,12 @@
                         <img src="${pd.profilePhoto || 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo'}" class="profile-photo-preview" alt="Profile Photo">
                     </div>
                     <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-sm-6 mb-2"><strong>Full Name:</strong><br> ${pd.fullName || na}</div>
-                            <div class="col-sm-6 mb-2"><strong>Email:</strong><br> ${pd.email || na}</div>
-                            <div class="col-sm-6 mb-2"><strong>Phone:</strong><br> ${pd.phone || na}</div>
-                            <div class="col-sm-6 mb-2"><strong>Gender:</strong><br> ${pd.gender ? pd.gender.charAt(0).toUpperCase() + pd.gender.slice(1) : na}</div>
-                            <div class="col-sm-6 mb-2"><strong>Experience:</strong><br> ${pd.experienceLevel ? pd.experienceLevel.charAt(0).toUpperCase() + pd.experienceLevel.slice(1) : na}</div>
-                            <div class="col-sm-6 mb-2"><strong>Expected CTC:</strong><br> ${pd.ctcExpected ? `${pd.ctcExpected} LPA` : na}</div>
-                        </div>
+                        <p><strong>Full Name:</strong> ${pd.fullName || na}</p>
+                        <p><strong>Email:</strong> ${pd.email || na}</p>
+                        <p><strong>Phone:</strong> ${pd.phone || na}</p>
+                        <p><strong>Gender:</strong> ${pd.gender ? pd.gender.charAt(0).toUpperCase() + pd.gender.slice(1) : na}</p>
+                        <p><strong>Experience:</strong> ${pd.experienceLevel ? pd.experienceLevel.charAt(0).toUpperCase() + pd.experienceLevel.slice(1) : na}</p>
+                        <p><strong>Expected CTC:</strong> ${pd.ctcExpected ? `${pd.ctcExpected} LPA` : na}</p>
                     </div>
                 </div>`;
             
@@ -841,19 +343,15 @@
             document.getElementById('profilePhotoPreview').src = pd.profilePhoto || 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo';
         }
 
+
         // --- Generic Section Rendering ---
         function renderDynamicSection(id, title, data, renderViewFn, addEntryFnName, saveFnName) {
             const container = document.getElementById(id);
-            let itemsHTML = data && data.length > 0 ? data.map(renderViewFn).join('') : `
-                <div class="empty-state">
-                    <i class="bi bi-inbox"></i>
-                    <p>No information added yet.</p>
-                    <button type="button" class="btn btn-outline-primary" onclick="toggleEdit('${id}', true)">Add Information</button>
-                </div>`;
+            let itemsHTML = data && data.length > 0 ? data.map(renderViewFn).join('') : '<p class="text-muted">No information added yet.</p>';
             
             container.innerHTML = `
                 <div class="section-header">
-                    <h2 class="h5 mb-0"><i class="bi ${getSectionIcon(id)} me-2"></i>${title}</h2>
+                    <h2 class="h5 mb-0">${title}</h2>
                     <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('${id}', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
                 </div>
                 <div id="${id}View">
@@ -865,709 +363,358 @@
                         <i class="bi bi-plus"></i> Add Entry
                     </button>
                     <div class="action-buttons">
-                        <button type="button" class="btn btn-primary" onclick="${saveFnName}()"><i class="bi bi-check-lg me-1"></i> Save</button>
-                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('${id}', false)"><i class="bi bi-x-lg me-1"></i> Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="${saveFnName}()">Save</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('${id}', false)">Cancel</button>
                     </div>
                 </form>
             `;
         }
         
         function renderResumeSection() {
-            const container = document.getElementById('resume');
-            const resumeData = profileData.resume || {};
-            
+            const id = 'resume';
+            const title = 'Resume';
+            const container = document.getElementById(id);
+            const data = profileData.resume;
+
             container.innerHTML = `
                 <div class="section-header">
-                    <h2 class="h5 mb-0"><i class="bi bi-file-earmark me-2"></i>Resume</h2>
+                    <h2 class="h5 mb-0">${title}</h2>
+                    <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('${id}', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
                 </div>
-                <div id="resumeView">
-                    ${resumeData.fileName ? `
-                        <div class="resume-preview">
-                            <i class="bi bi-file-earmark-pdf text-danger" style="font-size: 2rem;"></i>
-                            <div>
-                                <h5>${resumeData.fileName}</h5>
-                                <p class="text-muted mb-0">Uploaded on ${new Date(resumeData.uploadDate).toLocaleDateString()}</p>
-                            </div>
-                        </div>
-                    ` : `
-                        <div class="empty-state">
-                            <i class="bi bi-file-earmark"></i>
-                            <p>No resume uploaded yet.</p>
-                        </div>
-                    `}
+                <div id="${id}View">
+                    ${data ? renderResumeView(data) : '<p class="text-muted">No resume uploaded yet.</p>'}
                 </div>
-                <form id="resumeForm">
-                    <div class="mb-3">
-                        <label for="resumeFile" class="form-label">Upload Resume (PDF, DOC, DOCX)</label>
-                        <div class="d-flex align-items-center">
-                            <label for="resumeFile" class="custom-file-upload me-3">
-                                <i class="bi bi-cloud-upload me-1"></i> Choose File
-                            </label>
-                            <input type="file" class="form-control d-none" id="resumeFile" accept=".pdf,.doc,.docx">
-                            <span id="resumeFileName">No file chosen</span>
-                        </div>
-                    </div>
+                <form id="${id}Form" class="d-none">
+                    <div id="${id}Entries"></div>
                     <div class="action-buttons">
-                        <button type="button" class="btn btn-primary" onclick="saveResume()"><i class="bi bi-check-lg me-1"></i> Upload Resume</button>
+                        <button type="button" class="btn btn-primary" onclick="uploadResume()">Save</button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('${id}', false)">Cancel</button>
                     </div>
                 </form>
             `;
-            
-            document.getElementById('resumeFile').addEventListener('change', e => {
-                const file = e.target.files[0];
-                document.getElementById('resumeFileName').textContent = file ? file.name : 'No file chosen';
-            });
         }
 
-        // --- View Render Functions ---
-        function renderProfessionalView(item) {
-            return `
-                <div class="view-section">
-                    <h5>${item.jobTitle || 'N/A'}</h5>
-                    <div class="row">
-                        <div class="col-sm-6"><strong>Company:</strong> ${item.company || 'N/A'}</div>
-                        <div class="col-sm-6"><strong>Location:</strong> ${item.location || 'N/A'}</div>
-                        <div class="col-sm-6"><strong>Duration:</strong> ${item.startDate || 'N/A'} - ${item.currentJob ? 'Present' : (item.endDate || 'N/A')}</div>
-                        <div class="col-sm-6"><strong>Current Job:</strong> ${item.currentJob ? 'Yes' : 'No'}</div>
-                    </div>
-                    <p class="mt-2"><strong>Description:</strong> ${item.description || 'N/A'}</p>
-                </div>
-            `;
+        // --- View Renderers ---
+        const renderProfessionalView = item => `<div class="view-section"><h5>${item.companyName || 'N/A'}</h5><p class="mb-1">${item.roles?.join(', ') || 'N/A'}</p><small class="text-muted">${item.fromDate || ''} - ${item.toDate || 'Present'}</small></div>`;
+        const renderProjectView = item => `<div class="view-section"><h5>${item.projectTitle || 'N/A'}</h5><p class="mb-1">${item.description || ''}</p><small class="text-muted">Role: ${item.role || 'N/A'}</small></div>`;
+        const renderSkillView = item => `<div class="view-section d-flex justify-content-between align-items-center"><span>${item.skillName || 'N/A'}</span><span class="badge bg-primary rounded-pill">Rating: ${item.rating || 'N/A'}</span></div>`;
+        const renderEducationView = item => `<div class="view-section"><h5>${item.degree || 'N/A'}</h5><p class="mb-1">${item.institution || 'N/A'}</p><small class="text-muted">${item.fromDate || ''} - ${item.toDate || ''}</small></div>`;
+        const renderCertificationView = item => `<div class="view-section"><h5>${item.certificationName || 'N/A'}</h5><p class="mb-1">Issued by: ${item.issuingOrganization || 'N/A'}</p></div>`;
+        const renderLanguageView = item => `<div class="view-section d-flex justify-content-between align-items-center"><span>${item.languageName || 'N/A'}</span><span class="text-capitalize text-muted">${item.proficiency || 'N/A'}</span></div>`;
+        const renderResumeView = item => `<div class="resume-preview"><i class="bi bi-file-earmark-text fs-4"></i> <span>${item.name || 'No resume uploaded'}</span> ${item.url ? `<a href="${item.url}" target="_blank" class="ms-auto btn btn-sm btn-outline-secondary">View</a>` : ''}</div>`;
+
+
+        // --- UI State Management ---
+        function toggleEdit(sectionId, isEditing) {
+            const view = document.getElementById(`${sectionId}View`);
+            const form = document.getElementById(`${sectionId}Form`);
+            const editBtn = document.querySelector(`#${sectionId} .edit-btn`);
+
+            if (!view || !form) return;
+
+            view.classList.toggle('d-none', isEditing);
+            form.classList.toggle('d-none', !isEditing);
+            if (editBtn) editBtn.classList.toggle('d-none', isEditing);
+
+            if (isEditing) {
+                const data = profileData[sectionId];
+                const entriesContainer = document.getElementById(`${sectionId}Entries`);
+                entriesContainer.innerHTML = ''; // Clear previous entries
+                
+                const addFnMap = {
+                    professionalDetails: window.addProfessionalEntry,
+                    projects: window.addProjectEntry,
+                    skills: window.addSkillEntry,
+                    education: window.addEducationEntry,
+                    certifications: window.addCertificationEntry,
+                    languages: window.addLanguageEntry,
+                    resume: window.addResumeEntry
+                };
+                
+                const addFn = addFnMap[sectionId];
+                if(typeof addFn !== 'function') return;
+
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(item => addFn(item));
+                } else if (sectionId === 'resume' && data) { // Resume is an object, not array
+                    addFn(data);
+                } else {
+                    addFn(); // Add one empty entry for user to fill
+                }
+            } else {
+                // On cancel, reload the last-loaded profile snapshot to revert any form changes
+                populateAllSections();
+            }
         }
 
-        function renderProjectView(item) {
-            return `
-                <div class="view-section">
-                    <h5>${item.projectName || 'N/A'}</h5>
-                    <div class="row">
-                        <div class="col-sm-6"><strong>Technologies:</strong> ${item.technologies || 'N/A'}</div>
-                        <div class="col-sm-6"><strong>Duration:</strong> ${item.startDate || 'N/A'} - ${item.endDate || 'N/A'}</div>
-                    </div>
-                    <p class="mt-2"><strong>Description:</strong> ${item.description || 'N/A'}</p>
-                    <p><strong>Role:</strong> ${item.role || 'N/A'}</p>
-                </div>
-            `;
+        // --- Save & Update Functions ---
+        async function saveData(endpoint, payload) {
+            const email = sessionStorage.getItem("email");
+            if (!email) {
+                showToast("Authentication error. Please log in again.", "danger");
+                return null;
+            }
+
+            const body = payload instanceof FormData ? payload : { ...payload, email };
+            if (payload instanceof FormData) {
+                 body.append('email', email);
+            }
+
+            try {
+                const isFormData = body instanceof FormData;
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: isFormData ? {} : { 'Content-Type': 'application/json' },
+                    body: isFormData ? body : JSON.stringify(body),
+                });
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({ error: 'Failed to save data. Please try again.' }));
+                    throw new Error(error.error);
+                }
+                await loadProfileData(); // Reload data to show saved state
+                return await response.json();
+            } catch (error) {
+                console.error('Error saving data:', error);
+                showToast(error.message, 'danger');
+                return null;
+            }
         }
 
-        function renderSkillView(item) {
-            return `
-                <div class="view-section">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5>${item.skillName || 'N/A'}</h5>
-                        <span class="badge bg-primary">${item.proficiency || 'N/A'}/10</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar" role="progressbar" style="width: ${(item.proficiency || 0) * 10}%"></div>
-                    </div>
-                </div>
-            `;
-        }
+        async function savePersonalDetails() {
+            const formData = new FormData();
+            formData.append("fullName", document.getElementById("fullName").value);
+            formData.append("phone", document.getElementById("phone").value);
+            formData.append("gender", document.getElementById("gender").value);
+            const expLevel = document.querySelector('input[name="experienceLevel"]:checked');
+            formData.append("experienceLevel", expLevel ? expLevel.value : "");
+            formData.append("ctcExpected", document.getElementById("ctcExpected").value);
+            const photoFile = document.getElementById("profilePhoto").files[0];
+            if (photoFile) {
+                formData.append("profilePhoto", photoFile);
+            }
 
-        function renderEducationView(item) {
-            return `
-                <div class="view-section">
-                    <h5>${item.degree || 'N/A'}</h5>
-                    <div class="row">
-                        <div class="col-sm-6"><strong>Institution:</strong> ${item.institution || 'N/A'}</div>
-                        <div class="col-sm-6"><strong>Location:</strong> ${item.location || 'N/A'}</div>
-                        <div class="col-sm-6"><strong>Duration:</strong> ${item.startYear || 'N/A'} - ${item.endYear || 'N/A'}</div>
-                        <div class="col-sm-6"><strong>CGPA/Percentage:</strong> ${item.grade || 'N/A'}</div>
-                    </div>
-                </div>
-            `;
+            const result = await saveData('/api/profile/update', formData);
+            if(result) {
+                showToast("Personal details updated!", "success");
+                toggleEdit('personalDetails', false);
+            }
         }
-
-        function renderCertificationView(item) {
-            return `
-                <div class="view-section">
-                    <h5>${item.certificationName || 'N/A'}</h5>
-                    <div class="row">
-                        <div class="col-sm-6"><strong>Issuing Organization:</strong> ${item.issuingOrganization || 'N/A'}</div>
-                        <div class="col-sm-6"><strong>Date:</strong> ${item.issueDate || 'N/A'} ${item.expiryDate ? `- ${item.expiryDate}` : ''}</div>
-                    </div>
-                    <p class="mt-2"><strong>Credential ID:</strong> ${item.credentialId || 'N/A'}</p>
-                </div>
-            `;
+        
+        async function saveGenericSection(sectionId, dataExtractor) {
+            const payload = { [sectionId]: dataExtractor() };
+            const result = await saveData('/api/profile/update', payload);
+            if (result) {
+                showToast(`${sectionId.charAt(0).toUpperCase() + sectionId.slice(1)} updated!`, "success");
+                toggleEdit(sectionId, false);
+            }
         }
+        
+        // --- Data Extractors from Forms ---
+        const extractProfessionalDetails = () => Array.from(document.querySelectorAll('#professionalDetailsEntries .dynamic-section')).map(el => ({ companyName: el.querySelector('[id^=companyName]').value, companyLink: el.querySelector('[id^=companyLink]').value, fromDate: el.querySelector('[id^=fromDate]').value, toDate: el.querySelector('[id^=toDate]').value, roles: Array.from(el.querySelectorAll('.tag')).map(t => t.innerText.trim())}));
+        const extractProjects = () => Array.from(document.querySelectorAll('#projectsEntries .dynamic-section')).map(el => ({ projectTitle: el.querySelector('[id^=projectTitle]').value, client: el.querySelector('[id^=client]').value, role: el.querySelector('[id^=projectRole]').value, teamSize: el.querySelector('[id^=teamSize]').value, description: el.querySelector('[id^=projectDescription]').value, skillsUsed: Array.from(el.querySelectorAll('.tag')).map(t => t.innerText.trim()), fromDate: el.querySelector('[id^=projectFromDate]').value, toDate: el.querySelector('[id^=projectToDate]').value }));
+        const extractSkills = () => Array.from(document.querySelectorAll('#skillsEntries .dynamic-section')).map(el => ({ skillName: el.querySelector('[id^=skillName]').value, rating: el.querySelector('[id^=skillRating]').value }));
+        const extractEducation = () => Array.from(document.querySelectorAll('#educationEntries .dynamic-section')).map(el => ({ degree: el.querySelector('[id^=degree]').value, institution: el.querySelector('[id^=institution]').value, fromDate: el.querySelector('[id^=educationFromDate]').value, toDate: el.querySelector('[id^=educationToDate]').value, description: el.querySelector('[id^=educationDescription]').value }));
+        const extractCertifications = () => Array.from(document.querySelectorAll('#certificationsEntries .dynamic-section')).map(el => ({ certificationName: el.querySelector('[id^=certificationName]').value, issuingOrganization: el.querySelector('[id^=issuingOrganization]').value, issueDate: el.querySelector('[id^=issueDate]').value, expiryDate: el.querySelector('[id^=expiryDate]').value, certificationLink: el.querySelector('[id^=certificationLink]').value }));
+        const extractLanguages = () => Array.from(document.querySelectorAll('#languagesEntries .dynamic-section')).map(el => ({ languageName: el.querySelector('[id^=languageName]').value, proficiency: el.querySelector('[id^=proficiency]').value }));
 
-        function renderLanguageView(item) {
-            return `
-                <div class="view-section">
-                    <h5>${item.language || 'N/A'}</h5>
-                    <div class="row">
-                        <div class="col-sm-6"><strong>Proficiency:</strong> ${item.proficiency || 'N/A'}</div>
-                    </div>
-                </div>
-            `;
+        // FIX: Assign functions to window object to make them accessible from inline 'onclick'
+        window.saveProfessionalDetails = () => saveGenericSection('professionalDetails', extractProfessionalDetails);
+        window.saveProjects = () => saveGenericSection('projects', extractProjects);
+        window.saveSkills = () => saveGenericSection('skills', extractSkills);
+        window.saveEducation = () => saveGenericSection('education', extractEducation);
+        window.saveCertifications = () => saveGenericSection('certifications', extractCertifications);
+        window.saveLanguages = () => saveGenericSection('languages', extractLanguages);
+
+        window.uploadResume = async function() {
+            const resumeInput = document.getElementById('resumeFile');
+            if (!resumeInput) {
+                showToast('An error occurred. Please cancel and try again.', 'danger');
+                return;
+            }
+            const resumeFile = resumeInput.files[0];
+            if (!resumeFile) {
+                showToast('Please select a resume file.', 'warning');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('resume', resumeFile);
+            const result = await saveData('/api/profile/upload-resume', formData);
+             if (result) {
+                showToast('Resume uploaded successfully!', 'success');
+                toggleEdit('resume', false);
+            }
         }
-
-        // --- Form Entry Functions ---
-        function addProfessionalEntry() {
-            const container = document.getElementById('professionalDetailsEntries');
+        
+        // --- Dynamic Entry Add/Remove Functions (Attached to window) ---
+        window.addProfessionalEntry = function(data = {}) {
             const id = nextEntryId++;
-            container.innerHTML += `
-                <div class="dynamic-section">
-                    <button type="button" class="btn btn-sm remove-btn" onclick="removeEntry(this)"><i class="bi bi-x"></i></button>
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Job Title</label>
-                            <input type="text" class="form-control" name="jobTitle" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Company</label>
-                            <input type="text" class="form-control" name="company" required>
-                        </div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Company</label><input type="text" class="form-control" id="companyName-${id}" value="${data.companyName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Company Link</label><input type="url" class="form-control" id="companyLink-${id}" value="${data.companyLink || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">From</label><input type="date" class="form-control" id="fromDate-${id}" value="${data.fromDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">To</label><input type="date" class="form-control" id="toDate-${id}" value="${data.toDate || ''}"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Location</label>
-                            <input type="text" class="form-control" name="location">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Duration</label>
-                            <div class="row">
-                                <div class="col-6">
-                                    <input type="month" class="form-control" name="startDate" required>
-                                </div>
-                                <div class="col-6">
-                                    <input type="month" class="form-control" name="endDate">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="currentJob" id="currentJob${id}">
-                                <label class="form-check-label" for="currentJob${id}">Current Job</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" name="description" rows="3"></textarea>
-                    </div>
-                </div>
-            `;
+                    <div><label class="form-label">Roles</label><div class="rolesContainer-${id}">${(data.roles || []).map(r => `<span class="tag">${r}<i class="bi bi-x" onclick="this.parentElement.remove()"></i></span>`).join('')}</div><div class="input-group"><input type="text" class="form-control" placeholder="Add role"><button class="btn btn-outline-secondary" type="button" onclick="addTag(this,'.rolesContainer-${id}')">Add</button></div></div>
+                </div>`;
+            document.getElementById('professionalDetailsEntries').insertAdjacentHTML('beforeend', html);
         }
-
-        function addProjectEntry() {
-            const container = document.getElementById('projectsEntries');
-            container.innerHTML += `
-                <div class="dynamic-section">
-                    <button type="button" class="btn btn-sm remove-btn" onclick="removeEntry(this)"><i class="bi bi-x"></i></button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Project Name</label>
-                            <input type="text" class="form-control" name="projectName" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Technologies Used</label>
-                            <input type="text" class="form-control" name="technologies">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Duration</label>
-                            <div class="row">
-                                <div class="col-6">
-                                    <input type="month" class="form-control" name="startDate">
-                                </div>
-                                <div class="col-6">
-                                    <input type="month" class="form-control" name="endDate">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Your Role</label>
-                            <input type="text" class="form-control" name="role">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" name="description" rows="3"></textarea>
-                    </div>
-                </div>
-            `;
-        }
-
-        function addSkillEntry() {
-            const container = document.getElementById('skillsEntries');
+        
+        window.addSkillEntry = function(data = {}) {
             const id = nextEntryId++;
-            container.innerHTML += `
-                <div class="dynamic-section">
-                    <button type="button" class="btn btn-sm remove-btn" onclick="removeEntry(this)"><i class="bi bi-x"></i></button>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Skill Name</label>
-                            <input type="text" class="form-control" name="skillName" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Proficiency Level (1-10)</label>
-                            <input type="range" class="form-range" name="proficiency" min="1" max="10" value="5" oninput="updateProficiencyValue(this, ${id})">
-                            <div class="d-flex justify-content-between">
-                                <small>Beginner</small>
-                                <small id="proficiencyValue${id}">5</small>
-                                <small>Expert</small>
-                            </div>
-                        </div>
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3"><label class="form-label">Skill Name</label><input type="text" class="form-control" id="skillName-${id}" value="${data.skillName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Rating: <span id="ratingVal-${id}">${data.rating || 5}</span></label><input type="range" class="form-range" id="skillRating-${id}" min="1" max="10" value="${data.rating || 5}" oninput="document.getElementById('ratingVal-${id}').textContent = this.value"></div>
                     </div>
-                </div>
-            `;
+                </div>`;
+            document.getElementById('skillsEntries').insertAdjacentHTML('beforeend', html);
         }
 
-        function addEducationEntry() {
-            const container = document.getElementById('educationEntries');
-            container.innerHTML += `
-                <div class="dynamic-section">
-                    <button type="button" class="btn btn-sm remove-btn" onclick="removeEntry(this)"><i class="bi bi-x"></i></button>
+        window.addProjectEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Degree/Certificate</label>
-                            <input type="text" class="form-control" name="degree" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Institution</label>
-                            <input type="text" class="form-control" name="institution" required>
-                        </div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Project Title</label><input type="text" class="form-control" id="projectTitle-${id}" value="${data.projectTitle || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Client</label><input type="text" class="form-control" id="client-${id}" value="${data.client || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Role</label><input type="text" class="form-control" id="projectRole-${id}" value="${data.role || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Team Size</label><input type="number" class="form-control" id="teamSize-${id}" value="${data.teamSize || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">From</label><input type="date" class="form-control" id="projectFromDate-${id}" value="${data.fromDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">To</label><input type="date" class="form-control" id="projectToDate-${id}" value="${data.toDate || ''}"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Location</label>
-                            <input type="text" class="form-control" name="location">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Duration</label>
-                            <div class="row">
-                                <div class="col-6">
-                                    <input type="number" class="form-control" name="startYear" placeholder="Start Year" min="1900" max="2099">
-                                </div>
-                                <div class="col-6">
-                                    <input type="number" class="form-control" name="endYear" placeholder="End Year" min="1900" max="2099">
-                                </div>
-                            </div>
-                        </div>
+                    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" id="projectDescription-${id}" rows="3">${data.description || ''}</textarea></div>
+                    <div><label class="form-label">Skills Used</label>
+                        <div class="skillsContainer-${id}">${(data.skillsUsed || []).map(s => `<span class="tag">${s}<i class="bi bi-x" onclick="this.parentElement.remove()"></i></span>`).join('')}</div>
+                        <div class="input-group mt-2"><input type="text" class="form-control" placeholder="Add skill"><button class="btn btn-outline-secondary" type="button" onclick="addTag(this,'.skillsContainer-${id}')">Add</button></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">CGPA/Percentage</label>
-                            <input type="text" class="form-control" name="grade">
-                        </div>
-                    <div class="col-md-6 mb-3">
-                            <label class="form-label">Field of Study</label>
-                            <input type="text" class="form-control" name="fieldOfStudy">
-                        </div>
-                    </div>
-                </div>
-            `;
+                </div>`;
+            document.getElementById('projectsEntries').insertAdjacentHTML('beforeend', html);
         }
 
-        function addCertificationEntry() {
-            const container = document.getElementById('certificationsEntries');
-            container.innerHTML += `
-                <div class="dynamic-section">
-                    <button type="button" class="btn btn-sm remove-btn" onclick="removeEntry(this)"><i class="bi bi-x"></i></button>
+        window.addEducationEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Certification Name</label>
-                            <input type="text" class="form-control" name="certificationName" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Issuing Organization</label>
-                            <input type="text" class="form-control" name="issuingOrganization" required>
-                        </div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Degree</label><input type="text" class="form-control" id="degree-${id}" value="${data.degree || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Institution</label><input type="text" class="form-control" id="institution-${id}" value="${data.institution || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">From</label><input type="date" class="form-control" id="educationFromDate-${id}" value="${data.fromDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">To</label><input type="date" class="form-control" id="educationToDate-${id}" value="${data.toDate || ''}"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Issue Date</label>
-                            <input type="month" class="form-control" name="issueDate">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Expiry Date</label>
-                            <input type="month" class="form-control" name="expiryDate">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Credential ID</label>
-                        <input type="text" class="form-control" name="credentialId">
-                    </div>
-                </div>
-            `;
+                    <div class="mb-3"><label class="form-label">Description</label><textarea class="form-control" id="educationDescription-${id}" rows="2">${data.description || ''}</textarea></div>
+                </div>`;
+            document.getElementById('educationEntries').insertAdjacentHTML('beforeend', html);
         }
 
-        function addLanguageEntry() {
-            const container = document.getElementById('languagesEntries');
-            container.innerHTML += `
-                <div class="dynamic-section">
-                    <button type="button" class="btn btn-sm remove-btn" onclick="removeEntry(this)"><i class="bi bi-x"></i></button>
+        window.addCertificationEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Language</label>
-                            <input type="text" class="form-control" name="language" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Proficiency</label>
-                            <select class="form-select" name="proficiency">
-                                <option value="">Select Proficiency</option>
-                                <option value="Beginner">Beginner</option>
-                                <option value="Intermediate">Intermediate</option>
-                                <option value="Advanced">Advanced</option>
-                                <option value="Native">Native</option>
+                        <div class="col-md-6 mb-3"><label class="form-label">Certification Name</label><input type="text" class="form-control" id="certificationName-${id}" value="${data.certificationName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Issuing Organization</label><input type="text" class="form-control" id="issuingOrganization-${id}" value="${data.issuingOrganization || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Issue Date</label><input type="date" class="form-control" id="issueDate-${id}" value="${data.issueDate || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Expiry Date</label><input type="date" class="form-control" id="expiryDate-${id}" value="${data.expiryDate || ''}"></div>
+                    </div>
+                    <div class="mb-3"><label class="form-label">Certification Link</label><input type="url" class="form-control" id="certificationLink-${id}" value="${data.certificationLink || ''}"></div>
+                </div>`;
+            document.getElementById('certificationsEntries').insertAdjacentHTML('beforeend', html);
+        }
+
+        window.addLanguageEntry = function(data = {}) {
+            const id = nextEntryId++;
+            const html = `
+                <div class="dynamic-section" id="entry-${id}">
+                    <button type="button" class="btn-close remove-btn" aria-label="Close" onclick="this.parentElement.remove()"></button>
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><label class="form-label">Language</label><input type="text" class="form-control" id="languageName-${id}" value="${data.languageName || ''}"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Proficiency</label>
+                            <select class="form-select" id="proficiency-${id}">
+                                <option value="">Select</option>
+                                <option value="basic" ${data.proficiency === 'basic' ? 'selected' : ''}>Basic</option>
+                                <option value="conversational" ${data.proficiency === 'conversational' ? 'selected' : ''}>Conversational</option>
+                                <option value="fluent" ${data.proficiency === 'fluent' ? 'selected' : ''}>Fluent</option>
+                                <option value="native" ${data.proficiency === 'native' ? 'selected' : ''}>Native</option>
                             </select>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
+            document.getElementById('languagesEntries').insertAdjacentHTML('beforeend', html);
         }
 
-        // --- Form Management ---
-        function toggleEdit(sectionId, showForm) {
-            const view = document.getElementById(sectionId + 'View');
-            const form = document.getElementById(sectionId + 'Form');
-            const editBtn = document.querySelector(`#${sectionId} .edit-btn`);
+        // FIX: Create function to add resume input field dynamically
+        window.addResumeEntry = function(data = {}) {
+            const html = `
+                <div class="mb-3">
+                    <label for="resumeFile" class="form-label">Upload New Resume (PDF, DOC, DOCX)</label>
+                    <input type="file" class="form-control" id="resumeFile" accept=".pdf,.doc,.docx">
+                    <div id="resumePreview" class="resume-preview mt-2 d-none">
+                        <i class="bi bi-file-earmark-text fs-4"></i>
+                        <span id="resumeFileName"></span>
+                    </div>
+                </div>`;
+            const container = document.getElementById('resumeEntries');
+            container.innerHTML = html; // Replace content
             
-            if (showForm) {
-                view.classList.add('d-none');
-                form.classList.remove('d-none');
-                editBtn.innerHTML = '<i class="bi bi-eye me-1"></i> View';
-                editBtn.onclick = () => toggleEdit(sectionId, false);
-                
-                // Populate form with existing data
-                populateForm(sectionId);
-            } else {
-                view.classList.remove('d-none');
-                form.classList.add('d-none');
-                editBtn.innerHTML = '<i class="bi bi-pencil me-1"></i> Edit';
-                editBtn.onclick = () => toggleEdit(sectionId, true);
-            }
-        }
-
-        function populateForm(sectionId) {
-            const data = profileData[sectionId] || [];
-            const entriesContainer = document.getElementById(sectionId + 'Entries');
-            entriesContainer.innerHTML = '';
-            
-            if (data.length === 0) {
-                // Add one empty entry if no data exists
-                switch(sectionId) {
-                    case 'professionalDetails': addProfessionalEntry(); break;
-                    case 'projects': addProjectEntry(); break;
-                    case 'skills': addSkillEntry(); break;
-                    case 'education': addEducationEntry(); break;
-                    case 'certifications': addCertificationEntry(); break;
-                    case 'languages': addLanguageEntry(); break;
+            // Add event listener now that the element exists
+            document.getElementById('resumeFile').addEventListener('change', e => {
+                const file = e.target.files[0];
+                if (file) {
+                    document.getElementById('resumeFileName').textContent = file.name;
+                    document.getElementById('resumePreview').classList.remove('d-none');
                 }
-            } else {
-                // Add entries for each existing item
-                data.forEach(item => {
-                    switch(sectionId) {
-                        case 'professionalDetails': addProfessionalEntry(); break;
-                        case 'projects': addProjectEntry(); break;
-                        case 'skills': addSkillEntry(); break;
-                        case 'education': addEducationEntry(); break;
-                        case 'certifications': addCertificationEntry(); break;
-                        case 'languages': addLanguageEntry(); break;
-                    }
-                    
-                    // Populate the last added entry with data
-                    const lastEntry = entriesContainer.lastElementChild;
-                    if (lastEntry) {
-                        Object.keys(item).forEach(key => {
-                            const input = lastEntry.querySelector(`[name="${key}"]`);
-                            if (input) {
-                                if (input.type === 'checkbox') {
-                                    input.checked = item[key];
-                                } else {
-                                    input.value = item[key] || '';
-                                }
-                            }
-                        });
-                    }
-                });
+            });
+        }
+
+        function addTag(btn, containerSelector) {
+            const input = btn.previousElementSibling;
+            const text = input.value.trim();
+            if (text) {
+                const container = btn.closest('.dynamic-section').querySelector(containerSelector);
+                container.insertAdjacentHTML('beforeend', `<span class="tag">${text}<i class="bi bi-x" onclick="this.parentElement.remove()"></i></span>`);
+                input.value = '';
             }
         }
-
-        function removeEntry(button) {
-            const section = button.closest('.dynamic-section');
-            if (section) {
-                section.remove();
-            }
-        }
-
-        // --- Save Functions ---
-        async function savePersonalDetails() {
-            try {
-                showLoading(true);
-                const formData = new FormData();
-                const profilePhoto = document.getElementById('profilePhoto').files[0];
-                
-                if (profilePhoto) {
-                    formData.append('profilePhoto', profilePhoto);
-                }
-                
-                const personalDetails = {
-                    fullName: document.getElementById('fullName').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    gender: document.getElementById('gender').value,
-                    experienceLevel: document.querySelector('input[name="experienceLevel"]:checked')?.value,
-                    ctcExpected: document.getElementById('ctcExpected').value
-                };
-                
-                formData.append('personalDetails', JSON.stringify(personalDetails));
-                
-                const response = await fetch('/api/profile/personal-details', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) throw new Error("Failed to save personal details");
-                
-                showToast("Personal details saved successfully!", "success");
-                toggleEdit('personalDetails', false);
-                await loadProfileData(); // Reload to get updated photo URL
-                showLoading(false);
-            } catch (error) {
-                console.error("Error saving personal details:", error);
-                showToast("Error saving personal details. Please try again.", "danger");
-                showLoading(false);
-            }
-        }
-
-        async function saveProfessionalDetails() {
-            const entries = collectFormData('professionalDetailsEntries');
-            await saveSectionData('professional-details', entries, 'Professional details');
-        }
-
-        async function saveProjects() {
-            const entries = collectFormData('projectsEntries');
-            await saveSectionData('projects', entries, 'Projects');
-        }
-
-        async function saveSkills() {
-            const entries = collectFormData('skillsEntries');
-            await saveSectionData('skills', entries, 'Skills');
-        }
-
-        async function saveEducation() {
-            const entries = collectFormData('educationEntries');
-            await saveSectionData('education', entries, 'Education');
-        }
-
-        async function saveCertifications() {
-            const entries = collectFormData('certificationsEntries');
-            await saveSectionData('certifications', entries, 'Certifications');
-        }
-
-        async function saveLanguages() {
-            const entries = collectFormData('languagesEntries');
-            await saveSectionData('languages', entries, 'Languages');
-        }
-
-        async function saveResume() {
-            try {
-                showLoading(true);
-                const resumeFile = document.getElementById('resumeFile').files[0];
-                if (!resumeFile) {
-                    showToast("Please select a file to upload.", "warning");
-                    showLoading(false);
-                    return;
-                }
-                
-                const formData = new FormData();
-                formData.append('resume', resumeFile);
-                
-                const response = await fetch('/api/profile/resume', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (!response.ok) throw new Error("Failed to upload resume");
-                
-                showToast("Resume uploaded successfully!", "success");
-                await loadProfileData();
-                showLoading(false);
-            } catch (error) {
-                console.error("Error uploading resume:", error);
-                showToast("Error uploading resume. Please try again.", "danger");
-                showLoading(false);
-            }
-        }
-
+        
+        // --- Password Update ---
         async function updatePassword() {
-            try {
-                const newPassword = document.getElementById('newPassword').value;
-                const confirmPassword = document.getElementById('confirmPassword').value;
-                
-                if (newPassword !== confirmPassword) {
-                    showToast("Passwords do not match.", "danger");
-                    return;
-                }
-                
-                if (newPassword.length < 6) {
-                    showToast("Password must be at least 6 characters long.", "danger");
-                    return;
-                }
-                
-                showLoading(true);
-                const response = await fetch('/api/profile/password', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ newPassword })
-                });
-                
-                if (!response.ok) throw new Error("Failed to update password");
-                
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            if (newPassword.length < 6) {
+                showToast("Password must be at least 6 characters.", "warning");
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast("Passwords do not match.", "warning");
+                return;
+            }
+            // FIX: Correct API path for updating password
+            const result = await saveData('/api/user/update-password', { newPassword });
+            if(result) {
                 showToast("Password updated successfully!", "success");
                 document.getElementById('changePasswordForm').reset();
-                showLoading(false);
-            } catch (error) {
-                console.error("Error updating password:", error);
-                showToast("Error updating password. Please try again.", "danger");
-                showLoading(false);
             }
         }
 
-        // --- Helper Functions ---
-        function collectFormData(containerId) {
-            const entries = [];
-            const containers = document.querySelectorAll(`#${containerId} .dynamic-section`);
-            
-            containers.forEach(container => {
-                const inputs = container.querySelectorAll('input, textarea, select');
-                const entry = {};
-                
-                inputs.forEach(input => {
-                    if (input.type === 'checkbox') {
-                        entry[input.name] = input.checked;
-                    } else if (input.type === 'file') {
-                        // Skip file inputs in dynamic sections
-                    } else {
-                        entry[input.name] = input.value;
-                    }
-                });
-                
-                // Only add entry if it has at least one non-empty value
-                if (Object.values(entry).some(val => val && val.toString().trim() !== '')) {
-                    entries.push(entry);
-                }
-            });
-            
-            return entries;
-        }
-
-        async function saveSectionData(endpoint, data, sectionName) {
-            try {
-                showLoading(true);
-                const response = await fetch(`/api/profile/${endpoint}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-                
-                if (!response.ok) throw new Error(`Failed to save ${sectionName}`);
-                
-                showToast(`${sectionName} saved successfully!`, "success");
-                toggleEdit(endpoint, false);
-                await loadProfileData();
-                showLoading(false);
-            } catch (error) {
-                console.error(`Error saving ${sectionName}:`, error);
-                showToast(`Error saving ${sectionName}. Please try again.`, "danger");
-                showLoading(false);
-            }
-        }
-
-        function updateProficiencyValue(slider, id) {
-            document.getElementById(`proficiencyValue${id}`).textContent = slider.value;
-        }
-
-        function getSectionIcon(sectionId) {
-            const icons = {
-                personalDetails: 'bi-person',
-                professionalDetails: 'bi-briefcase',
-                projects: 'bi-folder',
-                resume: 'bi-file-earmark',
-                skills: 'bi-tools',
-                education: 'bi-book',
-                certifications: 'bi-award',
-                languages: 'bi-translate',
-                password: 'bi-shield-lock'
-            };
-            return icons[sectionId] || 'bi-gear';
-        }
-
-        function updateProfileCompletion() {
-            let completedFields = 0;
-            let totalFields = 0;
-            
-            // Personal Details
-            if (profileData.personalDetails) {
-                const pd = profileData.personalDetails;
-                totalFields += 6;
-                if (pd.fullName) completedFields++;
-                if (pd.email) completedFields++;
-                if (pd.phone) completedFields++;
-                if (pd.gender) completedFields++;
-                if (pd.experienceLevel) completedFields++;
-                if (pd.ctcExpected) completedFields++;
-            }
-            
-            // Other sections
-            const sections = ['professionalDetails', 'projects', 'skills', 'education', 'certifications', 'languages', 'resume'];
-            sections.forEach(section => {
-                if (profileData[section] && profileData[section].length > 0) {
-                    completedFields += 2; // Each section with at least one entry counts as 2 fields
-                    totalFields += 2;
-                } else {
-                    totalFields += 2;
-                }
-            });
-            
-            const percentage = totalFields > 0 ? Math.round((completedFields / totalFields) * 100) : 0;
-            document.getElementById('completionPercentage').textContent = `${percentage}%`;
-            document.getElementById('completionFill').style.width = `${percentage}%`;
-        }
-
-        function showToast(message, type) {
+        // --- Utilities ---
+        function showToast(message, type = 'info') {
             const toastContainer = document.querySelector('.toast-container');
             const toastId = 'toast-' + Date.now();
-            
-            const toast = document.createElement('div');
-            toast.className = `toast align-items-center text-bg-${type} border-0`;
-            toast.id = toastId;
-            toast.setAttribute('role', 'alert');
-            toast.setAttribute('aria-live', 'assertive');
-            toast.setAttribute('aria-atomic', 'true');
-            
-            toast.innerHTML = `
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <i class="bi ${type === 'success' ? 'bi-check-circle' : type === 'danger' ? 'bi-exclamation-triangle' : 'bi-info-circle'} me-2"></i>
-                        ${message}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
-            `;
-            
-            toastContainer.appendChild(toast);
-            
-            const bsToast = new bootstrap.Toast(toast, { delay: 5000 });
-            bsToast.show();
-            
-            // Remove toast from DOM after it's hidden
-            toast.addEventListener('hidden.bs.toast', () => {
-                toast.remove();
-            });
-        }
-
-        function showLoading(show) {
-            const spinner = document.getElementById('loadingSpinner');
-            if (show) {
-                spinner.classList.remove('d-none');
-            } else {
-                spinner.classList.add('d-none');
-            }
+            toastContainer.insertAdjacentHTML('beforeend', `
+                <div id="${toastId}" class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex"><div class="toast-body">${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button></div>
+                </div>`);
+            const toast = new bootstrap.Toast(document.getElementById(toastId), { delay: 4000 });
+            toast.show();
+            document.getElementById(toastId).addEventListener('hidden.bs.toast', e => e.target.remove());
         }
     </script>
 </body>
