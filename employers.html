@@ -104,6 +104,7 @@
             transition: all 0.3s ease;
             cursor: pointer;
             border: 1px solid var(--border-color);
+            height: 100%;
         }
         
         .company-card:hover {
@@ -233,7 +234,19 @@
             flex: 1;
         }
         
+        .companies-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
         /* Mobile Responsive */
+        @media (max-width: 1200px) {
+            .companies-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         @media (max-width: 992px) {
             .main-container {
                 flex-direction: column;
@@ -406,9 +419,9 @@
                 
                 <!-- Companies List View -->
                 <div id="companies-view">
-                    <div id="companies-list">
-                        <!-- Companies will be loaded here -->
-                        <div class="text-center py-5">
+                    <div id="companies-list" class="companies-grid">
+                        <!-- Companies will be loaded here in 2-column grid -->
+                        <div class="text-center py-5" style="grid-column: 1 / -1;">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Loading companies...</span>
                             </div>
@@ -488,7 +501,7 @@
                 } catch (error) {
                     console.error('Error loading companies:', error);
                     companiesList.innerHTML = `
-                        <div class="alert alert-danger">
+                        <div class="alert alert-danger" style="grid-column: 1 / -1;">
                             Failed to load companies. Please try again later.
                         </div>
                     `;
@@ -732,7 +745,7 @@
                 renderCompanies();
             };
 
-            // Render companies list
+            // Render companies list in 2-column grid
             const renderCompanies = () => {
                 companiesList.innerHTML = '';
                 
