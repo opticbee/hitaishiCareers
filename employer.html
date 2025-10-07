@@ -43,24 +43,16 @@
         .suggestion-item { padding: 0.5rem 1rem; cursor: pointer; }
         .suggestion-item:hover { background-color: #f1f3f5; }
 
-        /* Styles for applicant card details */
-        .card-header[aria-expanded="true"] .fa-chevron-down {
-            transform: rotate(180deg);
-        }
-        .fa-chevron-down {
-            transition: transform 0.2s ease-in-out;
-        }
-        .border-start-lg {
-            border-left: 1px solid #dee2e6;
-        }
+        .card-header[aria-expanded="true"] .fa-chevron-down { transform: rotate(180deg); }
+        .fa-chevron-down { transition: transform 0.2s ease-in-out; }
+        .border-start-lg { border-left: 1px solid #dee2e6; }
         @media (max-width: 991.98px) {
-            .border-start-lg {
-                border-left: none;
-                border-top: 1px solid #dee2e6;
-                padding-top: 1.5rem;
-                margin-top: 1.5rem;
-            }
+            .border-start-lg { border-left: none; border-top: 1px solid #dee2e6; padding-top: 1.5rem; margin-top: 1.5rem; }
         }
+        
+        .review-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem 2rem; }
+        .review-item strong { color: #495057; }
+        .review-section-title { font-weight: 600; color: #0d6efd; border-bottom: 2px solid #e9ecef; padding-bottom: 0.5rem; margin-top: 1.5rem; margin-bottom: 1rem; }
     </style>
 </head>
 <body>
@@ -116,8 +108,26 @@
                             <div class="col-12"><label class="form-label">Primary Skills</label><div id="requiredSkills" class="skills-input-container"></div></div>
                             <div class="col-12"><label class="form-label">Secondary Skills</label><div id="additionalSkills" class="skills-input-container"></div></div>
                         </div>
-                        <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4">Post Job</button></div>
+                        <div class="mt-4 text-end"><button type="submit" class="btn btn-primary px-4">Review Job</button></div>
                     </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section for reviewing the job before posting -->
+        <section id="reviewJobSection" class="content-section">
+            <div class="card">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Review Your Job Posting</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div id="reviewContent">
+                        <!-- Job details will be injected here by JS -->
+                    </div>
+                    <div class="mt-4 text-end">
+                        <button type="button" class="btn btn-secondary px-4 me-2" id="editJobBtn">Edit Details</button>
+                        <button type="button" class="btn btn-success px-4" id="confirmPostBtn">Confirm & Post Job</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -169,6 +179,7 @@
             }
 
             let currentCompanyProfile = null;
+            let jobDataForReview = null;
 
             const toastContainer = document.getElementById('toastContainer');
             const showToast = (message, type = 'success') => {
@@ -430,9 +441,9 @@
                 }).join('');
             };
 
-            document.getElementById('postJobForm').addEventListener('submit', async (e) => {
+            document.getElementById('postJobForm').addEventListener('submit', (e) => {
                 e.preventDefault();
-                const jobData = {
+                jobDataForReview = {
                     job_title: document.getElementById('jobTitle').value, required_experience: document.getElementById('requiredExperience').value,
                     job_type: document.getElementById('jobType').value, work_location: document.getElementById('workLocation').value,
                     salary_min: document.getElementById('salaryMin').value || null, salary_max: document.getElementById('salaryMax').value || null,
@@ -444,17 +455,76 @@
                     responsibilities: document.getElementById('responsibilities').value, required_skills: requiredSkillsInput.getSkills(),
                     additional_skills: additionalSkillsInput.getSkills(),
                 };
-                const result = await fetchData('/api/jobs/post', { method: 'POST', body: JSON.stringify(jobData) });
+                renderReviewContent(jobDataForReview);
+                showSection('reviewJobSection');
+            });
+            
+            function renderReviewContent(data) {
+                const reviewContainer = document.getElementById('reviewContent');
+                const formatText = text => text ? text.replace(/\n/g, '<br>') : 'N/A';
+                const formatSkills = skills => skills.length > 0 ? skills.map(s => `<span class="badge bg-secondary me-1 mb-1">${s}</span>`).join('') : 'None';
+                 
+                let salaryInfo = 'N/A';
+                if (data.salary_min && data.salary_max) {
+                    const periodCount = data.salary_period_count || 1;
+                    const period = data.salary_period || 'Year';
+                    let periodText = period;
+                    if (periodCount > 1) { periodText = `${periodCount} ${period.replace('ly','s')}`; }
+                    salaryInfo = `${data.salary_currency} ${Number(data.salary_min).toLocaleString()} - ${Number(data.salary_max).toLocaleString()} per ${periodText}`;
+                }
+
+                reviewContainer.innerHTML = `
+                    <h5 class="review-section-title">Job Overview</h5>
+                    <div class="review-grid">
+                        <div class="review-item"><strong>Job Title:</strong> <span>${data.job_title}</span></div>
+                        <div class="review-item"><strong>Company:</strong> <span>${currentCompanyProfile.company_name}</span></div>
+                        <div class="review-item"><strong>Experience:</strong> <span>${data.required_experience}</span></div>
+                        <div class="review-item"><strong>Job Type:</strong> <span>${data.job_type}</span></div>
+                        <div class="review-item"><strong>Work Location:</strong> <span>${data.work_location}</span></div>
+                        <div class="review-item"><strong>Salary:</strong> <span>${salaryInfo}</span></div>
+                    </div>
+
+                    <h5 class="review-section-title">Location & Contact</h5>
+                     <div class="review-grid">
+                        <div class="review-item"><strong>Location:</strong> <span>${data.city}, ${data.state}, ${data.country} ${data.zip_code}</span></div>
+                        <div class="review-item"><strong>Contact Person:</strong> <span>${data.posted_by_name}</span></div>
+                        <div class="review-item"><strong>Contact Email:</strong> <span>${data.posted_by_email}</span></div>
+                    </div>
+
+                    <h5 class="review-section-title">Skills</h5>
+                    <p><strong>Primary Skills:</strong><br>${formatSkills(data.required_skills)}</p>
+                    <p><strong>Secondary Skills:</strong><br>${formatSkills(data.additional_skills)}</p>
+
+                    <h5 class="review-section-title">Job Details</h5>
+                    <h6>Description</h6>
+                    <p class="small bg-light p-2 rounded">${formatText(data.job_description)}</p>
+                    <h6>Responsibilities</h6>
+                    <p class="small bg-light p-2 rounded">${formatText(data.responsibilities)}</p>
+                `;
+            }
+            
+            document.getElementById('editJobBtn').addEventListener('click', () => {
+                showSection('postJobSection');
+            });
+
+            document.getElementById('confirmPostBtn').addEventListener('click', async () => {
+                if (!jobDataForReview) {
+                    showToast('No job data to post. Please review first.', 'error');
+                    return;
+                }
+                const result = await fetchData('/api/jobs/post', { method: 'POST', body: JSON.stringify(jobDataForReview) });
                 if (result && result.success) {
                     showToast('Job posted successfully!');
-                    e.target.reset();
+                    document.getElementById('postJobForm').reset();
                     requiredSkillsInput.reset();
                     additionalSkillsInput.reset();
+                    jobDataForReview = null;
                     document.getElementById('postedByName').value = currentCompanyProfile.contact_person || '';
                     document.getElementById('postedByEmail').value = currentCompanyProfile.user_email || '';
                     document.getElementById('postedByPhone').value = currentCompanyProfile.contact_phone || '';
                     document.getElementById('postJobCompanyName').value = currentCompanyProfile.company_name || '';
-                    fetchJobs(); 
+                    await fetchJobs(); 
+                    showSection('myJobsSection');
                 }
             });
 
@@ -480,33 +550,19 @@
             const updateCountLabel = () => {
                 const selectedPeriod = salaryPeriodSelect.value;
                 switch (selectedPeriod) {
-                    case 'Hourly':
-                        salaryPeriodCountLabel.textContent = 'No. of Hours';
-                        break;
-                    case 'Monthly':
-                        salaryPeriodCountLabel.textContent = 'No. of Months';
-                        break;
-                    case 'Yearly':
-                        salaryPeriodCountLabel.textContent = 'No. of Years';
-                        break;
-                    default:
-                        salaryPeriodCountLabel.textContent = 'Count';
+                    case 'Hourly': salaryPeriodCountLabel.textContent = 'No. of Hours'; break;
+                    case 'Monthly': salaryPeriodCountLabel.textContent = 'No. of Months'; break;
+                    case 'Yearly': salaryPeriodCountLabel.textContent = 'No. of Years'; break;
+                    default: salaryPeriodCountLabel.textContent = 'Count';
                 }
             };
 
             jobTypeSelect.addEventListener('change', () => {
                 const selectedJobType = jobTypeSelect.value;
                 switch (selectedJobType) {
-                    case 'Contract':
-                        salaryPeriodSelect.value = 'Hourly';
-                        break;
-                    case 'Part-time':
-                    case 'Internship':
-                        salaryPeriodSelect.value = 'Monthly';
-                        break;
-                    case 'Full-time':
-                        salaryPeriodSelect.value = 'Yearly';
-                        break;
+                    case 'Contract': salaryPeriodSelect.value = 'Hourly'; break;
+                    case 'Part-time': case 'Internship': salaryPeriodSelect.value = 'Monthly'; break;
+                    case 'Full-time': salaryPeriodSelect.value = 'Yearly'; break;
                 }
                 salaryPeriodSelect.dispatchEvent(new Event('change'));
             });
@@ -533,9 +589,9 @@
                 navButtons.forEach(btn => btn.classList.remove('active'));
                 
                 let activeNavId = sectionIdToShow;
-                if (sectionIdToShow === 'applicantsSection') {
-                    activeNavId = 'myJobsSection';
-                }
+                if (sectionIdToShow === 'applicantsSection') activeNavId = 'myJobsSection';
+                if (sectionIdToShow === 'reviewJobSection') activeNavId = 'postJobSection';
+
                 const activeButton = document.querySelector(`.nav-btn[data-section="${activeNavId}"]`);
                 if (activeButton) activeButton.classList.add('active');
             };
@@ -582,4 +638,3 @@
     </script>
 </body>
 </html>
-

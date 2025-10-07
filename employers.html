@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Employers</title>
-    <!-- Favicon -->
-    <link rel="icon" href="https://winjob.in/images/favicon.ico" type="image/x-icon">
+    <title>Hiring Companies | Hitaishi Careers</title>
+    <meta name="description" content="Browse top companies hiring now. Filter by job type, location, experience and find your perfect job opportunity.">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -13,57 +12,262 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --light-bg: #f8f9fa;
+            --border-color: #dee2e6;
+            --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
         body {
             background-color: #f4f7fc;
             font-family: 'Poppins', sans-serif;
+            color: #333;
         }
+        
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .page-title {
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+        
         .main-container {
             display: flex;
             gap: 20px;
             margin-top: 20px;
         }
-        .companies-list-container {
-            width: 30%;
-            min-width: 300px;
+        
+        .filters-container {
+            width: 25%;
+            min-width: 280px;
             align-self: flex-start;
         }
-        .job-listings-container {
-            width: 70%;
+        
+        .companies-container {
+            width: 75%;
         }
-        .company-card {
+        
+        .filter-card {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            background: white;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .filter-header {
+            background-color: var(--light-bg);
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            border: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .company-card:hover, .company-card.active {
-            background-color: #e9ecef;
-            border-left: 4px solid #0d6efd;
-            transform: translateX(5px);
+        
+        .filter-header h6 {
+            margin: 0;
+            font-weight: 600;
+            color: #495057;
         }
+        
+        .filter-body {
+            padding: 15px;
+        }
+        
+        .filter-option {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .filter-option:last-child {
+            margin-bottom: 0;
+        }
+        
+        .filter-option input {
+            margin-right: 8px;
+        }
+        
+        .company-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+        
+        .company-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+        
         .company-logo {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             object-fit: contain;
             border-radius: 8px;
+            margin-right: 15px;
         }
+        
+        .company-info {
+            flex: 1;
+        }
+        
+        .company-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .company-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .rating-stars {
+            color: #ffc107;
+            margin-right: 5px;
+        }
+        
+        .company-type {
+            font-size: 0.85rem;
+            color: var(--secondary-color);
+        }
+        
         .job-card {
             background-color: #fff;
-            border: 1px solid #e9ecef;
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--card-shadow);
         }
+        
         .job-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
-        #no-jobs-message, #initial-message {
+        
+        .job-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .job-meta {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .job-badge {
+            background-color: var(--light-bg);
+            color: #495057;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .job-description {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .back-to-companies {
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .back-to-companies i {
+            margin-right: 5px;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .no-results {
             text-align: center;
-            padding: 50px;
-            background-color: #fff;
-            border-radius: 10px;
+            padding: 40px 20px;
+            color: var(--secondary-color);
+        }
+        
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+        
+        .company-count {
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .filter-actions button {
+            flex: 1;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .filters-container, .companies-container {
+                width: 100%;
+            }
+            
+            .company-card {
+                padding: 15px;
+            }
+            
+            .company-logo {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .job-meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .company-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .company-logo {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -92,159 +296,651 @@
     </header>
 
     <main class="container py-4">
-        <h1 class="mb-4">Hiring Companies</h1>
+        <h1 class="page-title">Hiring Companies</h1>
+        
         <div class="main-container">
-            <!-- Left side: Companies List -->
-            <div class="companies-list-container card">
-                <div class="card-header fw-bold">
-                    Companies
+            <!-- Left side: Filters -->
+            <div class="filters-container">
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h6>Posted Date</h6>
+                    </div>
+                    <div class="filter-body">
+                        <div class="filter-option">
+                            <input type="radio" id="today" name="postedDate" value="today" class="me-2">
+                            <label for="today">Today</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="week" name="postedDate" value="week" class="me-2">
+                            <label for="week">Last 7 days</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="month" name="postedDate" value="month" class="me-2">
+                            <label for="month">Last month</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="radio" id="anytime" name="postedDate" value="anytime" class="me-2" checked>
+                            <label for="anytime">Anytime</label>
+                        </div>
+                    </div>
                 </div>
-                <div id="company-list" class="list-group list-group-flush" style="max-height: 80vh; overflow-y: auto;">
-                    <!-- Company list will be loaded here -->
-                    <div class="p-5 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading companies...</span></div></div>
+
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h6>Job Type</h6>
+                    </div>
+                    <div class="filter-body">
+                        <div class="filter-option">
+                            <input type="checkbox" id="fulltime" name="jobType" value="fulltime" class="me-2">
+                            <label for="fulltime">Full Time</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="parttime" name="jobType" value="parttime" class="me-2">
+                            <label for="parttime">Part Time</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="contract" name="jobType" value="contract" class="me-2">
+                            <label for="contract">Contract</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h6>Country</h6>
+                    </div>
+                    <div class="filter-body">
+                        <div class="input-group mb-2">
+                            <input type="text" id="countrySearch" class="form-control form-control-sm" placeholder="Search country...">
+                        </div>
+                        <div id="countryList" style="max-height: 200px; overflow-y: auto;">
+                            <!-- Countries will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h6>Experience</h6>
+                    </div>
+                    <div class="filter-body">
+                        <div class="filter-option">
+                            <input type="checkbox" id="exp0-3" name="experience" value="0-3" class="me-2">
+                            <label for="exp0-3">0-3 years</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="exp4-6" name="experience" value="4-6" class="me-2">
+                            <label for="exp4-6">4-6 years</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="exp7-10" name="experience" value="7-10" class="me-2">
+                            <label for="exp7-10">7-10 years</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="exp10plus" name="experience" value="10+" class="me-2">
+                            <label for="exp10plus">10+ years</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button id="applyFilters" class="btn btn-primary">Apply Filters</button>
+                    <button id="resetFilters" class="btn btn-outline-secondary">Reset</button>
                 </div>
             </div>
 
-            <!-- Right side: Job Listings -->
-            <div class="job-listings-container">
-                <div id="initial-message">
-                    <i class="fas fa-arrow-left fa-3x text-muted mb-3"></i>
-                    <h4 class="fw-bold">Select a Company</h4>
-                    <p class="text-muted">Choose a company from the list to see their open positions.</p>
+            <!-- Right side: Companies and Jobs -->
+            <div class="companies-container">
+                <!-- Search Box -->
+                <div class="search-box">
+                    <div class="input-group">
+                        <input type="text" id="companySearch" class="form-control" placeholder="Search companies...">
+                        <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
-                <div id="job-list-container" class="d-none">
-                    <!-- Job cards will be dynamically inserted here -->
+                
+                <!-- Company Count -->
+                <div class="company-count" id="companyCount">Loading companies...</div>
+                
+                <!-- Companies List View -->
+                <div id="companies-view">
+                    <div id="companies-list">
+                        <!-- Companies will be loaded here -->
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading companies...</span>
+                            </div>
+                            <p class="mt-2">Loading companies...</p>
+                        </div>
+                    </div>
                 </div>
-                <div id="no-jobs-message" class="d-none">
-                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
-                    <h4 class="fw-bold">No Open Positions</h4>
-                    <p class="text-muted">This company does not have any active job listings at the moment.</p>
+                
+                <!-- Jobs List View (Hidden Initially) -->
+                <div id="jobs-view" class="d-none">
+                    <div class="back-to-companies" id="backToCompanies">
+                        <i class="fas fa-arrow-left"></i> Back to Companies
+                    </div>
+                    <div id="jobs-list">
+                        <!-- Jobs will be loaded here when a company is selected -->
+                    </div>
+                </div>
+                
+                <!-- No Results Message -->
+                <div id="no-results" class="no-results d-none">
+                    <i class="fas fa-search"></i>
+                    <h4>No Companies Found</h4>
+                    <p>Try adjusting your filters or search terms</p>
                 </div>
             </div>
         </div>
     </main>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const companyListContainer = document.getElementById('company-list');
-            const jobListContainer = document.getElementById('job-list-container');
-            const initialMessage = document.getElementById('initial-message');
-            const noJobsMessage = document.getElementById('no-jobs-message');
-            let activeCompanyCard = null;
+            // DOM Elements
+            const companiesView = document.getElementById('companies-view');
+            const jobsView = document.getElementById('jobs-view');
+            const companiesList = document.getElementById('companies-list');
+            const jobsList = document.getElementById('jobs-list');
+            const backToCompanies = document.getElementById('backToCompanies');
+            const companySearch = document.getElementById('companySearch');
+            const searchButton = document.getElementById('searchButton');
+            const companyCount = document.getElementById('companyCount');
+            const noResults = document.getElementById('no-results');
+            const applyFiltersBtn = document.getElementById('applyFilters');
+            const resetFiltersBtn = document.getElementById('resetFilters');
+            const countrySearch = document.getElementById('countrySearch');
+            const countryList = document.getElementById('countryList');
+            
+            // State
+            let allCompanies = [];
+            let filteredCompanies = [];
+            let allJobs = [];
+            let selectedCompany = null;
+            
+            // Filter state
+            const filters = {
+                postedDate: 'anytime',
+                jobType: [],
+                countries: [],
+                experience: []
+            };
 
-            // Fetch all companies on page load
-            const fetchCompanies = async () => {
+            // Initialize the page
+            const init = async () => {
+                await loadCompanies();
+                await loadJobs();
+                initFilters();
+                initEventListeners();
+            };
+
+            // Load companies from backend
+            const loadCompanies = async () => {
                 try {
                     const response = await fetch('/api/company/all');
-                    if (!response.ok) throw new Error('Failed to load companies.');
-                    const { companies } = await response.json();
-                    renderCompanies(companies);
+                    if (!response.ok) throw new Error('Failed to load companies');
+                    const data = await response.json();
+                    allCompanies = data.companies || [];
+                    filteredCompanies = [...allCompanies];
+                    renderCompanies();
                 } catch (error) {
-                    console.error('Error fetching companies:', error);
-                    companyListContainer.innerHTML = `<div class="alert alert-danger m-3">Could not load companies.</div>`;
-                }
-            };
-
-            const renderCompanies = (companies) => {
-                companyListContainer.innerHTML = '';
-                if (!companies || companies.length === 0) {
-                    companyListContainer.innerHTML = `<div class="p-3 text-muted">No companies found.</div>`;
-                    return;
-                }
-                companies.forEach(company => {
-                    const companyCard = document.createElement('a');
-                    companyCard.href = '#';
-                    companyCard.className = 'list-group-item list-group-item-action company-card d-flex align-items-center';
-                    companyCard.dataset.companyId = company.id;
-
-                    companyCard.innerHTML = `
-                        <img src="${company.logo_url || 'https://placehold.co/50x50/EFEFEF/AAAAAA&text=Logo'}" alt="${company.company_name} Logo" class="company-logo me-3">
-                        <span class="fw-bold">${company.company_name}</span>
+                    console.error('Error loading companies:', error);
+                    companiesList.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load companies. Please try again later.
+                        </div>
                     `;
-                    
-                    companyCard.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        
-                        if(activeCompanyCard) {
-                            activeCompanyCard.classList.remove('active');
-                        }
-                        activeCompanyCard = companyCard;
-                        activeCompanyCard.classList.add('active');
-
-                        fetchJobsForCompany(company.id);
-                    });
-
-                    companyListContainer.appendChild(companyCard);
-                });
-            };
-
-            const fetchJobsForCompany = async (companyId) => {
-                initialMessage.classList.add('d-none');
-                noJobsMessage.classList.add('d-none');
-                jobListContainer.classList.add('d-none');
-                jobListContainer.innerHTML = `<div class="p-5 text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading jobs...</span></div></div>`;
-                jobListContainer.classList.remove('d-none');
-
-                try {
-                    const response = await fetch(`/api/jobs/by-company/${companyId}`);
-                    if (!response.ok) throw new Error('Failed to load jobs for this company.');
-                    const { jobs } = await response.json();
-                    renderJobs(jobs);
-                } catch (error) {
-                    console.error(`Error fetching jobs for company ${companyId}:`, error);
-                    jobListContainer.innerHTML = `<div class="alert alert-danger">Could not load jobs.</div>`;
                 }
             };
 
-            const renderJobs = (jobs) => {
-                jobListContainer.innerHTML = '';
-                if (!jobs || jobs.length === 0) {
-                    noJobsMessage.classList.remove('d-none');
+            // Load jobs from backend
+            const loadJobs = async () => {
+                try {
+                    const response = await fetch('/api/jobs/active');
+                    if (!response.ok) throw new Error('Failed to load jobs');
+                    const data = await response.json();
+                    allJobs = data.jobs || [];
+                    extractCountries();
+                } catch (error) {
+                    console.error('Error loading jobs:', error);
+                }
+            };
+
+            // Extract unique countries from jobs for filter
+            const extractCountries = () => {
+                const countries = [...new Set(allJobs.map(job => job.country).filter(Boolean))];
+                renderCountryFilter(countries);
+            };
+
+            // Render country filter options
+            const renderCountryFilter = (countries) => {
+                countryList.innerHTML = '';
+                
+                if (!countries || countries.length === 0) {
+                    countryList.innerHTML = '<div class="text-muted small">No countries found</div>';
                     return;
                 }
                 
-                jobListContainer.classList.remove('d-none');
+                countries.sort().forEach(country => {
+                    const option = document.createElement('div');
+                    option.className = 'filter-option';
+                    option.innerHTML = `
+                        <input type="checkbox" id="country-${country.replace(/\s+/g, '-')}" name="country" value="${country}" class="me-2">
+                        <label for="country-${country.replace(/\s+/g, '-')}">${country}</label>
+                    `;
+                    countryList.appendChild(option);
+                    
+                    // Add event listener for country checkboxes
+                    const checkbox = option.querySelector('input');
+                    checkbox.addEventListener('change', (e) => {
+                        if (e.target.checked) {
+                            filters.countries.push(e.target.value);
+                        } else {
+                            filters.countries = filters.countries.filter(country => country !== e.target.value);
+                        }
+                    });
+                });
+            };
 
+            // Initialize filters
+            const initFilters = () => {
+                // Posted Date filter
+                document.querySelectorAll('input[name="postedDate"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        filters.postedDate = e.target.value;
+                    });
+                });
+
+                // Job Type filter
+                document.querySelectorAll('input[name="jobType"]').forEach(checkbox => {
+                    checkbox.addEventListener('change', (e) => {
+                        if (e.target.checked) {
+                            filters.jobType.push(e.target.value);
+                        } else {
+                            filters.jobType = filters.jobType.filter(type => type !== e.target.value);
+                        }
+                    });
+                });
+
+                // Experience filter
+                document.querySelectorAll('input[name="experience"]').forEach(checkbox => {
+                    checkbox.addEventListener('change', (e) => {
+                        if (e.target.checked) {
+                            filters.experience.push(e.target.value);
+                        } else {
+                            filters.experience = filters.experience.filter(exp => exp !== e.target.value);
+                        }
+                    });
+                });
+
+                // Country search
+                countrySearch.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const countryCheckboxes = countryList.querySelectorAll('.filter-option');
+                    
+                    countryCheckboxes.forEach(option => {
+                        const label = option.querySelector('label');
+                        if (label.textContent.toLowerCase().includes(searchTerm)) {
+                            option.style.display = 'block';
+                        } else {
+                            option.style.display = 'none';
+                        }
+                    });
+                });
+            };
+
+            // Initialize event listeners
+            const initEventListeners = () => {
+                // Apply filters button
+                applyFiltersBtn.addEventListener('click', applyFilters);
+
+                // Reset filters button
+                resetFiltersBtn.addEventListener('click', resetFilters);
+
+                // Back to companies button
+                backToCompanies.addEventListener('click', () => {
+                    jobsView.classList.add('d-none');
+                    companiesView.classList.remove('d-none');
+                    selectedCompany = null;
+                });
+
+                // Company search
+                searchButton.addEventListener('click', searchCompanies);
+                companySearch.addEventListener('keyup', (e) => {
+                    if (e.key === 'Enter') {
+                        searchCompanies();
+                    }
+                });
+            };
+
+            // Apply filters
+            const applyFilters = () => {
+                // Get companies with active jobs matching filters
+                const companyIdsWithMatchingJobs = new Set();
+                
+                allJobs.forEach(job => {
+                    if (jobMatchesFilters(job)) {
+                        companyIdsWithMatchingJobs.add(job.company_id);
+                    }
+                });
+                
+                // Filter companies
+                filteredCompanies = allCompanies.filter(company => 
+                    companyIdsWithMatchingJobs.has(company.id)
+                );
+                
+                // Apply search if any
+                const searchTerm = companySearch.value.trim().toLowerCase();
+                if (searchTerm) {
+                    filteredCompanies = filteredCompanies.filter(company => 
+                        company.company_name.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                renderCompanies();
+            };
+
+            // Check if a job matches current filters
+            const jobMatchesFilters = (job) => {
+                // Posted Date filter
+                if (filters.postedDate !== 'anytime') {
+                    const jobDate = new Date(job.created_at);
+                    const today = new Date();
+                    const daysDiff = Math.floor((today - jobDate) / (1000 * 60 * 60 * 24));
+                    
+                    switch (filters.postedDate) {
+                        case 'today':
+                            if (daysDiff > 0) return false;
+                            break;
+                        case 'week':
+                            if (daysDiff > 7) return false;
+                            break;
+                        case 'month':
+                            if (daysDiff > 30) return false;
+                            break;
+                    }
+                }
+                
+                // Job Type filter
+                if (filters.jobType.length > 0 && !filters.jobType.includes(job.job_type)) {
+                    return false;
+                }
+                
+                // Country filter
+                if (filters.countries.length > 0 && !filters.countries.includes(job.country)) {
+                    return false;
+                }
+                
+                // Experience filter
+                if (filters.experience.length > 0) {
+                    const jobExp = job.required_experience || '';
+                    let matchesExperience = false;
+                    
+                    filters.experience.forEach(expRange => {
+                        if (expRange === '0-3' && /[0-3]/.test(jobExp)) {
+                            matchesExperience = true;
+                        } else if (expRange === '4-6' && /[4-6]/.test(jobExp)) {
+                            matchesExperience = true;
+                        } else if (expRange === '7-10' && /[7-9]|10/.test(jobExp)) {
+                            matchesExperience = true;
+                        } else if (expRange === '10+' && (parseInt(jobExp) > 10 || /10\+/.test(jobExp))) {
+                            matchesExperience = true;
+                        }
+                    });
+                    
+                    if (!matchesExperience) return false;
+                }
+                
+                return true;
+            };
+
+            // Reset filters
+            const resetFilters = () => {
+                // Reset filter state
+                filters.postedDate = 'anytime';
+                filters.jobType = [];
+                filters.countries = [];
+                filters.experience = [];
+                
+                // Reset UI elements
+                document.querySelector('input[name="postedDate"][value="anytime"]').checked = true;
+                document.querySelectorAll('input[name="jobType"]').forEach(checkbox => checkbox.checked = false);
+                document.querySelectorAll('input[name="experience"]').forEach(checkbox => checkbox.checked = false);
+                document.querySelectorAll('input[name="country"]').forEach(checkbox => checkbox.checked = false);
+                countrySearch.value = '';
+                
+                // Reset companies list
+                filteredCompanies = [...allCompanies];
+                companySearch.value = '';
+                renderCompanies();
+            };
+
+            // Search companies
+            const searchCompanies = () => {
+                const searchTerm = companySearch.value.trim().toLowerCase();
+                
+                if (searchTerm) {
+                    filteredCompanies = allCompanies.filter(company => 
+                        company.company_name.toLowerCase().includes(searchTerm)
+                    );
+                } else {
+                    filteredCompanies = [...allCompanies];
+                }
+                
+                renderCompanies();
+            };
+
+            // Render companies list
+            const renderCompanies = () => {
+                companiesList.innerHTML = '';
+                
+                if (filteredCompanies.length === 0) {
+                    companiesView.classList.add('d-none');
+                    noResults.classList.remove('d-none');
+                    companyCount.textContent = '0 companies found';
+                    return;
+                }
+                
+                companiesView.classList.remove('d-none');
+                noResults.classList.add('d-none');
+                companyCount.textContent = `${filteredCompanies.length} companies found`;
+                
+                filteredCompanies.forEach(company => {
+                    const companyCard = document.createElement('div');
+                    companyCard.className = 'company-card d-flex align-items-center';
+                    companyCard.dataset.companyId = company.id;
+                    
+                    // Generate random rating and review count for demo (replace with actual data if available)
+                    const rating = (Math.random() * 1.5 + 3.5).toFixed(1);
+                    const reviewCount = Math.floor(Math.random() * 1000) + 50;
+                    
+                    companyCard.innerHTML = `
+                        <img src="${company.logo_url || 'https://placehold.co/60x60/EFEFEF/AAAAAA&text=Logo'}" 
+                             alt="${company.company_name} Logo" 
+                             class="company-logo">
+                        <div class="company-info">
+                            <h4 class="company-name">${company.company_name}</h4>
+                            <div class="company-rating">
+                                <span class="rating-stars">${generateStarRating(rating)}</span>
+                                <span>${rating} | ${reviewCount} reviews</span>
+                            </div>
+                            <div class="company-type">
+                                ${generateCompanyType(company.company_name)}
+                            </div>
+                        </div>
+                    `;
+                    
+                    companyCard.addEventListener('click', () => {
+                        selectCompany(company);
+                    });
+                    
+                    companiesList.appendChild(companyCard);
+                });
+            };
+
+            // Generate star rating HTML
+            const generateStarRating = (rating) => {
+                const fullStars = Math.floor(rating);
+                const halfStar = rating % 1 >= 0.5;
+                const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+                
+                let stars = '';
+                
+                for (let i = 0; i < fullStars; i++) {
+                    stars += '<i class="fas fa-star"></i>';
+                }
+                
+                if (halfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                }
+                
+                for (let i = 0; i < emptyStars; i++) {
+                    stars += '<i class="far fa-star"></i>';
+                }
+                
+                return stars;
+            };
+
+            // Generate company type (for demo purposes)
+            const generateCompanyType = (companyName) => {
+                const types = [
+                    'Foreign MNC / IT Services & Consulting',
+                    'Corporate / Analytics / KPO / Research',
+                    'Corporate / Education / Training',
+                    'Startup / Internal / Unicorn / Founded: 2018',
+                    'Corporate / Textile & Apparel / Founded: 1897',
+                    'Startup / IT Services & Consulting',
+                    'Indian MNC / IT Services & Consulting',
+                    'Marketing & Advertising / Founded: 2006',
+                    'Corporate / IT Services & Consulting',
+                    'Corporate / Banking / Founded: 1917'
+                ];
+                
+                // Use a simple hash to get a consistent type for each company
+                let hash = 0;
+                for (let i = 0; i < companyName.length; i++) {
+                    hash = ((hash << 5) - hash) + companyName.charCodeAt(i);
+                    hash = hash & hash;
+                }
+                
+                return types[Math.abs(hash) % types.length];
+            };
+
+            // Select a company and show its jobs
+            const selectCompany = async (company) => {
+                selectedCompany = company;
+                companiesView.classList.add('d-none');
+                jobsView.classList.remove('d-none');
+                
+                // Show loading state
+                jobsList.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading jobs...</span>
+                        </div>
+                        <p class="mt-2">Loading jobs for ${company.company_name}...</p>
+                    </div>
+                `;
+                
+                try {
+                    // Fetch jobs for this company
+                    const response = await fetch(`/api/jobs/by-company/${company.id}`);
+                    if (!response.ok) throw new Error('Failed to load jobs');
+                    const data = await response.json();
+                    
+                    // Filter jobs based on current filters
+                    const filteredJobs = data.jobs.filter(job => jobMatchesFilters(job));
+                    renderJobs(filteredJobs);
+                } catch (error) {
+                    console.error('Error loading company jobs:', error);
+                    jobsList.innerHTML = `
+                        <div class="alert alert-danger">
+                            Failed to load jobs for ${company.company_name}. Please try again later.
+                        </div>
+                    `;
+                }
+            };
+
+            // Render jobs list
+            const renderJobs = (jobs) => {
+                jobsList.innerHTML = '';
+                
+                if (jobs.length === 0) {
+                    jobsList.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-briefcase"></i>
+                            <h4>No Jobs Available</h4>
+                            <p>${selectedCompany.company_name} doesn't have any jobs matching your filters</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
                 jobs.forEach(job => {
                     const jobCard = document.createElement('div');
                     jobCard.className = 'job-card';
+                    
                     jobCard.innerHTML = `
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h5 class="job-title mb-1">${job.job_title}</h5>
-                                <p class="job-location small text-muted"><i class="fas fa-map-marker-alt me-1"></i>${job.city || 'N/A'}, ${job.country || ''}</p>
+                                <h5 class="job-title">${job.job_title}</h5>
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    ${job.city || 'N/A'}, ${job.country || ''}
+                                </p>
                             </div>
-                            <button class="btn btn-primary apply-now-btn" data-job-id="${job.id}">Apply Now</button>
+                            <button class="btn btn-primary apply-now-btn" data-job-id="${job.id}">
+                                Apply Now
+                            </button>
                         </div>
-                        <div class="d-flex gap-2 my-2">
-                            <span class="badge rounded-pill bg-light text-dark"><i class="fas fa-briefcase me-1"></i>${job.job_type || 'N/A'}</span>
-                            <span class="badge rounded-pill bg-light text-dark"><i class="fas fa-laptop me-1"></i>${job.work_location || 'N/A'}</span>
-                            ${job.required_experience ? `<span class="badge rounded-pill bg-light text-dark"><i class="fas fa-chart-line me-1"></i>${job.required_experience}</span>` : ''}
+                        <div class="job-meta">
+                            <span class="job-badge">
+                                <i class="fas fa-briefcase me-1"></i>${job.job_type || 'N/A'}
+                            </span>
+                            <span class="job-badge">
+                                <i class="fas fa-laptop me-1"></i>${job.work_location || 'N/A'}
+                            </span>
+                            ${job.required_experience ? `
+                                <span class="job-badge">
+                                    <i class="fas fa-chart-line me-1"></i>${job.required_experience}
+                                </span>
+                            ` : ''}
                         </div>
-                        <p class="job-description small mt-3">${job.job_description.substring(0, 150)}...</p>
+                        <p class="job-description">
+                            ${job.job_description.substring(0, 150)}...
+                        </p>
                     `;
-                    jobListContainer.appendChild(jobCard);
+                    
+                    // Add event listener for apply button
+                    const applyBtn = jobCard.querySelector('.apply-now-btn');
+                    applyBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const jobId = e.target.dataset.jobId;
+                        applyForJob(jobId);
+                    });
+                    
+                    jobsList.appendChild(jobCard);
                 });
             };
-            
-            jobListContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('apply-now-btn')) {
-                    e.preventDefault();
-                    const jobId = e.target.dataset.jobId;
-                    const userEmail = sessionStorage.getItem('email');
-                    if (userEmail) {
-                        window.location.href = `jobApplication.html?jobId=${jobId}`;
-                    } else {
-                        alert('Please login to apply for this job.');
-                        window.location.href = 'login.html';
-                    }
-                }
-            });
 
-            // Initial Load
-            fetchCompanies();
+            // Apply for a job
+            const applyForJob = (jobId) => {
+                const userEmail = sessionStorage.getItem('email');
+                if (userEmail) {
+                    window.location.href = `jobApplication.html?jobId=${jobId}`;
+                } else {
+                    alert('Please login to apply for this job.');
+                    window.location.href = 'login.html';
+                }
+            };
+
+            // Initialize the application
+            init();
         });
     </script>
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
