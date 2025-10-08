@@ -1022,187 +1022,197 @@
     </div>
   </section>
 
-  <!-- Popular Categories Section -->
-  <section class="py-5">
-    <div class="container">
-      <h2 class="text-center mb-5">Popular Categories</h2>
+<!-- Popular Industries Section -->
+<section class="py-5">
+  <div class="container">
+    <h2 class="text-center mb-5">Popular Industries</h2>
+    
+    <div class="row g-4">
+      <!-- Information Technology -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Information Technology (IT)')">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=59878&format=png" alt="Information Technology" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Information Technology</h6>
+          </div>
+        </div>
+      </div>
       
+      <!-- Manufacturing -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Manufacturing')">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=98960&format=png" alt="Manufacturing" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Manufacturing</h6>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Banking -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Banking')">
+          <div class="card-body">
+            <img src="https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" alt="Banking" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Banking</h6>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Healthcare -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Healthcare')">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=59892&format=png" alt="Healthcare" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Healthcare</h6>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Education -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Education')">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=59885&format=png" alt="Education" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Education</h6>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Retail -->
+      <div class="col-6 col-md-4 col-lg-2">
+        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Retail')">
+          <div class="card-body">
+            <img src="https://img.icons8.com/?size=100&id=70641&format=png" alt="Retail" class="img-fluid mb-2" style="height: 50px;">
+            <h6 class="card-title">Retail</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="text-center mt-4" id="viewMoreButton">
+      <button class="btn btn-primary" id="toggleCategories">View More Industries</button>
+    </div>
+    
+    <div class="collapse mt-4" id="moreCategories">
       <div class="row g-4">
-        <!-- Initial 6 categories -->
+        <!-- Media -->
         <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center">
+          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Media')">
             <div class="card-body">
-              <img src="https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" alt="Banking" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Banking</h6>
+              <img src="https://img.icons8.com/?size=100&id=98963&format=png" alt="Media" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Media</h6>
             </div>
           </div>
         </div>
         
+        <!-- Telecommunications -->
         <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center">
+          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Telecommunications')">
             <div class="card-body">
-              <img src="https://static.vecteezy.com/system/resources/thumbnails/046/596/525/small_2x/work-from-home-logo-vector.jpg" alt="Work From Home" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Work From Home</h6>
+              <img src="https://img.icons8.com/?size=100&id=22447&format=png" alt="Telecommunications" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Telecommunications</h6>
             </div>
           </div>
         </div>
         
+        <!-- Energy -->
         <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center">
+          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Energy')">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=123787&format=png" alt="HR" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">HR</h6>
+              <img src="https://image.shutterstock.com/image-vector/customer-service-icon-user-laptop-260nw-520867126.jpg" alt="Energy" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Energy</h6>
             </div>
           </div>
         </div>
         
+        <!-- Real Estate -->
         <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center">
+          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Real Estate')">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=70641&format=png" alt="Sales" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Sales</h6>
+              <img src="https://img.icons8.com/?size=100&id=59895&format=png" alt="Real Estate" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Real Estate</h6>
             </div>
           </div>
         </div>
         
+        <!-- Transportation -->
         <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center">
+          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Transportation')">
             <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=22447&format=png" alt="Accounting" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Accounting</h6>
+              <img src="https://static.vecteezy.com/system/resources/thumbnails/046/596/525/small_2x/work-from-home-logo-vector.jpg" alt="Transportation" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Transportation</h6>
             </div>
           </div>
         </div>
         
+        <!-- Tourism -->
         <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center">
+          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Tourism')">
             <div class="card-body">
-              <img src="https://image.shutterstock.com/image-vector/customer-service-icon-user-laptop-260nw-520867126.jpg" alt="Customer Support" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Customer Support</h6>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="text-center mt-4" id="viewMoreButton">
-        <button class="btn btn-primary" id="toggleCategories">View More Categories</button>
-      </div>
-      
-      <div class="collapse mt-4" id="moreCategories">
-        <div class="row g-4">
-          <!-- Additional 6 categories -->
-          <div class="col-6 col-md-4 col-lg-2">
-            <div class="pc-category-box card h-100 text-center">
-              <div class="card-body">
-                <img src="https://img.icons8.com/?size=100&id=98963&format=png" alt="Marketing" class="img-fluid mb-2" style="height: 50px;">
-                <h6 class="card-title">Marketing</h6>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-6 col-md-4 col-lg-2">
-            <div class="pc-category-box card h-100 text-center">
-              <div class="card-body">
-                <img src="https://img.icons8.com/?size=100&id=59878&format=png" alt="IT" class="img-fluid mb-2" style="height: 50px;">
-                <h6 class="card-title">IT</h6>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-6 col-md-4 col-lg-2">
-            <div class="pc-category-box card h-100 text-center">
-              <div class="card-body">
-                <img src="https://img.icons8.com/?size=100&id=98960&format=png" alt="Engineering" class="img-fluid mb-2" style="height: 50px;">
-                <h6 class="card-title">Engineering</h6>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-6 col-md-4 col-lg-2">
-            <div class="pc-category-box card h-100 text-center">
-              <div class="card-body">
-                <img src="https://img.icons8.com/?size=100&id=59892&format=png" alt="Healthcare" class="img-fluid mb-2" style="height: 50px;">
-                <h6 class="card-title">Healthcare</h6>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-6 col-md-4 col-lg-2">
-            <div class="pc-category-box card h-100 text-center">
-              <div class="card-body">
-                <img src="https://img.icons8.com/?size=100&id=59885&format=png" alt="Education" class="img-fluid mb-2" style="height: 50px;">
-                <h6 class="card-title">Education</h6>
-              </div>
-            </div>
-          </div>
-          
-          <div class="col-6 col-md-4 col-lg-2">
-            <div class="pc-category-box card h-100 text-center">
-              <div class="card-body">
-                <img src="https://img.icons8.com/?size=100&id=59895&format=png" alt="Design" class="img-fluid mb-2" style="height: 50px;">
-                <h6 class="card-title">Design</h6>
-              </div>
+              <img src="https://img.icons8.com/?size=100&id=123787&format=png" alt="Tourism" class="img-fluid mb-2" style="height: 50px;">
+              <h6 class="card-title">Tourism</h6>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <style>
-      /* Perfect Job (pj) Section Styles */
-      .pj-service-card {
-        transition: transform 0.3s ease;
-        height: 100%;
-      }
-      
-      .pj-service-card:hover {
-        transform: translateY(-10px);
-      }
-      
-      /* Popular Categories (pc) Section Styles */
-      .pc-category-box {
-        transition: all 0.3s ease;
-      }
-      
-      .pc-category-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      }
-      
-      /* Animation for category boxes */
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      
-      .pc-category-box {
-        animation: fadeInUp 0.5s ease forwards;
-      }
-    </style>
+  </div>
+  <style>
+    /* Popular Categories (pc) Section Styles */
+    .pc-category-box {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
     
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const toggleButton = document.getElementById('toggleCategories');
-        const moreCategories = document.getElementById('moreCategories');
-        const viewMoreButton = document.getElementById('viewMoreButton');
+    .pc-category-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    /* Animation for category boxes */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .pc-category-box {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+  </style>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleButton = document.getElementById('toggleCategories');
+      const moreCategories = document.getElementById('moreCategories');
+      const viewMoreButton = document.getElementById('viewMoreButton');
+      
+      toggleButton.addEventListener('click', function() {
+        // Show the additional categories
+        moreCategories.classList.add('show');
         
-        toggleButton.addEventListener('click', function() {
-          // Show the additional categories
-          moreCategories.classList.add('show');
-          
-          // Hide the button after a short delay to allow the collapse animation
-          setTimeout(function() {
-            viewMoreButton.style.display = 'none';
-          }, 300);
-        });
+        // Hide the button after a short delay to allow the collapse animation
+        setTimeout(function() {
+          viewMoreButton.style.display = 'none';
+        }, 300);
       });
-    </script>
-  </section>
+    });
+
+    // Function to redirect to employers page with industry filter
+    function filterByIndustry(industry) {
+      // Store the selected industry in sessionStorage
+      sessionStorage.setItem('selectedIndustry', industry);
+      
+      // Redirect to employers page
+      window.location.href = 'employers.html';
+    }
+  </script>
+</section>
 
   <!-- Browse By Section -->
   <section class="py-5 bg-light">

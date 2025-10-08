@@ -130,6 +130,10 @@
             padding: 1rem;
             border-radius: 10px;
         }
+        #industry-filter-options {
+            max-height: 200px;
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
@@ -150,10 +154,10 @@
         <div class="collapse navbar-collapse" id="navbarContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" href="index.html">Home</a>
+              <a class="nav-link" href="index.html">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="jobs.html">Jobs</a>
+              <a class="nav-link active" href="jobs.html">Jobs</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="servicesDropdown" role="button" data-bs-toggle="dropdown">
@@ -221,10 +225,7 @@
           const profilePhoto = data.personalDetails?.profilePhoto;
 
           if (profilePhoto) {
-            // Hide the default font-awesome icon
             document.getElementById("profile-icon").classList.add("d-none");
-
-            // Show user’s actual avatar
             const avatar = document.getElementById("profile-avatar");
             avatar.src = profilePhoto;
             avatar.classList.remove("d-none");
@@ -242,79 +243,24 @@
 <!-- Beautiful Compact Hero Section -->
 <section class="hero-section d-flex justify-content-center align-items-center">
   <div class="hero-card d-flex align-items-center justify-content-between px-4 py-2">
-    
-    <!-- Icon -->
-    <div class="hero-icon d-flex align-items-center justify-content-center me-3">
-      <i class="bi bi-whatsapp"></i>
-    </div>
-
-    <!-- Text -->
+    <div class="hero-icon d-flex align-items-center justify-content-center me-3"><i class="bi bi-whatsapp"></i></div>
     <div class="hero-text flex-grow-1 text-truncate">
       <span class="fw-bold text-dark">🚀 Join Our WhatsApp Group</span> – 
       <span class="text-secondary">Stay updated with latest</span> 
       <span class="text-success fw-semibold">job opportunities</span>
     </div>
-
-    <!-- Button -->
-    <a href="https://chat.whatsapp.com/FIYrARNv98W1zY0Yrgt4yD?mode=ems_copy_t" 
-       target="_blank" 
-       class="btn hero-btn px-3 d-flex align-items-center gap-1">
+    <a href="https://chat.whatsapp.com/FIYrARNv98W1zY0Yrgt4yD?mode=ems_copy_t" target="_blank" class="btn hero-btn px-3 d-flex align-items-center gap-1">
       <i class="bi bi-arrow-right-circle-fill"></i> Join
     </a>
   </div>
-
-  <!-- Styles -->
   <style>
-    .hero-section {
-      background: linear-gradient(90deg, #f0f9ff, #e6fffa);
-      padding: 0.7rem 0;
-      font-family: 'Poppins', sans-serif;
-    }
-
-    .hero-card {
-      background: #fff;
-      border-radius: 50px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      width: 85%;
-      max-width: 1000px;
-    }
-
-    .hero-icon {
-      background: #25D366;
-      color: #fff;
-      font-size: 1.5rem;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-
-    .hero-text {
-      font-size: 0.95rem;
-      font-weight: 500;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .hero-btn {
-      background: #25D366;
-      color: #fff;
-      font-weight: 600;
-      border-radius: 25px;
-      transition: all 0.3s ease;
-    }
-
-    .hero-btn:hover {
-      background: #1ebe5a;
-      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
-      transform: translateY(-2px);
-    }
+    .hero-section { background: linear-gradient(90deg, #f0f9ff, #e6fffa); padding: 0.7rem 0; font-family: 'Poppins', sans-serif; }
+    .hero-card { background: #fff; border-radius: 50px; box-shadow: 0 6px 16px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1rem; width: 85%; max-width: 1000px; }
+    .hero-icon { background: #25D366; color: #fff; font-size: 1.5rem; width: 40px; height: 40px; border-radius: 50%; }
+    .hero-text { font-size: 0.95rem; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .hero-btn { background: #25D366; color: #fff; font-weight: 600; border-radius: 25px; transition: all 0.3s ease; }
+    .hero-btn:hover { background: #1ebe5a; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4); transform: translateY(-2px); }
   </style>
-
-  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </section>
 
@@ -357,19 +303,24 @@
 
                 <div class="filter-section">
                     <h5>Employment Type</h5>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="employment-type" id="any-employment" value="any" checked><label class="form-check-label" for="any-employment">Any</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="employment-type" id="full-time" value="Full-time"><label class="form-check-label" for="full-time">Full-time</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="employment-type" id="part-time" value="Part-time"><label class="form-check-label" for="part-time">Part-time</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="employment-type" id="contract" value="Contract"><label class="form-check-label" for="contract">Contract</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="employment-type" id="internship" value="Internship"><label class="form-check-label" for="internship">Internship</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="full-time" value="Full-time"><label class="form-check-label" for="full-time">Full-time</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="part-time" value="Part-time"><label class="form-check-label" for="part-time">Part-time</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="contract" value="Contract"><label class="form-check-label" for="contract">Contract</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="internship" value="Internship"><label class="form-check-label" for="internship">Internship</label></div>
                 </div>
 
                 <div class="filter-section">
                     <h5>Work Setting</h5>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="work-setting" id="any-setting" value="any" checked><label class="form-check-label" for="any-setting">Any</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="work-setting" id="in-office" value="In-office"><label class="form-check-label" for="in-office">In-office</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="work-setting" id="hybrid" value="Hybrid"><label class="form-check-label" for="hybrid">Hybrid</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="work-setting" id="remote" value="Remote"><label class="form-check-label" for="remote">Remote</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="in-office" value="In-office"><label class="form-check-label" for="in-office">In-office</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="hybrid" value="Hybrid"><label class="form-check-label" for="hybrid">Hybrid</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="remote" value="Remote"><label class="form-check-label" for="remote">Remote</label></div>
+                </div>
+                
+                <div class="filter-section">
+                    <h5>Industry</h5>
+                    <div id="industry-filter-options">
+                        <!-- Industry checkboxes will be dynamically inserted here -->
+                    </div>
                 </div>
             </div>
 
@@ -397,34 +348,23 @@
             const locationInput = document.getElementById('locationInput');
             const searchButton = document.getElementById('searchButton');
             const resetFiltersButton = document.getElementById('resetFilters');
+            const industryFilterContainer = document.getElementById('industry-filter-options');
 
             // --- Read search parameters from URL ---
             const urlParams = new URLSearchParams(window.location.search);
-            const searchQuery = urlParams.get('q');
-            const locationQuery = urlParams.get('location');
-
-            if (searchQuery) {
-                searchInput.value = searchQuery;
-            }
-            if (locationQuery) {
-                locationInput.value = locationQuery;
-            }
+            searchInput.value = urlParams.get('q') || '';
+            locationInput.value = urlParams.get('location') || '';
 
             // --- Helper Functions ---
             const timeAgo = (dateString) => {
                 if (!dateString) return '';
                 const date = new Date(dateString);
                 const seconds = Math.floor((new Date() - date) / 1000);
-                let interval = seconds / 31536000;
-                if (interval > 1) return Math.floor(interval) + " years ago";
-                interval = seconds / 2592000;
-                if (interval > 1) return Math.floor(interval) + " months ago";
-                interval = seconds / 86400;
-                if (interval > 1) return Math.floor(interval) + " days ago";
-                interval = seconds / 3600;
-                if (interval > 1) return Math.floor(interval) + " hours ago";
-                interval = seconds / 60;
-                if (interval > 1) return Math.floor(interval) + " minutes ago";
+                let interval = seconds / 31536000; if (interval > 1) return Math.floor(interval) + " years ago";
+                interval = seconds / 2592000; if (interval > 1) return Math.floor(interval) + " months ago";
+                interval = seconds / 86400; if (interval > 1) return Math.floor(interval) + " days ago";
+                interval = seconds / 3600; if (interval > 1) return Math.floor(interval) + " hours ago";
+                interval = seconds / 60; if (interval > 1) return Math.floor(interval) + " minutes ago";
                 return "Just now";
             };
 
@@ -440,18 +380,18 @@
                     const skillArray = typeof skills === 'string' ? JSON.parse(skills) : skills;
                     if (!Array.isArray(skillArray) || skillArray.length === 0) return '';
                     return skillArray.slice(0, 5).map(skill => `<span class="badge rounded-pill bg-primary bg-opacity-10 text-primary skill-badge me-1">${skill}</span>`).join('');
-                } catch (e) {
-                    return ''; // Return empty if skills are not a valid JSON array
-                }
+                } catch (e) { return ''; }
             };
             
             // --- Core Functions ---
             const fetchJobs = async () => {
                 try {
+                    jobListContainer.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Loading jobs...</p></div>`;
                     const response = await fetch('/api/jobs/active');
                     if (!response.ok) throw new Error('Network response was not ok');
                     const data = await response.json();
                     allJobs = data.jobs || [];
+                    populateIndustryFilter();
                     applyFilters();
                 } catch (error) {
                     console.error("Failed to fetch jobs:", error);
@@ -459,14 +399,26 @@
                 }
             };
 
+            const populateIndustryFilter = () => {
+                const industries = [...new Set(allJobs.map(job => job.industry).filter(Boolean))].sort();
+                industryFilterContainer.innerHTML = '';
+                industries.forEach(industry => {
+                    const div = document.createElement('div');
+                    div.className = 'form-check';
+                    div.innerHTML = `
+                        <input class="form-check-input" type="checkbox" name="industry" value="${industry}" id="industry-${industry.replace(/\s+/g, '-')}">
+                        <label class="form-check-label" for="industry-${industry.replace(/\s+/g, '-')}">${industry}</label>
+                    `;
+                    industryFilterContainer.appendChild(div);
+                });
+            };
+
             const renderJobs = (jobs) => {
                 jobListContainer.innerHTML = '';
                 if (jobs.length === 0) {
                     noJobsMessage.style.display = 'block';
-                    jobListContainer.style.display = 'none';
                 } else {
                     noJobsMessage.style.display = 'none';
-                    jobListContainer.style.display = 'block';
                     jobs.forEach(job => {
                         const jobCard = document.createElement('div');
                         jobCard.className = 'job-card';
@@ -496,7 +448,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end mt-3 border-top pt-3">
-                                <button class="btn btn-primary apply-now-btn" data-job-id="${job.id}">Apply Now</button>
+                                <a href="jobApplication.html?jobId=${job.id}" class="btn btn-primary apply-now-btn" data-job-id="${job.id}">Apply Now</a>
                             </div>
                         `;
                         jobListContainer.appendChild(jobCard);
@@ -506,8 +458,6 @@
             
             const applyFilters = () => {
                 let filteredJobs = [...allJobs];
-
-                // Search filters
                 const searchTerm = searchInput.value.toLowerCase();
                 const locationTerm = locationInput.value.toLowerCase();
 
@@ -518,7 +468,6 @@
                         (job.required_skills && JSON.stringify(job.required_skills).toLowerCase().includes(searchTerm))
                     );
                 }
-
                 if (locationTerm) {
                     filteredJobs = filteredJobs.filter(job =>
                         (job.city && job.city.toLowerCase().includes(locationTerm)) ||
@@ -527,27 +476,30 @@
                     );
                 }
                 
-                // Radio button filters
                 const postedDateFilter = document.querySelector('input[name="posted-date"]:checked').value;
-                const employmentTypeFilter = document.querySelector('input[name="employment-type"]:checked').value;
-                const workSettingFilter = document.querySelector('input[name="work-setting"]:checked').value;
-
                 if (postedDateFilter !== 'any-date') {
                     const now = new Date();
                     let days;
                     if (postedDateFilter === 'today') days = 1;
                     if (postedDateFilter === 'last-3-days') days = 3;
                     if (postedDateFilter === 'last-7-days') days = 7;
-                    const cutoffDate = new Date(now.setDate(now.getDate() - days));
+                    const cutoffDate = new Date().setDate(new Date().getDate() - days);
                     filteredJobs = filteredJobs.filter(job => new Date(job.created_at) >= cutoffDate);
                 }
                 
-                if (employmentTypeFilter !== 'any') {
-                    filteredJobs = filteredJobs.filter(job => job.job_type === employmentTypeFilter);
+                const selectedEmpTypes = [...document.querySelectorAll('input[name="employment-type"]:checked')].map(cb => cb.value);
+                if (selectedEmpTypes.length > 0) {
+                    filteredJobs = filteredJobs.filter(job => selectedEmpTypes.includes(job.job_type));
                 }
 
-                if (workSettingFilter !== 'any') {
-                    filteredJobs = filteredJobs.filter(job => job.work_location === workSettingFilter);
+                const selectedWorkSettings = [...document.querySelectorAll('input[name="work-setting"]:checked')].map(cb => cb.value);
+                if (selectedWorkSettings.length > 0) {
+                    filteredJobs = filteredJobs.filter(job => selectedWorkSettings.includes(job.work_location));
+                }
+                
+                const selectedIndustries = [...document.querySelectorAll('input[name="industry"]:checked')].map(cb => cb.value);
+                if (selectedIndustries.length > 0) {
+                    filteredJobs = filteredJobs.filter(job => selectedIndustries.includes(job.industry));
                 }
                 
                 renderJobs(filteredJobs);
@@ -555,8 +507,7 @@
 
             const resetFilters = () => {
                 document.getElementById('any-date').checked = true;
-                document.getElementById('any-employment').checked = true;
-                document.getElementById('any-setting').checked = true;
+                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
                 searchInput.value = '';
                 locationInput.value = '';
                 applyFilters();
@@ -564,39 +515,36 @@
 
             // --- Event Listeners ---
             jobListContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('apply-now-btn')) {
+                const applyButton = e.target.closest('.apply-now-btn');
+                if (applyButton) {
                     e.preventDefault();
-                    const jobId = e.target.dataset.jobId;
-                    // Check if user is logged in by looking for email in sessionStorage
-                    const userEmail = sessionStorage.getItem('email');
-                    if (userEmail) {
-                        window.location.href = `jobApplication.html?jobId=${jobId}`;
+                    if (sessionStorage.getItem('email')) {
+                        window.location.href = applyButton.href;
                     } else {
-                        alert('Please login to continue.');
-                        // You could also redirect to login.html
+                        alert('Please login to apply for this job.');
+                        window.location.href = 'login.html';
                     }
                 }
             });
 
-            document.querySelectorAll('input[type="radio"]').forEach(radio => {
-                radio.addEventListener('change', applyFilters);
+            document.querySelectorAll('input[name="posted-date"], input[name="employment-type"], input[name="work-setting"]').forEach(el => {
+                el.addEventListener('change', applyFilters);
             });
+            industryFilterContainer.addEventListener('change', (e) => {
+                if(e.target.name === 'industry') applyFilters();
+            });
+
             searchButton.addEventListener('click', applyFilters);
-            searchInput.addEventListener('keyup', (e) => {
-                if(e.key === 'Enter') applyFilters();
-            });
-            locationInput.addEventListener('keyup', (e) => {
-                if(e.key === 'Enter') applyFilters();
-            });
+            searchInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') applyFilters(); });
+            locationInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') applyFilters(); });
             resetFiltersButton.addEventListener('click', resetFilters);
 
-            // --- Initial Load ---
             fetchJobs();
         });
     </script>
 
     <!-- Footer -->
-    <footer class="text-white py-5">
+     <footer class="text-white py-5" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d);">
         <div class="container">
         <div class="row g-4">
             <div class="col-lg-4 col-md-6">
@@ -612,7 +560,6 @@
                 <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
             </div>
             </div>
-            
             <div class="col-lg-2 col-md-6">
             <h5 class="mb-4">Quick Links</h5>
             <ul class="list-unstyled">
@@ -623,7 +570,6 @@
                 <li class="mb-2"><a href="contact.html" class="text-white-50">Contact</a></li>
             </ul>
             </div>
-            
             <div class="col-lg-3 col-md-6">
             <h5 class="mb-4">Job Seeker Resources</h5>
             <ul class="list-unstyled">
@@ -634,54 +580,25 @@
                 <li class="mb-2"><a href="tutu.html" class="text-white-50">Apply with AI</a></li>
             </ul>
             </div>
-            
             <div class="col-lg-3 col-md-6">
             <h5 class="mb-4">Contact Us</h5>
             <ul class="list-unstyled">
-                <li class="mb-3 d-flex align-items-start">
-                <i class="fas fa-map-marker-alt me-3 mt-1"></i>
-                <span class="text-white-50">985 pragathi nagar, Pragathi Nagar, Hyderabad, TS 500090</span>
-                </li>
-                <li class="mb-3 d-flex align-items-center">
-                <i class="fas fa-phone me-3"></i>
-                <a href="tel:+919876543210" class="text-white-50">+91 99087 93602</a>,  
-                <a href="tel:+919876543210" class="text-white-50">+91 87901 70525</a>
-                </li>
-                <li class="mb-3 d-flex align-items-center">
-                <i class="fas fa-envelope me-3"></i>
-                <a href="mailto:info@hitashicareers.com" class="text-white-50">info@hitashicareers.com</a>
-                </li>
+                <li class="mb-3 d-flex align-items-start"><i class="fas fa-map-marker-alt me-3 mt-1"></i><span class="text-white-50">985 pragathi nagar, Pragathi Nagar, Hyderabad, TS 500090</span></li>
+                <li class="mb-3 d-flex align-items-center"><i class="fas fa-phone me-3"></i><span><a href="tel:+919908793602" class="text-white-50">+91 99087 93602</a>, <a href="tel:+918790170525" class="text-white-50">+91 87901 70525</a></span></li>
+                <li class="mb-3 d-flex align-items-center"><i class="fas fa-envelope me-3"></i><a href="mailto:info@hitashicareers.com" class="text-white-50">info@hitashicareers.com</a></li>
             </ul>
             </div>
         </div>
-        
         <hr class="my-5">
-        
         <div class="row align-items-center">
-            <div class="col-md-6 text-center text-md-start">
-            <p class="mb-0">&copy; 2025 Hitaishi Careers. All rights reserved.</p>
-            </div>
+            <div class="col-md-6 text-center text-md-start"><p class="mb-0">&copy; 2025 Hitaishi Careers. All rights reserved.</p></div>
             <div class="col-md-6 text-center text-md-end">
-            <a href="PrivacyPolicy.html" class="text-white-50 me-3">Privacy Policy</a>
-            <a href="Terms-Conditions.html" class="text-white-50 me-3">Terms of Service</a>
-            <a href="cookiesPolicy.html" class="text-white-50">Cookie Policy</a>
+                <a href="PrivacyPolicy.html" class="text-white-50 me-3">Privacy Policy</a>
+                <a href="Terms-Conditions.html" class="text-white-50 me-3">Terms of Service</a>
+                <a href="cookiesPolicy.html" class="text-white-50">Cookie Policy</a>
             </div>
         </div>
         </div>
-        <style>
-            footer {
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-        }
-        
-        footer a {
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        
-        footer a:hover {
-            color: var(--secondary-color) !important;
-        }
-        </style>
     </footer>
     
 </body>

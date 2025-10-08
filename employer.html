@@ -373,7 +373,14 @@
                     const resumeUrl = profile.resumeUrl;
                     const uniqueId = `applicant-details-${index}`;
 
-                    const skillsHtml = skills.length > 0 ? skills.map(skill => `<span class="badge bg-primary bg-opacity-10 text-primary fw-normal me-1 mb-1">${skill}</span>`).join('') : '<span class="text-muted">No skills listed.</span>';
+                    const skillsHtml = skills.length > 0
+                    ? skills.map(skill => {
+                        const name = skill.skillName || skill.name || skill; // handles object or string
+                        const rating = skill.rating ? ` (${skill.rating}/10)` : '';
+                        return `<span class="badge bg-primary bg-opacity-10 text-primary fw-normal me-1 mb-1">${name}${rating}</span>`;
+                        }).join('')
+                    : '<span class="text-muted">No skills listed.</span>';
+
                     
                     const professionalHtml = professional.length > 0 ? professional.map(job => `
                         <div class="mb-3">
@@ -382,12 +389,23 @@
                             <div class="text-muted">${job.fromDate || ''} to ${job.toDate || 'Present'}</div>
                         </div>`).join('') : '<span class="text-muted">No work experience listed.</span>';
 
-                    const educationHtml = education.length > 0 ? education.map(edu => `
-                        <div class="mb-3">
-                            <div class="fw-bold">${edu.degree || 'N/A'}</div>
-                            <div>${edu.collegeName || 'N/A'}</div>
-                            <div class="text-muted">Percentage/CGPA: ${edu.percentage || 'N/A'}</div>
-                        </div>`).join('') : '<span class="text-muted">No education listed.</span>';
+                    const educationHtml = education.length > 0
+                        ? education.map(edu => {
+                            const degree = edu.degree || 'N/A';
+                            const institution = edu.institution || edu.collegeName || 'N/A';
+                            const from = edu.fromDate ? new Date(edu.fromDate).toLocaleDateString() : '';
+                            const to = edu.toDate ? new Date(edu.toDate).toLocaleDateString() : 'Present';
+                            const desc = edu.description ? `<div class="text-muted">${edu.description}</div>` : '';
+                            return `
+                                <div class="mb-3">
+                                <div class="fw-bold">${degree}</div>
+                                <div>${institution}</div>
+                                <div class="text-muted">${from} - ${to}</div>
+                                ${desc}
+                                </div>
+                            `;
+                            }).join('')
+                        : '<span class="text-muted">No education listed.</span>';
                     
                     const projectsHtml = projects.length > 0 ? projects.map(proj => `
                         <div class="mb-3">
