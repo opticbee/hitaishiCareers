@@ -87,9 +87,10 @@
                             <div class="col-md-3"><label for="city" class="form-label">City</label><input type="text" class="form-control" id="city"></div>
                             <div class="col-md-3"><label for="zipCode" class="form-label">Zip Code</label><input type="text" class="form-control" id="zipCode"></div>
                             <hr class="my-3">
-                            <div class="col-md-4"><label for="postJobCompanyName" class="form-label">Company Name</label><input type="text" class="form-control" id="postJobCompanyName" readonly></div>
-                            <div class="col-md-4"><label for="jobTitle" class="form-label">Job Title</label><input type="text" class="form-control" id="jobTitle" required></div>
-                            <div class="col-md-4"><label for="requiredExperience" class="form-label">Required Experience</label><input type="text" class="form-control" id="requiredExperience" placeholder="e.g., 2+ Years"></div>
+                            <div class="col-md-6"><label for="postJobCompanyName" class="form-label">Company Name</label><input type="text" class="form-control" id="postJobCompanyName" readonly></div>
+                            <div class="col-md-6"><label for="jobTitle" class="form-label">Job Title</label><input type="text" class="form-control" id="jobTitle" required></div>
+                            <div class="col-md-6"><label for="industry" class="form-label">Industry</label><select id="industry" class="form-select" required></select></div>
+                            <div class="col-md-6"><label for="requiredExperience" class="form-label">Required Experience</label><input type="text" class="form-control" id="requiredExperience" placeholder="e.g., 2+ Years"></div>
                             
                             <div class="col-md-6"><label for="jobType" class="form-label">Job Type</label><select id="jobType" class="form-select"><option value="Full-time" selected>Full-time</option><option value="Part-time">Part-time</option><option value="Contract">Contract</option><option value="Internship">Internship</option></select></div>
                             <div class="col-md-6"><label for="workLocation" class="form-label">Work Location</label><select id="workLocation" class="form-select"><option value="In-office">In-office</option><option value="Remote">Remote</option><option value="Hybrid">Hybrid</option></select></div>
@@ -180,6 +181,18 @@
 
             let currentCompanyProfile = null;
             let jobDataForReview = null;
+
+            // --- Populate Industry Dropdown ---
+            const industryDropdown = document.getElementById('industry');
+            const industries = [
+                "Information Technology (IT)", "Manufacturing", "Banking", "Healthcare", "Education",
+                "Retail", "Media", "Telecommunications", "Energy", "Real Estate", "Transportation",
+                "Tourism", "Food Industry", "Compliance", "Public Sector", "Recruitment",
+                "Research", "Fitness", "Social Enterprises"
+            ];
+            industryDropdown.innerHTML = '<option value="" selected disabled>Select an Industry</option>' + 
+                industries.map(i => `<option value="${i}">${i}</option>`).join('');
+
 
             const toastContainer = document.getElementById('toastContainer');
             const showToast = (message, type = 'success') => {
@@ -445,6 +458,7 @@
                 e.preventDefault();
                 jobDataForReview = {
                     job_title: document.getElementById('jobTitle').value, required_experience: document.getElementById('requiredExperience').value,
+                    industry: document.getElementById('industry').value,
                     job_type: document.getElementById('jobType').value, work_location: document.getElementById('workLocation').value,
                     salary_min: document.getElementById('salaryMin').value || null, salary_max: document.getElementById('salaryMax').value || null,
                     salary_currency: document.getElementById('salaryCurrency').value, salary_period: document.getElementById('salaryPeriod').value,
@@ -478,6 +492,7 @@
                     <div class="review-grid">
                         <div class="review-item"><strong>Job Title:</strong> <span>${data.job_title}</span></div>
                         <div class="review-item"><strong>Company:</strong> <span>${currentCompanyProfile.company_name}</span></div>
+                        <div class="review-item"><strong>Industry:</strong> <span>${data.industry}</span></div>
                         <div class="review-item"><strong>Experience:</strong> <span>${data.required_experience}</span></div>
                         <div class="review-item"><strong>Job Type:</strong> <span>${data.job_type}</span></div>
                         <div class="review-item"><strong>Work Location:</strong> <span>${data.work_location}</span></div>

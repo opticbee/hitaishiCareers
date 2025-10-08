@@ -45,6 +45,7 @@ const authenticateToken = (req, res, next) => {
         city VARCHAR(100),
         zip_code VARCHAR(20),
         job_data JSON, /* This is legacy, will be removed by migration */
+        industry VARCHAR(100) NULL,
         status ENUM('active','inactive') DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -108,6 +109,17 @@ const authenticateToken = (req, res, next) => {
         `);
         console.log("✅ salary_period_count field added to 'jobs' table successfully.");
     }
+
+    // Migration 4: Check if industry field exists for older tables
+    const industryCol = await query("SHOW COLUMNS FROM jobs WHERE Field = 'industry'");
+    if (industryCol.length === 0) {
+        console.log("Schema migration needed: Adding 'industry' to existing 'jobs' table.");
+        await query(`
+            ALTER TABLE jobs
+            ADD COLUMN industry VARCHAR(100) NULL
+        `);
+        console.log("✅ industry field added to 'jobs' table successfully.");
+    }
     
     console.log("✅ jobs table is ready.");
   } catch (err) {
@@ -124,7 +136,7 @@ router.post("/post", authenticateToken, async (req, res) => {
         job_description, required_skills, additional_skills, country, 
         state, city, zip_code, salary_min, salary_max, 
         salary_currency, salary_period, salary_period_count, responsibilities, 
-        job_type, work_location 
+        job_type, work_location, industry
     } = req.body;
     
     console.log('Received job post data:', req.body);
@@ -136,14 +148,14 @@ router.post("/post", authenticateToken, async (req, res) => {
           required_experience, job_description, required_skills, 
           additional_skills, country, state, city, zip_code, 
           salary_min, salary_max, salary_currency, salary_period, salary_period_count,
-          responsibilities, job_type, work_location, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active')`,
+          responsibilities, job_type, work_location, status, industry
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'active', ?)`,
       [
           id, company_id, posted_by_name, posted_by_email, job_title, 
           required_experience, job_description, JSON.stringify(required_skills || []), 
           JSON.stringify(additional_skills || []), country, state, city, zip_code, 
           salary_min || null, salary_max || null, salary_currency, salary_period, salary_period_count || 1,
-          responsibilities, job_type, work_location
+          responsibilities, job_type, work_location, industry
       ]
     );
     res.json({ success: true, job_id: id });
@@ -222,3 +234,4 @@ router.get("/by-company/:companyId", async (req, res) => {
 
 
 module.exports = router;
+
