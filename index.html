@@ -856,6 +856,7 @@
 
                 const card = document.createElement('div');
                 card.className = 'card h-100 job-card';
+                card.setAttribute('onclick', `window.location.href='jobApplication.html?jobId=${job.id}'`);
                 card.innerHTML = `
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-start mb-3">
@@ -872,7 +873,7 @@
                     </div>
                     <div class="card-footer bg-transparent d-flex justify-content-between align-items-center">
                       <small class="text-muted">Posted ${timeAgo(job.created_at)}</small>
-                      <a href="#" class="btn btn-sm btn-primary">Apply Now</a>
+                      <a href="jobApplication.html?jobId=${job.id}" class="btn btn-sm btn-primary">Apply Now</a>
                     </div>
                 `;
                 col.appendChild(card);
@@ -1022,358 +1023,266 @@
     </div>
   </section>
 
-<!-- Popular Industries Section -->
-<section class="py-5">
+<!-- 🌍 Popular Industries Section -->
+<section class="py-5 bg-light">
   <div class="container">
     <h2 class="text-center mb-5 fw-bold">Popular Industries</h2>
-    
-    <div class="row g-4">
-      <!-- Information Technology -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Information Technology (IT)')">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=59878&format=png" alt="Information Technology" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Information Technology</h6>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Manufacturing -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Manufacturing')">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=98960&format=png" alt="Manufacturing" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Manufacturing</h6>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Banking -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Banking')">
-          <div class="card-body">
-            <img src="https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" alt="Banking" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Banking</h6>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Healthcare -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Healthcare')">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=59892&format=png" alt="Healthcare" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Healthcare</h6>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Education -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Education')">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=59885&format=png" alt="Education" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Education</h6>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Retail -->
-      <div class="col-6 col-md-4 col-lg-2">
-        <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Retail')">
-          <div class="card-body">
-            <img src="https://img.icons8.com/?size=100&id=70641&format=png" alt="Retail" class="img-fluid mb-2" style="height: 50px;">
-            <h6 class="card-title">Retail</h6>
-          </div>
-        </div>
-      </div>
+
+    <div class="row g-4" id="industryContainer">
+      <!-- Industries dynamically inserted here -->
     </div>
-    
-    <div class="text-center mt-4" id="viewMoreButton">
-      <button class="btn btn-primary" id="toggleCategories">View More Industries</button>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-primary px-4" id="toggleIndustries">View More</button>
     </div>
+  </div>
+
+  <style>
+    /* ✨ Industry Card Styles */
+    .industry-card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid #e0e0e0;
+      border-radius: 15px;
+      background-color: #fff;
+    }
+
+    .industry-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+      border-color: #0d6efd;
+    }
+
+    .industry-card .card-body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
+    }
+
+    .industry-card img {
+      height: 50px;
+      width: 50px;
+      margin-bottom: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .industry-card:hover img {
+      transform: scale(1.1);
+    }
+
+    .industry-card h6 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #333;
+      margin: 0;
+    }
+
+    /* Animation */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+  </style>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const industries = [
+        { name: "Information Technology", icon: "https://img.icons8.com/?size=100&id=nSBfeVcn9hpX&format=png&color=000000" },
+        { name: "Manufacturing", icon: "https://img.icons8.com/?size=100&id=BmLM7L3ONdX-&format=png&color=000000" },
+        { name: "Banking", icon: "https://static.vecteezy.com/system/resources/previews/013/948/616/non_2x/bank-icon-logo-design-vector.jpg" },
+        { name: "Healthcare", icon: "https://img.icons8.com/?size=100&id=9511&format=png&color=000000" },
+        { name: "Education", icon: "https://img.icons8.com/?size=100&id=77565&format=png&color=000000" },
+        { name: "Retail", icon: "https://img.icons8.com/?size=100&id=70641&format=png" },
+        { name: "Media", icon: "https://img.icons8.com/?size=100&id=jplvES5PwQsn&format=png&color=000000" },
+        { name: "Telecommunications", icon: "https://img.icons8.com/?size=100&id=NI8rBqtPXnVf&format=png&color=000000" },
+        { name: "Energy", icon: "https://img.icons8.com/?size=100&id=45259&format=png&color=000000" },
+        { name: "Real Estate", icon: "https://img.icons8.com/?size=100&id=49636&format=png&color=000000" },
+        { name: "Transportation", icon: "https://img.icons8.com/?size=100&id=52751&format=png&color=000000" },
+        { name: "Tourism", icon: "https://img.icons8.com/?size=100&id=102202&format=png&color=000000" },
+      ];
+
+      const container = document.getElementById("industryContainer");
+      const toggleBtn = document.getElementById("toggleIndustries");
+      let showingAll = false;
+
+      // Function to render industries (6 or all)
+      function renderIndustries(limit = 6) {
+        container.innerHTML = "";
+        const visible = industries.slice(0, limit);
+        visible.forEach((industry, i) => {
+          const div = document.createElement("div");
+          div.className = "col-6 col-md-4 col-lg-2 fade-in";
+          div.style.animationDelay = `${i * 0.1}s`;
+          div.innerHTML = `
+            <div class="industry-card card h-100 text-center" onclick="alert('You selected: ${industry.name}')">
+              <div class="card-body">
+                <img src="${industry.icon}" alt="${industry.name}">
+                <h6>${industry.name}</h6>
+              </div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      }
+
+      // Initial render
+      renderIndustries(6);
+
+      // Toggle functionality
+      toggleBtn.addEventListener("click", function () {
+        showingAll = !showingAll;
+        renderIndustries(showingAll ? industries.length : 6);
+        toggleBtn.textContent = showingAll ? "View Less" : "View More";
+      });
+    });
+  </script>
+</section>
+
+
+<!-- Browse By Section -->
+<section class="py-5 bg-light">
+  <div class="container">
+    <h2 class="text-center mb-4">Browse Jobs By</h2>
     
-    <div class="collapse mt-4" id="moreCategories">
-      <div class="row g-4">
-        <!-- Media -->
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Media')">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=98963&format=png" alt="Media" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Media</h6>
-            </div>
-          </div>
+    <ul class="nav nav-pills justify-content-center mb-4" id="browseTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab">Skills</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="location-tab" data-bs-toggle="pill" data-bs-target="#location" type="button" role="tab">Location</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="industry-tab" data-bs-toggle="pill" data-bs-target="#industry" type="button" role="tab">Industry</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="roles-tab" data-bs-toggle="pill" data-bs-target="#roles" type="button" role="tab">Roles</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="company-tab" data-bs-toggle="pill" data-bs-target="#company" type="button" role="tab">Company</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="functions-tab" data-bs-toggle="pill" data-bs-target="#functions" type="button" role="tab">Functions</button>
+      </li>
+    </ul>
+    
+    <div class="tab-content" id="browseTabContent">
+      <div class="tab-pane fade show active" id="skills" role="tabpanel">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <!-- Skills will be loaded here dynamically -->
+            <p class="text-muted">Loading skills...</p>
         </div>
-        
-        <!-- Telecommunications -->
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Telecommunications')">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=22447&format=png" alt="Telecommunications" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Telecommunications</h6>
-            </div>
-          </div>
+      </div>
+      
+      <div class="tab-pane fade" id="location" role="tabpanel">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+           <!-- Locations will be loaded here dynamically -->
+           <p class="text-muted">Loading locations...</p>
         </div>
-        
-        <!-- Energy -->
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Energy')">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=11900&format=png" alt="Energy" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Energy</h6>
-            </div>
-          </div>
+      </div>
+      
+      <div class="tab-pane fade" id="industry" role="tabpanel">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+           <!-- Industries will be loaded here dynamically -->
+           <p class="text-muted">Loading industries...</p>
         </div>
-        
-        <!-- Real Estate -->
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Real Estate')">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=59895&format=png" alt="Real Estate" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Real Estate</h6>
-            </div>
-          </div>
+      </div>
+
+      <div class="tab-pane fade" id="roles" role="tabpanel">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+           <!-- Roles will be loaded here dynamically -->
+           <p class="text-muted">Loading roles...</p>
         </div>
-        
-        <!-- Transportation -->
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Transportation')">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=13415&format=png" alt="Transportation" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Transportation</h6>
-            </div>
-          </div>
+      </div>
+      
+      <div class="tab-pane fade" id="company" role="tabpanel">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+           <!-- Companies will be loaded here dynamically -->
+           <p class="text-muted">Loading companies...</p>
         </div>
-        
-        <!-- Tourism -->
-        <div class="col-6 col-md-4 col-lg-2">
-          <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Tourism')">
-            <div class="card-body">
-              <img src="https://img.icons8.com/?size=100&id=123787&format=png" alt="Tourism" class="img-fluid mb-2" style="height: 50px;">
-              <h6 class="card-title">Tourism</h6>
-            </div>
-          </div>
+      </div>
+
+      <div class="tab-pane fade" id="functions" role="tabpanel">
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <!-- Functions are kept static as they are broad categories -->
+            <a href="javascript:void(0)" onclick="browseBy('function', 'Technology')" class="function-box btn btn-outline-secondary">Technology</a>
+            <a href="javascript:void(0)" onclick="browseBy('function', 'Sales')" class="function-box btn btn-outline-secondary">Sales</a>
+            <a href="javascript:void(0)" onclick="browseBy('function', 'Finance')" class="function-box btn btn-outline-secondary">Finance</a>
+            <a href="javascript:void(0)" onclick="browseBy('function', 'IT')" class="function-box btn btn-outline-secondary">IT</a>
+            <a href="javascript:void(0)" onclick="browseBy('function', 'Engineering')" class="function-box btn btn-outline-secondary">Engineering</a>
+            <a href="javascript:void(0)" onclick="browseBy('function', 'Marketing')" class="function-box btn btn-outline-secondary">Marketing</a>
+            <a href="javascript:void(0)" onclick="browseBy('function', 'Software Development')" class="function-box btn btn-outline-secondary">Software Development</a>
         </div>
       </div>
     </div>
   </div>
-  <style>
-    /* Popular Categories (pc) Section Styles */
-    .pc-category-box {
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border: 1px solid #e0e0e0;
-        border-radius: 10px;
-    }
-    
-    .pc-category-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        border-color: #0d6efd;
-    }
-    
-    .pc-category-box .card-body {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 1.5rem 1rem;
-    }
-
-    .pc-category-box .card-title {
-        margin-top: 0.5rem;
-        font-weight: 500;
-        font-size: 0.9rem;
-        color: #333;
-    }
-    
-    /* Animation for category boxes */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .pc-category-box {
-        animation: fadeInUp 0.5s ease forwards;
-        opacity: 0; /* Start hidden for animation */
-    }
-
-    /* Stagger the animation for a nice effect */
-    .row.g-4 > div:nth-child(1) .pc-category-box { animation-delay: 0.1s; }
-    .row.g-4 > div:nth-child(2) .pc-category-box { animation-delay: 0.15s; }
-    .row.g-4 > div:nth-child(3) .pc-category-box { animation-delay: 0.2s; }
-    .row.g-4 > div:nth-child(4) .pc-category-box { animation-delay: 0.25s; }
-    .row.g-4 > div:nth-child(5) .pc-category-box { animation-delay: 0.3s; }
-    .row.g-4 > div:nth-child(6) .pc-category-box { animation-delay: 0.35s; }
-
-  </style>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleButton = document.getElementById('toggleCategories');
-      const moreCategories = document.getElementById('moreCategories');
-      const viewMoreButton = document.getElementById('viewMoreButton');
-      
-      toggleButton.addEventListener('click', function() {
-        // Using Bootstrap's Collapse instance to toggle
-        const collapseInstance = new bootstrap.Collapse(moreCategories, {
-          toggle: false
-        });
-        collapseInstance.toggle();
-
-        // Hide the button after it's clicked
-        viewMoreButton.style.display = 'none';
-      });
-    });
-
-    // Function to redirect to the jobs page with the industry filter
-    function filterByIndustry(industry) {
-      // Store the selected industry in sessionStorage to be read by the next page
-      sessionStorage.setItem('selectedIndustry', industry);
-      
-      // Redirect to the jobs page
+    // This function redirects to the jobs page with the selected filter
+    function browseBy(type, value) {
+      sessionStorage.setItem('browseType', type);
+      sessionStorage.setItem('browseValue', value);
       window.location.href = 'jobs.html';
     }
+
+    // This script fetches data and populates the tabs
+    document.addEventListener('DOMContentLoaded', async function() {
+      try {
+        const response = await fetch('/api/jobs/browse-data');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        
+        // Helper function to create and append links
+        const populateTab = (containerSelector, items, type) => {
+          const container = document.querySelector(containerSelector);
+          if (!container || !items || items.length === 0) {
+            if(container) container.innerHTML = `<p class="text-muted">No data available.</p>`;
+            return;
+          }
+          
+          container.innerHTML = ''; // Clear loading message
+          items.forEach(item => {
+            const a = document.createElement('a');
+            a.href = 'javascript:void(0)';
+            a.className = `${type}-box btn btn-outline-secondary`;
+            a.textContent = item;
+            a.onclick = () => browseBy(type, item);
+            container.appendChild(a);
+          });
+        };
+        
+        // Populate all dynamic tabs
+        populateTab('#skills .d-flex', data.skills, 'skill');
+        populateTab('#location .d-flex', data.locations, 'location');
+        populateTab('#industry .d-flex', data.industries, 'industry');
+        populateTab('#roles .d-flex', data.roles, 'role');
+        populateTab('#company .d-flex', data.companies, 'company');
+
+      } catch (error) {
+        console.error('Could not load browse-by data:', error);
+        // If there's an error, show a message in all tabs
+        document.querySelectorAll('#browseTabContent .d-flex').forEach(el => {
+            if (!el.parentElement.id === 'functions') {
+                 el.innerHTML = '<p class="text-danger">Could not load data.</p>';
+            }
+        });
+      }
+    });
   </script>
 </section>
 
-  <!-- Browse By Section -->
-  <section class="py-5 bg-light">
-    <div class="container">
-      <h2 class="text-center mb-4">Browse Jobs By</h2>
-      
-      <ul class="nav nav-pills justify-content-center mb-4" id="browseTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="nav-link active" id="skills-tab" data-bs-toggle="pill" data-bs-target="#skills" type="button" role="tab">Skills</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="location-tab" data-bs-toggle="pill" data-bs-target="#location" type="button" role="tab">Location</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="industry-tab" data-bs-toggle="pill" data-bs-target="#industry" type="button" role="tab">Industry</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="functions-tab" data-bs-toggle="pill" data-bs-target="#functions" type="button" role="tab">Functions</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="roles-tab" data-bs-toggle="pill" data-bs-target="#roles" type="button" role="tab">Roles</button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="company-tab" data-bs-toggle="pill" data-bs-target="#company" type="button" role="tab">Company</button>
-        </li>
-      </ul>
-      
-      <div class="tab-content" id="browseTabContent">
-        <div class="tab-pane fade show active" id="skills" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="skill-box btn btn-outline-secondary">Python</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">SQL</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Sales</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Java</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">NodeJs</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">C++</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">MySQL</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">PHP</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Communication</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">JavaScript</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">AWS</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Git</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Negotiation</a>
-            <a href="#" class="skill-box btn btn-outline-secondary">Excel</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="location" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="location-box btn btn-outline-secondary">Bengaluru / Bangalore</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Hyderabad / Secunderabad</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Mumbai</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Pune</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Chennai</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Gurgaon / Gurugram</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Delhi</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Noida</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Ahmedabad</a>
-            <a href="#" class="location-box btn btn-outline-secondary">Kolkata</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="industry" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Hardware & Networking</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">IT/Computers - Software</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Banking/Accounting/Financial Services</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Hospitals/Healthcare/Diagnostics</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Banking</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Information Technology</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Insurance</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Software</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Entertainment/Media/Publishing</a>
-            <a href="#" class="industry-box btn btn-outline-secondary">Finance</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="functions" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="function-box btn btn-outline-secondary">Technology</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Sales</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Finance</a>
-            <a href="#" class="function-box btn btn-outline-secondary">IT</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Engineering</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Education</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Healthcare</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Business Support and Management</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Marketing</a>
-            <a href="#" class="function-box btn btn-outline-secondary">Software Development</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="roles" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="role-box btn btn-outline-secondary">Fresher</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Software Engineer/Programmer</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Team Leader/Technical Leader</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Software Developer</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Business Analyst</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Technical Support Executive</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Sales Executive</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Project Leader/Project Manager</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Accountant</a>
-            <a href="#" class="role-box btn btn-outline-secondary">Customer Service Executive (Voice)</a>
-          </div>
-        </div>
-        
-        <div class="tab-pane fade" id="company" role="tabpanel">
-          <div class="d-flex flex-wrap gap-2">
-            <a href="#" class="company-box btn btn-outline-secondary">Axis Bank</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Kotak Mahindra Bank Limited</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Accenture Services Pvt Ltd</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Infosys Limited</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Genpact</a>
-            <a href="#" class="company-box btn btn-outline-secondary">myGwork - LGBTQ+ Business Community</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Robotics Technologies</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Mount Talent Consulting</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Tata Capital</a>
-            <a href="#" class="company-box btn btn-outline-secondary">PwC India</a>
-            <a href="#" class="company-box btn btn-outline-secondary">RARR Technologies</a>
-            <a href="#" class="company-box btn btn-outline-secondary">WSP in India</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Capital Placement Services</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Cadila Pharmaceuticals Limited</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Turfng</a>
-            <a href="#" class="company-box btn btn-outline-secondary">EXL IT Service Management</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Mycityband</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Coders Brain</a>
-            <a href="#" class="company-box btn btn-outline-secondary">Global Act</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- Services Section -->
   <section class="py-5">
@@ -1620,176 +1529,11 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   
   <script>
-    // Google Authentication Popup Logic
     document.addEventListener('DOMContentLoaded', function() {
-      const uploadResumeLink = document.getElementById('uploadResumeLink');
-      const googleAuthPopup = document.getElementById('google-auth-popup');
-      const popupBackdrop = document.getElementById('popupBackdrop');
-      const popupCloseBtn = document.getElementById('popup-close-btn');
-      const continueAsButton = document.getElementById('continueAsButton');
-      const googleSignInButton = document.getElementById('googleSignInButton');
-      const profileIcon = document.getElementById('profile-icon');
-      const profileAvatar = document.getElementById('profile-avatar');
-      const profileMenu = document.getElementById('profile-menu');
-      const profileDropdown = document.querySelector('#profileDropdown');
-      
-      // Simulate user data (in a real app, this would come from authentication)
-      let userData = null;
-      
-      // Check if user is logged in (simulated with localStorage)
-      function checkUserStatus() {
-        const savedUser = localStorage.getItem('hitaishiUser');
-        if (savedUser) {
-          userData = JSON.parse(savedUser);
-          updateProfileUI();
-        }
-      }
-      
-      // Update profile UI based on user status
-      function updateProfileUI() {
-        if (userData) {
-          // User is logged in
-          profileIcon.classList.add('d-none');
-          profileAvatar.classList.remove('d-none');
-          profileAvatar.src = userData.avatar || 'https://randomuser.me/api/portraits/men/75.jpg';
-          profileAvatar.alt = userData.name;
-          
-          // Update profile menu
-          profileMenu.innerHTML = `
-            <li><a class="dropdown-item" href="profile.html"><i class="fas fa-user me-2"></i>My Profile</a></li>
-            <li><a class="dropdown-item" href="myjobs.html"><i class="fas fa-briefcase me-2"></i>My Jobs</a></li>
-            <li><a class="dropdown-item" href="settings.html"><i class="fas fa-cog me-2"></i>Settings</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-          `;
-          
-          // Add logout functionality
-          document.getElementById('logoutBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('hitaishiUser');
-            userData = null;
-            updateProfileUI();
-            window.location.reload();
-          });
-        } else {
-          // User is not logged in
-          profileIcon.classList.remove('d-none');
-          profileAvatar.classList.add('d-none');
-          
-          // Update profile menu
-          profileMenu.innerHTML = `
-            <li><a class="dropdown-item" href="#" id="showAuthPopup"><i class="fas fa-sign-in-alt me-2"></i>Sign In</a></li>
-            <li><a class="dropdown-item" href="employerlogin.html"><i class="fas fa-user-tie me-2"></i>Employer Login</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="help.html"><i class="fas fa-question-circle me-2"></i>Help Center</a></li>
-          `;
-          
-          // Add event listener for sign in option
-          document.getElementById('showAuthPopup').addEventListener('click', function(e) {
-            e.preventDefault();
-            showAuthPopup();
-          });
-        }
-      }
-      
-      // Show authentication popup
-      function showAuthPopup() {
-        googleAuthPopup.classList.add('show');
-        popupBackdrop.classList.add('show');
-        document.body.style.overflow = 'hidden';
-        
-        // If we have a previous user, show the "Continue as" button
-        const previousUser = localStorage.getItem('hitaishiPreviousUser');
-        if (previousUser) {
-          const prevUserData = JSON.parse(previousUser);
-          continueAsButton.classList.remove('d-none');
-          continueAsButton.innerHTML = `
-            <img src="${prevUserData.avatar}" alt="${prevUserData.name}" class="rounded-circle me-2" width="20" height="20">
-            Continue as ${prevUserData.name}
-          `;
-        } else {
-          continueAsButton.classList.add('d-none');
-        }
-      }
-      
-      // Hide authentication popup
-      function hideAuthPopup() {
-        googleAuthPopup.classList.remove('show');
-        popupBackdrop.classList.remove('show');
-        document.body.style.overflow = '';
-      }
-      
-      // Simulate Google authentication
-      function simulateGoogleAuth() {
-        // In a real app, this would be the Google OAuth flow
-        // For demo purposes, we'll simulate a successful login
-        
-        // Generate random user data
-        const randomUserId = Math.floor(Math.random() * 100) + 1;
-        const isMale = Math.random() > 0.5;
-        const userName = isMale ? 
-          ['Raj', 'Amit', 'Suresh', 'Vikram', 'Arjun'][Math.floor(Math.random() * 5)] :
-          ['Priya', 'Anjali', 'Neha', 'Sonia', 'Deepa'][Math.floor(Math.random() * 5)];
-        
-        userData = {
-          id: randomUserId,
-          name: userName + ' ' + ['Sharma', 'Patel', 'Verma', 'Singh', 'Kumar'][Math.floor(Math.random() * 5)],
-          email: userName.toLowerCase() + randomUserId + '@example.com',
-          avatar: `https://randomuser.me/api/portraits/${isMale ? 'men' : 'women'}/${randomUserId}.jpg`
-        };
-        
-        // Save user data
-        localStorage.setItem('hitaishiUser', JSON.stringify(userData));
-        localStorage.setItem('hitaishiPreviousUser', JSON.stringify(userData));
-        
-        // Update UI
-        updateProfileUI();
-        
-        // Hide popup
-        hideAuthPopup();
-        
-        // Show success message
-        alert(`Welcome back, ${userData.name}! You are now signed in.`);
-      }
-      
-      // Event Listeners
-      uploadResumeLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        showAuthPopup();
-      });
-      
-      popupCloseBtn.addEventListener('click', hideAuthPopup);
-      popupBackdrop.addEventListener('click', hideAuthPopup);
-      
-      googleSignInButton.addEventListener('click', simulateGoogleAuth);
-      
-      continueAsButton.addEventListener('click', function() {
-        const previousUser = localStorage.getItem('hitaishiPreviousUser');
-        if (previousUser) {
-          userData = JSON.parse(previousUser);
-          localStorage.setItem('hitaishiUser', previousUser);
-          updateProfileUI();
-          hideAuthPopup();
-          alert(`Welcome back, ${userData.name}!`);
-        }
-      });
-      
-      // Close popup when pressing Escape key
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-          hideAuthPopup();
-        }
-      });
-      
-      // Initialize user status
-      checkUserStatus();
-      
       // Job Search Form Logic
-      const jobSearchForm = document.getElementById('jobSearchForm');
       const countrySelect = document.getElementById('countrySelect');
       const locationSelect = document.getElementById('locationSelect');
       
-      // Location data based on country
       const locationData = {
         'India': ['Hyderabad', 'Bangalore', 'Mumbai', 'Delhi', 'Chennai', 'Pune', 'Kolkata'],
         'USA': ['New York', 'San Francisco', 'Chicago', 'Los Angeles', 'Seattle', 'Austin'],
@@ -1798,7 +1542,6 @@
         'Canada': ['Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa']
       };
       
-      // Update locations when country changes
       countrySelect.addEventListener('change', function() {
         const selectedCountry = this.value;
         
@@ -1816,76 +1559,6 @@
           locationSelect.disabled = true;
           locationSelect.innerHTML = '<option value="">Location</option>';
         }
-      });
-      
-      // Job Filtering Logic
-      const searchJobsButton = document.getElementById('search-jobs');
-      const jobCards = document.querySelectorAll('.job-card');
-      const placeholderMessage = document.getElementById('placeholder-message');
-      
-      searchJobsButton.addEventListener('click', function() {
-        const postedDate = document.getElementById('posted-date').value;
-        const employmentType = document.getElementById('employment-type').value;
-        const employerType = document.getElementById('employer-type').value;
-        const workSetting = document.getElementById('work-settings').value;
-        
-        let hasVisibleJobs = false;
-        
-        jobCards.forEach(card => {
-          const cardPostedDate = card.getAttribute('data-posted-date');
-          const cardEmploymentType = card.getAttribute('data-employment-type');
-          const cardEmployerType = card.getAttribute('data-employer-type');
-          const cardWorkSetting = card.getAttribute('data-work-setting');
-          
-          const matchesPostedDate = !postedDate || cardPostedDate === postedDate;
-          const matchesEmploymentType = !employmentType || cardEmploymentType === employmentType;
-          const matchesEmployerType = !employerType || cardEmployerType === employerType;
-          const matchesWorkSetting = !workSetting || cardWorkSetting === workSetting;
-          
-          if (matchesPostedDate && matchesEmploymentType && matchesEmployerType && matchesWorkSetting) {
-            card.style.display = 'block';
-            hasVisibleJobs = true;
-          } else {
-            card.style.display = 'none';
-          }
-        });
-        
-        // Show/hide placeholder message
-        if (hasVisibleJobs) {
-          placeholderMessage.style.display = 'none';
-        } else {
-          placeholderMessage.style.display = 'block';
-          placeholderMessage.textContent = 'No jobs match your current filters. Try adjusting your criteria.';
-        }
-      });
-      
-      // Initialize with some jobs visible
-      window.addEventListener('load', function() {
-        // Show first two job cards by default
-        if (jobCards.length >= 2) {
-          jobCards[0].style.display = 'block';
-          jobCards[1].style.display = 'block';
-          placeholderMessage.style.display = 'none';
-        }
-      });
-      
-      // Add animation to elements when they come into view
-      const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-      };
-      
-      const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in-up');
-          }
-        });
-      }, observerOptions);
-      
-      // Observe elements for animation
-      document.querySelectorAll('.service-card, .job-card, .stat-item').forEach(el => {
-        observer.observe(el);
       });
     });
   </script>

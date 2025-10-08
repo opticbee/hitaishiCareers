@@ -176,6 +176,46 @@ router.get("/active", async (_req, res) => {
   }
 });
 
+
+// NEW: Endpoint to get data for browse filters
+router.get("/browse-data", async (_req, res) => {
+  try {
+    // Get Skills
+    const skillsQuery = await query("SELECT required_skills FROM jobs WHERE status='active' AND JSON_VALID(required_skills) AND JSON_LENGTH(required_skills) > 0");
+    const allSkillsArrays = skillsQuery.map(row => row.required_skills);
+    const flatSkills = [].concat(...allSkillsArrays);
+    const uniqueSkills = [...new Set(flatSkills)].slice(0, 20); // Get top 20 unique skills
+
+    // Get Locations
+    const locationsQuery = await query("SELECT DISTINCT city FROM jobs WHERE status='active' AND city IS NOT NULL AND city != '' ORDER BY city ASC LIMIT 15");
+    const uniqueLocations = locationsQuery.map(row => row.city);
+
+    // Get Industries
+    const industriesQuery = await query("SELECT DISTINCT industry FROM jobs WHERE status='active' AND industry IS NOT NULL AND industry != '' ORDER BY industry ASC LIMIT 15");
+    const uniqueIndustries = industriesQuery.map(row => row.industry);
+    
+    // Get Roles (most common job titles)
+    const rolesQuery = await query("SELECT job_title, COUNT(*) as count FROM jobs WHERE status='active' AND job_title IS NOT NULL AND job_title != '' GROUP BY job_title ORDER BY count DESC LIMIT 15");
+    const uniqueRoles = rolesQuery.map(row => row.job_title);
+
+    // Get Companies (with the most active job postings)
+    const companiesQuery = await query("SELECT c.company_name, COUNT(j.id) as job_count FROM jobs j JOIN companies c ON j.company_id = c.id WHERE j.status='active' AND c.company_name IS NOT NULL AND c.company_name != '' GROUP BY c.company_name ORDER BY job_count DESC LIMIT 15");
+    const uniqueCompanies = companiesQuery.map(row => row.company_name);
+
+    res.json({
+      skills: uniqueSkills,
+      locations: uniqueLocations,
+      industries: uniqueIndustries,
+      roles: uniqueRoles,
+      companies: uniqueCompanies
+    });
+  } catch (err) {
+    console.error("Failed to fetch browse data:", err);
+    res.status(500).json({ error: "Failed to fetch browse data" });
+  }
+});
+
+
 // Get a single job by ID (for application page)
 router.get("/:id", async (req, res) => {
   try {

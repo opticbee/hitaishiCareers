@@ -134,6 +134,14 @@
             max-height: 200px;
             overflow-y: auto;
         }
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .filter-container, .job-listings-container {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -181,9 +189,6 @@
             </li>
             <li class="nav-item">
               <a class="nav-link" href="employers.html">Employers</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" id="uploadResumeLink">Upload Resume</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="tutu.html">Apply with AI</a>
@@ -239,384 +244,385 @@
     </script>
   </header>
     
-
-<!-- Beautiful Compact Hero Section -->
-<section class="hero-section d-flex justify-content-center align-items-center">
-  <div class="hero-card d-flex align-items-center justify-content-between px-4 py-2">
-    <div class="hero-icon d-flex align-items-center justify-content-center me-3"><i class="bi bi-whatsapp"></i></div>
-    <div class="hero-text flex-grow-1 text-truncate">
-      <span class="fw-bold text-dark">🚀 Join Our WhatsApp Group</span> – 
-      <span class="text-secondary">Stay updated with latest</span> 
-      <span class="text-success fw-semibold">job opportunities</span>
+<main class="container" style="padding-top: 80px;">
+    <!-- Search bar -->
+    <div class="search-bar mb-4">
+        <div class="row g-2">
+            <div class="col-md-5">
+                <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Job title, skills, or company">
+            </div>
+            <div class="col-md-5">
+                <input type="text" id="locationInput" class="form-control form-control-lg" placeholder="City, state, or country">
+            </div>
+            <div class="col-md-2">
+                <button id="searchButton" class="btn btn-light btn-lg w-100">
+                    <i class="fas fa-search me-2"></i>Search
+                </button>
+            </div>
+        </div>
     </div>
-    <a href="https://chat.whatsapp.com/FIYrARNv98W1zY0Yrgt4yD?mode=ems_copy_t" target="_blank" class="btn hero-btn px-3 d-flex align-items-center gap-1">
-      <i class="bi bi-arrow-right-circle-fill"></i> Join
-    </a>
-  </div>
-  <style>
-    .hero-section { background: linear-gradient(90deg, #f0f9ff, #e6fffa); padding: 0.7rem 0; font-family: 'Poppins', sans-serif; }
-    .hero-card { background: #fff; border-radius: 50px; box-shadow: 0 6px 16px rgba(0,0,0,0.08); display: flex; align-items: center; gap: 1rem; width: 85%; max-width: 1000px; }
-    .hero-icon { background: #25D366; color: #fff; font-size: 1.5rem; width: 40px; height: 40px; border-radius: 50%; }
-    .hero-text { font-size: 0.95rem; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .hero-btn { background: #25D366; color: #fff; font-weight: 600; border-radius: 25px; transition: all 0.3s ease; }
-    .hero-btn:hover { background: #1ebe5a; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4); transform: translateY(-2px); }
-  </style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-</section>
 
+    <!-- Main Container -->
+    <div class="main-container">
 
-    <main class="container" style="margin-top: 20px;">
-        <!-- Search bar -->
-        <div class="search-bar mb-4">
-            <div class="row g-2">
-                <div class="col-md-5">
-                    <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Job title, skills, or company">
-                </div>
-                <div class="col-md-5">
-                    <input type="text" id="locationInput" class="form-control form-control-lg" placeholder="City, state, or country">
-                </div>
-                <div class="col-md-2">
-                    <button id="searchButton" class="btn btn-light btn-lg w-100">
-                        <i class="fas fa-search me-2"></i>Search
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Container -->
-        <div class="main-container">
-
-            <!-- Left Side: Filters -->
-            <div class="filter-container">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0 fs-5 fw-bold">Filters</h4>
-                    <button class="btn btn-sm btn-outline-secondary" id="resetFilters">Reset</button>
-                </div>
-
-                <div class="filter-section">
-                    <h5>Posted Date</h5>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="any-date" value="any-date" checked><label class="form-check-label" for="any-date">Any Date</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="today" value="today"><label class="form-check-label" for="today">Today</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="last-3-days" value="last-3-days"><label class="form-check-label" for="last-3-days">Last 3 Days</label></div>
-                    <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="last-7-days" value="last-7-days"><label class="form-check-label" for="last-7-days">Last 7 Days</label></div>
-                </div>
-
-                <div class="filter-section">
-                    <h5>Employment Type</h5>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="full-time" value="Full-time"><label class="form-check-label" for="full-time">Full-time</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="part-time" value="Part-time"><label class="form-check-label" for="part-time">Part-time</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="contract" value="Contract"><label class="form-check-label" for="contract">Contract</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="internship" value="Internship"><label class="form-check-label" for="internship">Internship</label></div>
-                </div>
-
-                <div class="filter-section">
-                    <h5>Work Setting</h5>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="in-office" value="In-office"><label class="form-check-label" for="in-office">In-office</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="hybrid" value="Hybrid"><label class="form-check-label" for="hybrid">Hybrid</label></div>
-                    <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="remote" value="Remote"><label class="form-check-label" for="remote">Remote</label></div>
-                </div>
-                
-                <div class="filter-section">
-                    <h5>Industry</h5>
-                    <div id="industry-filter-options">
-                        <!-- Industry checkboxes will be dynamically inserted here -->
-                    </div>
-                </div>
+        <!-- Left Side: Filters -->
+        <div class="filter-container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="mb-0 fs-5 fw-bold">Filters</h4>
+                <button class="btn btn-sm btn-outline-secondary" id="resetFilters">Reset</button>
             </div>
 
-            <!-- Right Side: Job Listings -->
-            <div class="job-listings-container">
-                <div id="job-list-container">
-                    <!-- Job cards will be dynamically inserted here -->
-                </div>
-                <div id="no-jobs-message" style="display: none;">
-                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
-                    <h4 class="fw-bold">No Jobs Found</h4>
-                    <p class="text-muted">Try adjusting your search or filter criteria.</p>
-                </div>
+            <div class="filter-section">
+                <h5>Posted Date</h5>
+                <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="any-date" value="any-date" checked><label class="form-check-label" for="any-date">Any Date</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="today" value="today"><label class="form-check-label" for="today">Today</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="last-3-days" value="last-3-days"><label class="form-check-label" for="last-3-days">Last 3 Days</label></div>
+                <div class="form-check"><input class="form-check-input" type="radio" name="posted-date" id="last-7-days" value="last-7-days"><label class="form-check-label" for="last-7-days">Last 7 Days</label></div>
             </div>
-        </div>
-    </main>
 
-    <!-- JavaScript -->
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            let allJobs = [];
-            const jobListContainer = document.getElementById("job-list-container");
-            const noJobsMessage = document.getElementById("no-jobs-message");
-            const searchInput = document.getElementById('searchInput');
-            const locationInput = document.getElementById('locationInput');
-            const searchButton = document.getElementById('searchButton');
-            const resetFiltersButton = document.getElementById('resetFilters');
-            const industryFilterContainer = document.getElementById('industry-filter-options');
+            <div class="filter-section">
+                <h5>Employment Type</h5>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="full-time" value="Full-time"><label class="form-check-label" for="full-time">Full-time</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="part-time" value="Part-time"><label class="form-check-label" for="part-time">Part-time</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="contract" value="Contract"><label class="form-check-label" for="contract">Contract</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="employment-type" id="internship" value="Internship"><label class="form-check-label" for="internship">Internship</label></div>
+            </div>
 
-            // --- Read search parameters from URL ---
-            const urlParams = new URLSearchParams(window.location.search);
-            searchInput.value = urlParams.get('q') || '';
-            locationInput.value = urlParams.get('location') || '';
-
-            // --- Helper Functions ---
-            const timeAgo = (dateString) => {
-                if (!dateString) return '';
-                const date = new Date(dateString);
-                const seconds = Math.floor((new Date() - date) / 1000);
-                let interval = seconds / 31536000; if (interval > 1) return Math.floor(interval) + " years ago";
-                interval = seconds / 2592000; if (interval > 1) return Math.floor(interval) + " months ago";
-                interval = seconds / 86400; if (interval > 1) return Math.floor(interval) + " days ago";
-                interval = seconds / 3600; if (interval > 1) return Math.floor(interval) + " hours ago";
-                interval = seconds / 60; if (interval > 1) return Math.floor(interval) + " minutes ago";
-                return "Just now";
-            };
-
-            const formatSalary = (job) => {
-                if (job.salary_min && job.salary_max) {
-                    return `${job.salary_currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} ${job.salary_period}`;
-                }
-                return 'Not Disclosed';
-            };
-
-            const renderSkills = (skills) => {
-                try {
-                    const skillArray = typeof skills === 'string' ? JSON.parse(skills) : skills;
-                    if (!Array.isArray(skillArray) || skillArray.length === 0) return '';
-                    return skillArray.slice(0, 5).map(skill => `<span class="badge rounded-pill bg-primary bg-opacity-10 text-primary skill-badge me-1">${skill}</span>`).join('');
-                } catch (e) { return ''; }
-            };
+            <div class="filter-section">
+                <h5>Work Setting</h5>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="in-office" value="In-office"><label class="form-check-label" for="in-office">In-office</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="hybrid" value="Hybrid"><label class="form-check-label" for="hybrid">Hybrid</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="work-setting" id="remote" value="Remote"><label class="form-check-label" for="remote">Remote</label></div>
+            </div>
             
-            // --- Core Functions ---
-            const fetchJobs = async () => {
-                try {
-                    jobListContainer.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Loading jobs...</p></div>`;
-                    const response = await fetch('/api/jobs/active');
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    const data = await response.json();
-                    allJobs = data.jobs || [];
-                    
-                    populateIndustryFilter();
+            <div class="filter-section">
+                <h5>Industry</h5>
+                <div id="industry-filter-options">
+                    <!-- Industry checkboxes will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
 
-                    // <!-- MODIFICATION START -->
-                    // Check for a selected industry from another page
-                    const selectedIndustry = sessionStorage.getItem('selectedIndustry');
-                    if (selectedIndustry) {
-                        const industryCheckbox = document.querySelector(`input[name="industry"][value="${selectedIndustry}"]`);
+        <!-- Right Side: Job Listings -->
+        <div class="job-listings-container">
+            <div id="job-list-container">
+                <!-- Job cards will be dynamically inserted here -->
+            </div>
+            <div id="no-jobs-message" style="display: none;">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="fw-bold">No Jobs Found</h4>
+                <p class="text-muted">Try adjusting your search or filter criteria.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let allJobs = [];
+        const jobListContainer = document.getElementById("job-list-container");
+        const noJobsMessage = document.getElementById("no-jobs-message");
+        const searchInput = document.getElementById('searchInput');
+        const locationInput = document.getElementById('locationInput');
+        const searchButton = document.getElementById('searchButton');
+        const resetFiltersButton = document.getElementById('resetFilters');
+        const industryFilterContainer = document.getElementById('industry-filter-options');
+
+        // --- Read search parameters from URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        searchInput.value = urlParams.get('q') || '';
+        locationInput.value = urlParams.get('location') || '';
+
+        // --- Helper Functions ---
+        const timeAgo = (dateString) => {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const seconds = Math.floor((new Date() - date) / 1000);
+            let interval = seconds / 31536000; if (interval > 1) return Math.floor(interval) + " years ago";
+            interval = seconds / 2592000; if (interval > 1) return Math.floor(interval) + " months ago";
+            interval = seconds / 86400; if (interval > 1) return Math.floor(interval) + " days ago";
+            interval = seconds / 3600; if (interval > 1) return Math.floor(interval) + " hours ago";
+            interval = seconds / 60; if (interval > 1) return Math.floor(interval) + " minutes ago";
+            return "Just now";
+        };
+
+        const formatSalary = (job) => {
+            if (job.salary_min && job.salary_max) {
+                return `${job.salary_currency} ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()} ${job.salary_period}`;
+            }
+            return 'Not Disclosed';
+        };
+
+        const renderSkills = (skills) => {
+            try {
+                const skillArray = typeof skills === 'string' ? JSON.parse(skills) : skills;
+                if (!Array.isArray(skillArray) || skillArray.length === 0) return '';
+                return skillArray.slice(0, 5).map(skill => `<span class="badge rounded-pill bg-primary bg-opacity-10 text-primary skill-badge me-1">${skill}</span>`).join('');
+            } catch (e) { return ''; }
+        };
+        
+        // --- Core Functions ---
+        const fetchJobs = async () => {
+            try {
+                jobListContainer.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary"></div><p class="mt-2">Loading jobs...</p></div>`;
+                const response = await fetch('/api/jobs/active');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                allJobs = data.jobs || [];
+                
+                populateIndustryFilter();
+                
+                handleIncomingFilters();
+
+                applyFilters();
+
+            } catch (error) {
+                console.error("Failed to fetch jobs:", error);
+                jobListContainer.innerHTML = `<div class="alert alert-danger">Failed to load jobs. Please try again later.</div>`;
+            }
+        };
+
+        const populateIndustryFilter = () => {
+            const industries = [...new Set(allJobs.map(job => job.industry).filter(Boolean))].sort();
+            industryFilterContainer.innerHTML = '';
+            industries.forEach(industry => {
+                const div = document.createElement('div');
+                div.className = 'form-check';
+                div.innerHTML = `
+                    <input class="form-check-input" type="checkbox" name="industry" value="${industry}" id="industry-${industry.replace(/\s+/g, '-')}">
+                    <label class="form-check-label" for="industry-${industry.replace(/\s+/g, '-')}">${industry}</label>
+                `;
+                industryFilterContainer.appendChild(div);
+            });
+        };
+
+        const handleIncomingFilters = () => {
+            // Check for filter from "Popular Industries"
+            const industryFromHome = sessionStorage.getItem('selectedIndustry');
+            if (industryFromHome) {
+                const industryCheckbox = document.querySelector(`input[name="industry"][value="${industryFromHome}"]`);
+                if (industryCheckbox) {
+                    industryCheckbox.checked = true;
+                }
+                sessionStorage.removeItem('selectedIndustry');
+                return; // Prioritize this filter
+            }
+            
+            // Check for filters from "Browse By" section
+            const browseType = sessionStorage.getItem('browseType');
+            const browseValue = sessionStorage.getItem('browseValue');
+            if (browseType && browseValue) {
+                switch(browseType) {
+                    case 'industry':
+                        const industryCheckbox = document.querySelector(`input[name="industry"][value="${browseValue}"]`);
                         if (industryCheckbox) {
                             industryCheckbox.checked = true;
-                            applyFilters(); 
                         }
-                        // Clear the item so it doesn't persist on refresh or back navigation
-                        sessionStorage.removeItem('selectedIndustry');
-                    }
-                    // <!-- MODIFICATION END -->
-
-                    applyFilters();
-
-                } catch (error) {
-                    console.error("Failed to fetch jobs:", error);
-                    jobListContainer.innerHTML = `<div class="alert alert-danger">Failed to load jobs. Please try again later.</div>`;
+                        break;
+                    case 'location':
+                        locationInput.value = browseValue;
+                        break;
+                    case 'skill':
+                    case 'company':
+                    case 'role':
+                    case 'function':
+                        searchInput.value = browseValue;
+                        break;
                 }
-            };
+                sessionStorage.removeItem('browseType');
+                sessionStorage.removeItem('browseValue');
+            }
+        };
 
-            const populateIndustryFilter = () => {
-                const industries = [...new Set(allJobs.map(job => job.industry).filter(Boolean))].sort();
-                industryFilterContainer.innerHTML = '';
-                industries.forEach(industry => {
-                    const div = document.createElement('div');
-                    div.className = 'form-check';
-                    div.innerHTML = `
-                        <input class="form-check-input" type="checkbox" name="industry" value="${industry}" id="industry-${industry.replace(/\s+/g, '-')}">
-                        <label class="form-check-label" for="industry-${industry.replace(/\s+/g, '-')}">${industry}</label>
+        const renderJobs = (jobs) => {
+            jobListContainer.innerHTML = '';
+            if (jobs.length === 0) {
+                noJobsMessage.style.display = 'block';
+            } else {
+                noJobsMessage.style.display = 'none';
+                jobs.forEach(job => {
+                    const jobCard = document.createElement('div');
+                    jobCard.className = 'job-card';
+                    jobCard.innerHTML = `
+                        <div class="row">
+                            <div class="col-auto">
+                                <img src="${job.logo_url || 'https://placehold.co/60x60/EFEFEF/AAAAAA&text=Logo'}" alt="${job.company_name} Logo" class="company-logo">
+                            </div>
+                            <div class="col">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="job-title mb-1">${job.job_title}</h5>
+                                        <p class="company-name mb-1">${job.company_name}</p>
+                                        <p class="job-location small"><i class="fas fa-map-marker-alt me-1"></i>${job.city || 'N/A'}, ${job.country || ''}</p>
+                                    </div>
+                                    <div class="text-end">
+                                        <p class="job-salary mb-1">${formatSalary(job)}</p>
+                                        <p class="post-time mb-0">${timeAgo(job.created_at)}</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 my-2 job-details-pills">
+                                    <span class="badge rounded-pill"><i class="fas fa-briefcase me-1"></i>${job.job_type || 'N/A'}</span>
+                                    <span class="badge rounded-pill"><i class="fas fa-laptop me-1"></i>${job.work_location || 'N/A'}</span>
+                                    ${job.required_experience ? `<span class="badge rounded-pill"><i class="fas fa-chart-line me-1"></i>${job.required_experience}</span>` : ''}
+                                </div>
+                                <div class="mt-2">${renderSkills(job.required_skills)}</div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3 border-top pt-3">
+                            <a href="jobApplication.html?jobId=${job.id}" class="btn btn-primary apply-now-btn" data-job-id="${job.id}">Apply Now</a>
+                        </div>
                     `;
-                    industryFilterContainer.appendChild(div);
+                    jobListContainer.appendChild(jobCard);
                 });
-            };
+            }
+        };
+        
+        const applyFilters = () => {
+            let filteredJobs = [...allJobs];
+            const searchTerm = searchInput.value.toLowerCase();
+            const locationTerm = locationInput.value.toLowerCase();
 
-            const renderJobs = (jobs) => {
-                jobListContainer.innerHTML = '';
-                if (jobs.length === 0) {
-                    noJobsMessage.style.display = 'block';
-                } else {
-                    noJobsMessage.style.display = 'none';
-                    jobs.forEach(job => {
-                        const jobCard = document.createElement('div');
-                        jobCard.className = 'job-card';
-                        jobCard.innerHTML = `
-                            <div class="row">
-                                <div class="col-auto">
-                                    <img src="${job.logo_url || 'https://placehold.co/60x60/EFEFEF/AAAAAA&text=Logo'}" alt="${job.company_name} Logo" class="company-logo">
-                                </div>
-                                <div class="col">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h5 class="job-title mb-1">${job.job_title}</h5>
-                                            <p class="company-name mb-1">${job.company_name}</p>
-                                            <p class="job-location small"><i class="fas fa-map-marker-alt me-1"></i>${job.city || 'N/A'}, ${job.country || ''}</p>
-                                        </div>
-                                        <div class="text-end">
-                                            <p class="job-salary mb-1">${formatSalary(job)}</p>
-                                            <p class="post-time mb-0">${timeAgo(job.created_at)}</p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex gap-2 my-2 job-details-pills">
-                                        <span class="badge rounded-pill"><i class="fas fa-briefcase me-1"></i>${job.job_type || 'N/A'}</span>
-                                        <span class="badge rounded-pill"><i class="fas fa-laptop me-1"></i>${job.work_location || 'N/A'}</span>
-                                        ${job.required_experience ? `<span class="badge rounded-pill"><i class="fas fa-chart-line me-1"></i>${job.required_experience}</span>` : ''}
-                                    </div>
-                                    <div class="mt-2">${renderSkills(job.required_skills)}</div>
-                                </div>
-                            </div>
-                            <div class="d-flex justify-content-end mt-3 border-top pt-3">
-                                <a href="jobApplication.html?jobId=${job.id}" class="btn btn-primary apply-now-btn" data-job-id="${job.id}">Apply Now</a>
-                            </div>
-                        `;
-                        jobListContainer.appendChild(jobCard);
-                    });
-                }
-            };
+            if (searchTerm) {
+                filteredJobs = filteredJobs.filter(job => 
+                    job.job_title.toLowerCase().includes(searchTerm) ||
+                    job.company_name.toLowerCase().includes(searchTerm) ||
+                    (job.required_skills && JSON.stringify(job.required_skills).toLowerCase().includes(searchTerm))
+                );
+            }
+            if (locationTerm) {
+                filteredJobs = filteredJobs.filter(job =>
+                    (job.city && job.city.toLowerCase().includes(locationTerm)) ||
+                    (job.state && job.state.toLowerCase().includes(locationTerm)) ||
+                    (job.country && job.country.toLowerCase().includes(locationTerm))
+                );
+            }
             
-            const applyFilters = () => {
-                let filteredJobs = [...allJobs];
-                const searchTerm = searchInput.value.toLowerCase();
-                const locationTerm = locationInput.value.toLowerCase();
+            const postedDateFilter = document.querySelector('input[name="posted-date"]:checked').value;
+            if (postedDateFilter !== 'any-date') {
+                const now = new Date();
+                let days;
+                if (postedDateFilter === 'today') days = 1;
+                if (postedDateFilter === 'last-3-days') days = 3;
+                if (postedDateFilter === 'last-7-days') days = 7;
+                const cutoffDate = new Date().setDate(new Date().getDate() - days);
+                filteredJobs = filteredJobs.filter(job => new Date(job.created_at) >= cutoffDate);
+            }
+            
+            const selectedEmpTypes = [...document.querySelectorAll('input[name="employment-type"]:checked')].map(cb => cb.value);
+            if (selectedEmpTypes.length > 0) {
+                filteredJobs = filteredJobs.filter(job => selectedEmpTypes.includes(job.job_type));
+            }
 
-                if (searchTerm) {
-                    filteredJobs = filteredJobs.filter(job => 
-                        job.job_title.toLowerCase().includes(searchTerm) ||
-                        job.company_name.toLowerCase().includes(searchTerm) ||
-                        (job.required_skills && JSON.stringify(job.required_skills).toLowerCase().includes(searchTerm))
-                    );
-                }
-                if (locationTerm) {
-                    filteredJobs = filteredJobs.filter(job =>
-                        (job.city && job.city.toLowerCase().includes(locationTerm)) ||
-                        (job.state && job.state.toLowerCase().includes(locationTerm)) ||
-                        (job.country && job.country.toLowerCase().includes(locationTerm))
-                    );
-                }
-                
-                const postedDateFilter = document.querySelector('input[name="posted-date"]:checked').value;
-                if (postedDateFilter !== 'any-date') {
-                    const now = new Date();
-                    let days;
-                    if (postedDateFilter === 'today') days = 1;
-                    if (postedDateFilter === 'last-3-days') days = 3;
-                    if (postedDateFilter === 'last-7-days') days = 7;
-                    const cutoffDate = new Date().setDate(new Date().getDate() - days);
-                    filteredJobs = filteredJobs.filter(job => new Date(job.created_at) >= cutoffDate);
-                }
-                
-                const selectedEmpTypes = [...document.querySelectorAll('input[name="employment-type"]:checked')].map(cb => cb.value);
-                if (selectedEmpTypes.length > 0) {
-                    filteredJobs = filteredJobs.filter(job => selectedEmpTypes.includes(job.job_type));
-                }
+            const selectedWorkSettings = [...document.querySelectorAll('input[name="work-setting"]:checked')].map(cb => cb.value);
+            if (selectedWorkSettings.length > 0) {
+                filteredJobs = filteredJobs.filter(job => selectedWorkSettings.includes(job.work_location));
+            }
+            
+            const selectedIndustries = [...document.querySelectorAll('input[name="industry"]:checked')].map(cb => cb.value);
+            if (selectedIndustries.length > 0) {
+                filteredJobs = filteredJobs.filter(job => selectedIndustries.includes(job.industry));
+            }
+            
+            renderJobs(filteredJobs);
+        };
 
-                const selectedWorkSettings = [...document.querySelectorAll('input[name="work-setting"]:checked')].map(cb => cb.value);
-                if (selectedWorkSettings.length > 0) {
-                    filteredJobs = filteredJobs.filter(job => selectedWorkSettings.includes(job.work_location));
+        const resetFilters = () => {
+            document.getElementById('any-date').checked = true;
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            searchInput.value = '';
+            locationInput.value = '';
+            applyFilters();
+        };
+
+        // --- Event Listeners ---
+        jobListContainer.addEventListener('click', (e) => {
+            const applyButton = e.target.closest('.apply-now-btn');
+            if (applyButton) {
+                e.preventDefault();
+                if (sessionStorage.getItem('email')) {
+                    window.location.href = applyButton.href;
+                } else {
+                    alert('Please login to apply for this job.');
+                    window.location.href = 'login.html';
                 }
-                
-                const selectedIndustries = [...document.querySelectorAll('input[name="industry"]:checked')].map(cb => cb.value);
-                if (selectedIndustries.length > 0) {
-                    filteredJobs = filteredJobs.filter(job => selectedIndustries.includes(job.industry));
-                }
-                
-                renderJobs(filteredJobs);
-            };
-
-            const resetFilters = () => {
-                document.getElementById('any-date').checked = true;
-                document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-                searchInput.value = '';
-                locationInput.value = '';
-                applyFilters();
-            };
-
-            // --- Event Listeners ---
-            jobListContainer.addEventListener('click', (e) => {
-                const applyButton = e.target.closest('.apply-now-btn');
-                if (applyButton) {
-                    e.preventDefault();
-                    if (sessionStorage.getItem('email')) {
-                        window.location.href = applyButton.href;
-                    } else {
-                        alert('Please login to apply for this job.');
-                        window.location.href = 'login.html';
-                    }
-                }
-            });
-
-            document.querySelectorAll('input[name="posted-date"], input[name="employment-type"], input[name="work-setting"]').forEach(el => {
-                el.addEventListener('change', applyFilters);
-            });
-            industryFilterContainer.addEventListener('change', (e) => {
-                if(e.target.name === 'industry') applyFilters();
-            });
-
-            searchButton.addEventListener('click', applyFilters);
-            searchInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') applyFilters(); });
-            locationInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') applyFilters(); });
-            resetFiltersButton.addEventListener('click', resetFilters);
-
-            fetchJobs();
+            }
         });
-    </script>
 
-    <!-- Footer -->
-     <footer class="text-white py-5" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d);">
-        <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-4 col-md-6">
-            <div class="mb-4">
-                <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
-                <span class="fw-bold fs-4">Hitaishi Careers</span>
-            </div>
-            <p class="mb-4">Connecting talented professionals with their dream jobs since 2022. Our mission is to make job searching efficient and effective for everyone.</p>
-            <div class="d-flex gap-3">
-                <a href="#" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
-                <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
-                <a href="#" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
-                <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
-            </div>
-            </div>
-            <div class="col-lg-2 col-md-6">
-            <h5 class="mb-4">Quick Links</h5>
-            <ul class="list-unstyled">
-                <li class="mb-2"><a href="index.html" class="text-white-50">Home</a></li>
-                <li class="mb-2"><a href="jobs.html" class="text-white-50">Browse Jobs</a></li>
-                <li class="mb-2"><a href="employer.html" class="text-white-50">For Employers</a></li>
-                <li class="mb-2"><a href="about.html" class="text-white-50">About Us</a></li>
-                <li class="mb-2"><a href="contact.html" class="text-white-50">Contact</a></li>
-            </ul>
-            </div>
-            <div class="col-lg-3 col-md-6">
-            <h5 class="mb-4">Job Seeker Resources</h5>
-            <ul class="list-unstyled">
-                <li class="mb-2"><a href="resumebuild.html" class="text-white-50">Resume Builder</a></li>
-                <li class="mb-2"><a href="preparation.html" class="text-white-50">Interview Tips</a></li>
-                <li class="mb-2"><a href="careerbooster.html" class="text-white-50">Career Advice</a></li>
-                <li class="mb-2"><a href="featuredprofile.html" class="text-white-50">Featured Profile</a></li>
-                <li class="mb-2"><a href="tutu.html" class="text-white-50">Apply with AI</a></li>
-            </ul>
-            </div>
-            <div class="col-lg-3 col-md-6">
-            <h5 class="mb-4">Contact Us</h5>
-            <ul class="list-unstyled">
-                <li class="mb-3 d-flex align-items-start"><i class="fas fa-map-marker-alt me-3 mt-1"></i><span class="text-white-50">985 pragathi nagar, Pragathi Nagar, Hyderabad, TS 500090</span></li>
-                <li class="mb-3 d-flex align-items-center"><i class="fas fa-phone me-3"></i><span><a href="tel:+919908793602" class="text-white-50">+91 99087 93602</a>, <a href="tel:+918790170525" class="text-white-50">+91 87901 70525</a></span></li>
-                <li class="mb-3 d-flex align-items-center"><i class="fas fa-envelope me-3"></i><a href="mailto:info@hitashicareers.com" class="text-white-50">info@hitashicareers.com</a></li>
-            </ul>
-            </div>
+        document.querySelectorAll('input[name="posted-date"], input[name="employment-type"], input[name="work-setting"]').forEach(el => {
+            el.addEventListener('change', applyFilters);
+        });
+        industryFilterContainer.addEventListener('change', (e) => {
+            if(e.target.name === 'industry') applyFilters();
+        });
+
+        searchButton.addEventListener('click', applyFilters);
+        searchInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') applyFilters(); });
+        locationInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') applyFilters(); });
+        resetFiltersButton.addEventListener('click', resetFilters);
+
+        fetchJobs();
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Footer -->
+ <footer class="text-white py-5" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d);">
+    <div class="container">
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+        <div class="mb-4">
+            <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
+            <span class="fw-bold fs-4">Hitaishi Careers</span>
         </div>
-        <hr class="my-5">
-        <div class="row align-items-center">
-            <div class="col-md-6 text-center text-md-start"><p class="mb-0">&copy; 2025 Hitaishi Careers. All rights reserved.</p></div>
-            <div class="col-md-6 text-center text-md-end">
-                <a href="PrivacyPolicy.html" class="text-white-50 me-3">Privacy Policy</a>
-                <a href="Terms-Conditions.html" class="text-white-50 me-3">Terms of Service</a>
-                <a href="cookiesPolicy.html" class="text-white-50">Cookie Policy</a>
-            </div>
+        <p class="mb-4">Connecting talented professionals with their dream jobs since 2022. Our mission is to make job searching efficient and effective for everyone.</p>
+        <div class="d-flex gap-3">
+            <a href="#" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+            <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
+            <a href="#" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
+            <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
         </div>
         </div>
-    </footer>
+        <div class="col-lg-2 col-md-6">
+        <h5 class="mb-4">Quick Links</h5>
+        <ul class="list-unstyled">
+            <li class="mb-2"><a href="index.html" class="text-white-50">Home</a></li>
+            <li class="mb-2"><a href="jobs.html" class="text-white-50">Browse Jobs</a></li>
+            <li class="mb-2"><a href="employer.html" class="text-white-50">For Employers</a></li>
+            <li class="mb-2"><a href="about.html" class="text-white-50">About Us</a></li>
+            <li class="mb-2"><a href="contact.html" class="text-white-50">Contact</a></li>
+        </ul>
+        </div>
+        <div class="col-lg-3 col-md-6">
+        <h5 class="mb-4">Job Seeker Resources</h5>
+        <ul class="list-unstyled">
+            <li class="mb-2"><a href="resumebuild.html" class="text-white-50">Resume Builder</a></li>
+            <li class="mb-2"><a href="preparation.html" class="text-white-50">Interview Tips</a></li>
+            <li class="mb-2"><a href="careerbooster.html" class="text-white-50">Career Advice</a></li>
+            <li class="mb-2"><a href="featuredprofile.html" class="text-white-50">Featured Profile</a></li>
+            <li class="mb-2"><a href="tutu.html" class="text-white-50">Apply with AI</a></li>
+        </ul>
+        </div>
+        <div class="col-lg-3 col-md-6">
+        <h5 class="mb-4">Contact Us</h5>
+        <ul class="list-unstyled">
+            <li class="mb-3 d-flex align-items-start"><i class="fas fa-map-marker-alt me-3 mt-1"></i><span class="text-white-50">985 pragathi nagar, Pragathi Nagar, Hyderabad, TS 500090</span></li>
+            <li class="mb-3 d-flex align-items-center"><i class="fas fa-phone me-3"></i><span><a href="tel:+919908793602" class="text-white-50">+91 99087 93602</a>, <a href="tel:+918790170525" class="text-white-50">+91 87901 70525</a></span></li>
+            <li class="mb-3 d-flex align-items-center"><i class="fas fa-envelope me-3"></i><a href="mailto:info@hitashicareers.com" class="text-white-50">info@hitashicareers.com</a></li>
+        </ul>
+        </div>
+    </div>
+    <hr class="my-5">
+    <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start"><p class="mb-0">&copy; 2025 Hitaishi Careers. All rights reserved.</p></div>
+        <div class="col-md-6 text-center text-md-end">
+            <a href="PrivacyPolicy.html" class="text-white-50 me-3">Privacy Policy</a>
+            <a href="Terms-Conditions.html" class="text-white-50 me-3">Terms of Service</a>
+            <a href="cookiesPolicy.html" class="text-white-50">Cookie Policy</a>
+        </div>
+    </div>
+    </div>
+</footer>
     
 </body>
 </html>
