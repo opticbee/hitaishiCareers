@@ -391,8 +391,25 @@
                     if (!response.ok) throw new Error('Network response was not ok');
                     const data = await response.json();
                     allJobs = data.jobs || [];
+                    
                     populateIndustryFilter();
+
+                    // <!-- MODIFICATION START -->
+                    // Check for a selected industry from another page
+                    const selectedIndustry = sessionStorage.getItem('selectedIndustry');
+                    if (selectedIndustry) {
+                        const industryCheckbox = document.querySelector(`input[name="industry"][value="${selectedIndustry}"]`);
+                        if (industryCheckbox) {
+                            industryCheckbox.checked = true;
+                            applyFilters(); 
+                        }
+                        // Clear the item so it doesn't persist on refresh or back navigation
+                        sessionStorage.removeItem('selectedIndustry');
+                    }
+                    // <!-- MODIFICATION END -->
+
                     applyFilters();
+
                 } catch (error) {
                     console.error("Failed to fetch jobs:", error);
                     jobListContainer.innerHTML = `<div class="alert alert-danger">Failed to load jobs. Please try again later.</div>`;

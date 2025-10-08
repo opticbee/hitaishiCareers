@@ -1025,7 +1025,7 @@
 <!-- Popular Industries Section -->
 <section class="py-5">
   <div class="container">
-    <h2 class="text-center mb-5">Popular Industries</h2>
+    <h2 class="text-center mb-5 fw-bold">Popular Industries</h2>
     
     <div class="row g-4">
       <!-- Information Technology -->
@@ -1119,7 +1119,7 @@
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Energy')">
             <div class="card-body">
-              <img src="https://image.shutterstock.com/image-vector/customer-service-icon-user-laptop-260nw-520867126.jpg" alt="Energy" class="img-fluid mb-2" style="height: 50px;">
+              <img src="https://img.icons8.com/?size=100&id=11900&format=png" alt="Energy" class="img-fluid mb-2" style="height: 50px;">
               <h6 class="card-title">Energy</h6>
             </div>
           </div>
@@ -1139,7 +1139,7 @@
         <div class="col-6 col-md-4 col-lg-2">
           <div class="pc-category-box card h-100 text-center" onclick="filterByIndustry('Transportation')">
             <div class="card-body">
-              <img src="https://static.vecteezy.com/system/resources/thumbnails/046/596/525/small_2x/work-from-home-logo-vector.jpg" alt="Transportation" class="img-fluid mb-2" style="height: 50px;">
+              <img src="https://img.icons8.com/?size=100&id=13415&format=png" alt="Transportation" class="img-fluid mb-2" style="height: 50px;">
               <h6 class="card-title">Transportation</h6>
             </div>
           </div>
@@ -1160,32 +1160,59 @@
   <style>
     /* Popular Categories (pc) Section Styles */
     .pc-category-box {
-      transition: all 0.3s ease;
-      cursor: pointer;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
     }
     
     .pc-category-box:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-color: #0d6efd;
+    }
+    
+    .pc-category-box .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem 1rem;
+    }
+
+    .pc-category-box .card-title {
+        margin-top: 0.5rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: #333;
     }
     
     /* Animation for category boxes */
     @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
     .pc-category-box {
-      animation: fadeInUp 0.5s ease forwards;
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0; /* Start hidden for animation */
     }
+
+    /* Stagger the animation for a nice effect */
+    .row.g-4 > div:nth-child(1) .pc-category-box { animation-delay: 0.1s; }
+    .row.g-4 > div:nth-child(2) .pc-category-box { animation-delay: 0.15s; }
+    .row.g-4 > div:nth-child(3) .pc-category-box { animation-delay: 0.2s; }
+    .row.g-4 > div:nth-child(4) .pc-category-box { animation-delay: 0.25s; }
+    .row.g-4 > div:nth-child(5) .pc-category-box { animation-delay: 0.3s; }
+    .row.g-4 > div:nth-child(6) .pc-category-box { animation-delay: 0.35s; }
+
   </style>
-  
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const toggleButton = document.getElementById('toggleCategories');
@@ -1193,23 +1220,24 @@
       const viewMoreButton = document.getElementById('viewMoreButton');
       
       toggleButton.addEventListener('click', function() {
-        // Show the additional categories
-        moreCategories.classList.add('show');
-        
-        // Hide the button after a short delay to allow the collapse animation
-        setTimeout(function() {
-          viewMoreButton.style.display = 'none';
-        }, 300);
+        // Using Bootstrap's Collapse instance to toggle
+        const collapseInstance = new bootstrap.Collapse(moreCategories, {
+          toggle: false
+        });
+        collapseInstance.toggle();
+
+        // Hide the button after it's clicked
+        viewMoreButton.style.display = 'none';
       });
     });
 
-    // Function to redirect to employers page with industry filter
+    // Function to redirect to the jobs page with the industry filter
     function filterByIndustry(industry) {
-      // Store the selected industry in sessionStorage
+      // Store the selected industry in sessionStorage to be read by the next page
       sessionStorage.setItem('selectedIndustry', industry);
       
-      // Redirect to employers page
-      window.location.href = 'employers.html';
+      // Redirect to the jobs page
+      window.location.href = 'jobs.html';
     }
   </script>
 </section>
