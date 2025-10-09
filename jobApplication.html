@@ -224,6 +224,7 @@
                     const response = await fetch('/api/applicant/apply', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
+                        credentials: 'include',
                         body: JSON.stringify({ jobId })
                     });
                     const result = await response.json();
