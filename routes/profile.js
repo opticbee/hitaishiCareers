@@ -41,7 +41,7 @@ router.use(express.urlencoded({
 router.get('/profile', async (req, res) => {
     try {
         // Use the email from the session if available, otherwise check query params.
-        const userEmail = req.session.user?.email || req.query.email;
+        const userEmail = req.user.email;
         if (!userEmail) return res.status(401).json({
             error: 'Not logged in or user email not provided'
         });
@@ -64,9 +64,10 @@ router.get('/profile', async (req, res) => {
 // GET /api/profile/full
 router.get('/profile/full', async (req, res) => {
   try {
-    // Prefer session email, fallback to query param
-    const userEmail = req.session?.user?.email || req.query.email;
-    if (!userEmail) return res.status(401).json({ error: 'Not logged in or email not provided' });
+    // The 'protectRoute' middleware has already verified the user.
+    // We get the email directly from req.user.
+    const userEmail = req.user.email;
+    if (!userEmail) return res.status(401).json({ error: 'Authentication error' });
 
     const rows = await query('SELECT * FROM users WHERE email=?', [userEmail]);
     if (!rows.length) return res.status(404).json({ error: 'User not found' });
@@ -78,16 +79,17 @@ router.get('/profile/full', async (req, res) => {
       if (typeof v === 'object') return v;
       try { return JSON.parse(v); } catch (e) { return []; }
     };
-
+    
+    // Also include basic user info from req.user for consistency
     const payload = {
       personalDetails: {
-        fullName: u.full_name || '',
-        email: u.email || '',
+        fullName: u.full_name || req.user.fullName || '',
+        email: u.email || req.user.email || '',
         phone: u.mobile_number || '',
         gender: u.gender || '',
         experienceLevel: u.experience_level || '',
         ctcExpected: u.ctc_expected || '',
-        profilePhoto: u.profile_image_url || u.profile_image || null
+        profilePhoto: u.profile_image_url || null
       },
       professionalDetails: safeParse(u.professional_details),
       projects: safeParse(u.projects),
@@ -107,63 +109,40 @@ router.get('/profile/full', async (req, res) => {
   }
 });
 
-// Unified update route: handles JSON body & multipart/form-data with profilePhoto
+// Unified update route (now uses req.user)
 router.post('/profile/update', upload.single('profilePhoto'), async (req, res) => {
   try {
-    let email = req.session?.user?.email || req.body?.email || req.query?.email;
-    if (!email) return res.status(401).json({ error: 'Not logged in' });
+    const email = req.user.email;
+    if (!email) return res.status(401).json({ error: 'Not authenticated' });
 
+    // ... (rest of the update logic remains the same) ...
     const updates = {};
-
-    // simple text fields
     if (req.body.fullName) updates.full_name = req.body.fullName;
     if (req.body.phone) updates.mobile_number = req.body.phone;
     if (req.body.gender) updates.gender = req.body.gender;
     if (req.body.experienceLevel) updates.experience_level = req.body.experienceLevel;
     if (req.body.ctcExpected) updates.ctc_expected = req.body.ctcExpected;
     if (req.body.noticePeriod) updates.notice_period = req.body.noticePeriod;
-
-    // helper to accept either JSON string or JS object
     const jsonFieldToString = (val) => {
       if (!val) return null;
-      if (typeof val === 'string') {
-        // already JSON-string? try to detect: if starts with '[' or '{' treat as JSON, else keep as-is
-        try {
-          JSON.parse(val);
-          return val; // already a JSON string
-        } catch (_) {
-          // not valid JSON string => it could be a comma-separated string; try to convert to array?
-          // We'll just store string as-is (frontend should send JSON for arrays).
-          return val;
-        }
-      } else {
-        return JSON.stringify(val);
-      }
+      return typeof val === 'string' ? val : JSON.stringify(val);
     };
-
     if (req.body.professionalDetails) updates.professional_details = jsonFieldToString(req.body.professionalDetails);
     if (req.body.projects) updates.projects = jsonFieldToString(req.body.projects);
     if (req.body.skills) updates.skills = jsonFieldToString(req.body.skills);
     if (req.body.education) updates.education = jsonFieldToString(req.body.education);
     if (req.body.certifications) updates.certifications = jsonFieldToString(req.body.certifications);
     if (req.body.languages) updates.languages = jsonFieldToString(req.body.languages);
-
     if (req.file) {
-      // uploaded profile photo
-      const photoUrl = `/uploads/${req.file.filename}`;
-      updates.profile_image_url = photoUrl;
+      updates.profile_image_url = `/uploads/${req.file.filename}`;
     }
-
-    // update profile_uuid (for cache busting)
     updates.profile_uuid = uuidv4();
 
     if (Object.keys(updates).length) {
       const fields = Object.keys(updates).map(k => `${k}=?`).join(',');
-      const values = Object.values(updates);
-      values.push(email);
+      const values = [...Object.values(updates), email];
       await query(`UPDATE users SET ${fields} WHERE email = ?`, values);
     }
-
     res.json({ message: 'Profile updated successfully' });
   } catch (err) {
     console.error('❌ Error updating profile:', err);
@@ -171,39 +150,24 @@ router.post('/profile/update', upload.single('profilePhoto'), async (req, res) =
   }
 });
 
-
-
 // --- Upload resume ---
-// This remains a separate route as it handles a different file type.
+// Upload resume route (now uses req.user)
 router.post('/profile/upload-resume', upload.single('resume'), async (req, res) => {
     try {
-        const userEmail = req.session.user?.email;
-        if (!userEmail) return res.status(401).json({
-            error: 'Not logged in'
-        });
+        const userEmail = req.user.email;
+        if (!userEmail) return res.status(401).json({ error: 'Not authenticated' });
 
         if (!req.file) {
-            return res.status(400).json({
-                error: 'No resume file uploaded.'
-            });
+            return res.status(400).json({ error: 'No resume file uploaded.' });
         }
 
         const resumeUrl = `/uploads/${req.file.filename}`;
-        await query('UPDATE users SET resume_url=?, profile_uuid=? WHERE email=?', [
-            resumeUrl,
-            uuidv4(),
-            userEmail
-        ]);
+        await query('UPDATE users SET resume_url=?, profile_uuid=? WHERE email=?', [resumeUrl, uuidv4(), userEmail]);
 
-        res.json({
-            message: 'Resume uploaded successfully',
-            url: resumeUrl
-        });
+        res.json({ message: 'Resume uploaded successfully', url: resumeUrl });
     } catch (err) {
         console.error("❌ Resume upload error:", err);
-        res.status(500).json({
-            error: 'Error uploading resume'
-        });
+        res.status(500).json({ error: 'Error uploading resume' });
     }
 });
 

@@ -611,38 +611,30 @@
       </div>
     </nav>
     <script>
-      async function loadNavbarProfile() {
-        const email = sessionStorage.getItem("email");
-        if (!email) {
-          console.log("User not logged in → showing default icon.");
-          return;
-        }
-
+      // Using the same navbar auth check script as login.html
+      async function checkAuthAndUpdateNavbar() {
         try {
-          const res = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
+          const res = await fetch('/api/profile/full');
           if (!res.ok) {
-            console.error("Failed to fetch profile:", res.status);
+            // If auth check fails on profile page, redirect to login
+            window.location.href = 'login.html';
             return;
           }
-
           const data = await res.json();
           const profilePhoto = data.personalDetails?.profilePhoto;
-
           if (profilePhoto) {
-            // Hide the default font-awesome icon
             document.getElementById("profile-icon").classList.add("d-none");
-
-            // Show user’s actual avatar
             const avatar = document.getElementById("profile-avatar");
             avatar.src = profilePhoto;
             avatar.classList.remove("d-none");
           }
+          document.getElementById('profileLink').href = 'userProfile.html';
         } catch (err) {
-          console.error("Error loading navbar profile:", err);
+          console.error("Auth check failed, redirecting to login.", err);
+          window.location.href = 'login.html';
         }
       }
-
-      document.addEventListener("DOMContentLoaded", loadNavbarProfile);
+      document.addEventListener("DOMContentLoaded", checkAuthAndUpdateNavbar);
     </script>
   </header>
 
@@ -858,15 +850,21 @@
         // --- Data Loading & Population ---
         async function loadProfileData() {
             try {
-                const email = sessionStorage.getItem("email");
-                if (!email) {
-                    console.warn("No email found in session storage. Please log in.");
-                    showToast("Authentication error. Please log in again.", "danger");
+                // const email = sessionStorage.getItem("email");
+                // if (!email) {
+                //     console.warn("No email found in session storage. Please log in.");
+                //     showToast("Authentication error. Please log in again.", "danger");
+                //     return;
+                // }
+                const response = await fetch('/api/profile/full');
+                if (response.status === 401) {
+                    // This is a fallback in case the navbar check fails or is slow.
+                    console.warn("Not authorized. Redirecting to login page.");
+                    window.location.href = 'login.html';
                     return;
                 }
-
-                const response = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
-                if (!response.ok) throw new Error("Failed to load profile data. Status: " + response.status);
+            
+                if (!response.ok) throw new Error("Failed to fetch profile data.");
 
                 profileData = await response.json();
                 populateAllSections();

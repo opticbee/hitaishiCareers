@@ -255,40 +255,40 @@
         </div>
       </div>
     </nav>
-    <script>
-      async function loadNavbarProfile() {
-        const email = sessionStorage.getItem("email");
-        if (!email) {
-          console.log("User not logged in → showing default icon.");
-          return;
-        }
+      <script>
+            // --- NEW: Check authentication status and update navbar ---
+            async function checkAuthAndUpdateNavbar() {
+              try {
+                // The browser automatically sends the http-only cookie with this request.
+                const res = await fetch('/api/profile/full'); 
+                
+                if (res.ok) {
+                  // User is logged in
+                  const data = await res.json();
+                  const profilePhoto = data.personalDetails?.profilePhoto;
 
-        try {
-          const res = await fetch(`/api/profile/full?email=${encodeURIComponent(email)}`);
-          if (!res.ok) {
-            console.error("Failed to fetch profile:", res.status);
-            return;
-          }
-
-          const data = await res.json();
-          const profilePhoto = data.personalDetails?.profilePhoto;
-
-          if (profilePhoto) {
-            // Hide the default font-awesome icon
-            document.getElementById("profile-icon").classList.add("d-none");
-
-            // Show user’s actual avatar
-            const avatar = document.getElementById("profile-avatar");
-            avatar.src = profilePhoto;
-            avatar.classList.remove("d-none");
-          }
-        } catch (err) {
-          console.error("Error loading navbar profile:", err);
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", loadNavbarProfile);
-    </script>
+                  if (profilePhoto) {
+                    document.getElementById("profile-icon").classList.add("d-none");
+                    const avatar = document.getElementById("profile-avatar");
+                    avatar.src = profilePhoto;
+                    avatar.classList.remove("d-none");
+                  }
+                  // Change link to go to profile page
+                  document.getElementById('profileLink').href = 'userProfile.html';
+                } else {
+                  // User is not logged in, ensure default state
+                  console.log("User not logged in, showing default icon.");
+                  document.getElementById("profile-icon").classList.remove("d-none");
+                  document.getElementById("profile-avatar").classList.add("d-none");
+                  document.getElementById('profileLink').href = 'login.html';
+                }
+              } catch (err) {
+                console.error("Error checking auth status:", err);
+              }
+            }
+            // Run the check when the page content is loaded
+            document.addEventListener("DOMContentLoaded", checkAuthAndUpdateNavbar);
+      </script>
   </header>
 
   <div class="container login-container">
@@ -422,12 +422,12 @@
           alert('✅ ' + result.message);
           
           // ✅ Save email in sessionStorage (This now works because the backend sends result.user)
-          if(result.user && result.user.email) {
-            sessionStorage.setItem('email', result.user.email);
+          // if(result.user && result.user.email) {
+          //   sessionStorage.setItem('email', result.user.email);
             window.location.href = 'userProfile.html'; // Redirect to profile page
-          } else {
-            alert('❌ Login successful, but no user email was returned.');
-          }
+          // } else {
+          //   alert('❌ Login successful, but no user email was returned.');
+          // }
 
         } else {
           alert('❌ ' + result.error);
@@ -525,7 +525,7 @@
                     alert('✅ ' + result.message);
                     
                     // ✅ Save email in sessionStorage
-                    sessionStorage.setItem('email', email);
+                    // sessionStorage.setItem('email', email);
                     
                     window.location.href = 'userProfile.html';
                 } else {
