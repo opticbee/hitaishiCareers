@@ -62,7 +62,7 @@ router.get('/profile', async (req, res) => {
 
 
 // GET /api/profile/full
-router.get('/profile/full', async (req, res) => {
+router.get('/full', async (req, res) => {
   try {
     // The 'protectRoute' middleware has already verified the user.
     // We get the email directly from req.user.
@@ -110,7 +110,7 @@ router.get('/profile/full', async (req, res) => {
 });
 
 // Unified update route (now uses req.user)
-router.post('/profile/update', upload.single('profilePhoto'), async (req, res) => {
+router.post('/update', upload.single('profilePhoto'), async (req, res) => {
   try {
     const email = req.user.email;
     if (!email) return res.status(401).json({ error: 'Not authenticated' });
@@ -152,7 +152,7 @@ router.post('/profile/update', upload.single('profilePhoto'), async (req, res) =
 
 // --- Upload resume ---
 // Upload resume route (now uses req.user)
-router.post('/profile/upload-resume', upload.single('resume'), async (req, res) => {
+router.post('/upload-resume', upload.single('resume'), async (req, res) => {
     try {
         const userEmail = req.user.email;
         if (!userEmail) return res.status(401).json({ error: 'Not authenticated' });

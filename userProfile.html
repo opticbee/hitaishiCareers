@@ -611,16 +611,17 @@
       </div>
     </nav>
     <script>
-      // Using the same navbar auth check script as login.html
       async function checkAuthAndUpdateNavbar() {
         try {
-          const res = await fetch('/api/profile/full');
+          const res = await fetch('/api/profile/full'); 
           if (!res.ok) {
-            // If auth check fails on profile page, redirect to login
-            window.location.href = 'login.html';
+            if (window.location.pathname.includes('userProfile.html')) {
+                 window.location.href = 'login.html';
+            }
             return;
           }
           const data = await res.json();
+          sessionStorage.setItem("email", data.personalDetails.email);
           const profilePhoto = data.personalDetails?.profilePhoto;
           if (profilePhoto) {
             document.getElementById("profile-icon").classList.add("d-none");
@@ -630,8 +631,10 @@
           }
           document.getElementById('profileLink').href = 'userProfile.html';
         } catch (err) {
-          console.error("Auth check failed, redirecting to login.", err);
-          window.location.href = 'login.html';
+          console.error("Auth check failed.", err);
+           if (window.location.pathname.includes('userProfile.html')) {
+                 window.location.href = 'login.html';
+            }
         }
       }
       document.addEventListener("DOMContentLoaded", checkAuthAndUpdateNavbar);
@@ -713,7 +716,11 @@
                                 <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('personalDetails', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
                             </div>
                             <div id="personalDetailsView"></div>
+                            <!-- *** FIX: ADDED THE MISSING DIV HERE *** -->
                             <form id="personalDetailsForm" class="d-none">
+                                <div id="personalDetailsEntries">
+                                    <!-- This div is necessary for the toggleEdit function to work correctly -->
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="fullName" class="form-label">Full Name</label>
@@ -810,7 +817,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Global state - KEEPING YOUR ORIGINAL STRUCTURE
+        // Global state
         let profileData = {};
         let nextEntryId = 1;
 
@@ -819,7 +826,6 @@
             setupNavigation();
             loadProfileData();
             setupEventListeners();
-            updateProfileCompletion();
         });
 
         function setupNavigation() {
@@ -850,20 +856,7 @@
         // --- Data Loading & Population ---
         async function loadProfileData() {
             try {
-                // const email = sessionStorage.getItem("email");
-                // if (!email) {
-                //     console.warn("No email found in session storage. Please log in.");
-                //     showToast("Authentication error. Please log in again.", "danger");
-                //     return;
-                // }
                 const response = await fetch('/api/profile/full');
-                if (response.status === 401) {
-                    // This is a fallback in case the navbar check fails or is slow.
-                    console.warn("Not authorized. Redirecting to login page.");
-                    window.location.href = 'login.html';
-                    return;
-                }
-            
                 if (!response.ok) throw new Error("Failed to fetch profile data.");
 
                 profileData = await response.json();
@@ -871,7 +864,7 @@
                 updateProfileCompletion();
             } catch (error) {
                 console.error("Error loading profile data:", error);
-                showToast("Error loading your profile. Please try again.", "danger");
+                showToast("Error loading your profile. Please try refreshing.", "danger");
             }
         }
 
@@ -890,7 +883,6 @@
             if (!profileData.personalDetails) return;
             const pd = profileData.personalDetails;
             
-            // Populate View
             const viewContainer = document.getElementById('personalDetailsView');
             const na = '<span class="text-muted">N/A</span>';
             viewContainer.innerHTML = `
@@ -908,7 +900,6 @@
                     </div>
                 </div>`;
             
-            // Populate Form
             document.getElementById('fullName').value = pd.fullName || '';
             document.getElementById('email').value = pd.email || '';
             document.getElementById('phone').value = pd.phone || '';
@@ -924,7 +915,6 @@
             document.getElementById('profilePhotoPreview').src = pd.profilePhoto || 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo';
         }
 
-        // --- Generic Section Rendering ---
         function renderDynamicSection(id, title, data, renderViewFn, addEntryFnName, saveFnName) {
             const container = document.getElementById(id);
             let itemsHTML = data && data.length > 0 ? data.map(renderViewFn).join('') : '<p class="text-muted">No information added yet.</p>';
@@ -974,7 +964,6 @@
             `;
         }
 
-        // --- View Renderers ---
         const renderProfessionalView = item => `<div class="view-section"><h5>${item.companyName || 'N/A'}</h5><p class="mb-1">${item.roles?.join(', ') || 'N/A'}</p><small class="text-muted">${item.fromDate || ''} - ${item.toDate || 'Present'}</small></div>`;
         const renderProjectView = item => `<div class="view-section"><h5>${item.projectTitle || 'N/A'}</h5><p class="mb-1">${item.description || ''}</p><small class="text-muted">Role: ${item.role || 'N/A'}</small></div>`;
         const renderSkillView = item => `<div class="view-section d-flex justify-content-between align-items-center"><span>${item.skillName || 'N/A'}</span><span class="badge bg-primary rounded-pill">Rating: ${item.rating || 'N/A'}</span></div>`;
@@ -983,7 +972,6 @@
         const renderLanguageView = item => `<div class="view-section d-flex justify-content-between align-items-center"><span>${item.languageName || 'N/A'}</span><span class="text-capitalize text-muted">${item.proficiency || 'N/A'}</span></div>`;
         const renderResumeView = item => `<div class="resume-preview"><i class="bi bi-file-earmark-text fs-4"></i> <span>${item.name || 'No resume uploaded'}</span> ${item.url ? `<a href="${item.url}" target="_blank" class="ms-auto btn btn-sm btn-outline-secondary">View</a>` : ''}</div>`;
 
-        // --- UI State Management ---
         function toggleEdit(sectionId, isEditing) {
             const view = document.getElementById(`${sectionId}View`);
             const form = document.getElementById(`${sectionId}Form`);
@@ -998,7 +986,11 @@
             if (isEditing) {
                 const data = profileData[sectionId];
                 const entriesContainer = document.getElementById(`${sectionId}Entries`);
-                entriesContainer.innerHTML = ''; // Clear previous entries
+                
+                // *** FIX: Check if entriesContainer exists before using it ***
+                if(entriesContainer) {
+                    entriesContainer.innerHTML = ''; // Clear previous entries
+                }
                 
                 const addFnMap = {
                     professionalDetails: window.addProfessionalEntry,
@@ -1017,40 +1009,29 @@
                     data.forEach(item => addFn(item));
                 } else if (sectionId === 'resume' && data) {
                     addFn(data);
-                } else {
-                    addFn(); // Add one empty entry for user to fill
+                } else if (sectionId !== 'personalDetails') { // Personal details doesn't use the 'add' pattern
+                    addFn();
                 }
             } else {
-                // On cancel, reload the last-loaded profile snapshot to revert any form changes
                 populateAllSections();
             }
         }
 
-        // --- Save & Update Functions ---
         async function saveData(endpoint, payload) {
-            const email = sessionStorage.getItem("email");
-            if (!email) {
-                showToast("Authentication error. Please log in again.", "danger");
-                return null;
-            }
-
-            const body = payload instanceof FormData ? payload : { ...payload, email };
-            if (payload instanceof FormData) {
-                 body.append('email', email);
-            }
+            const body = payload instanceof FormData ? payload : JSON.stringify(payload);
+            const headers = payload instanceof FormData ? {} : { 'Content-Type': 'application/json' };
 
             try {
-                const isFormData = body instanceof FormData;
                 const response = await fetch(endpoint, {
                     method: 'POST',
-                    headers: isFormData ? {} : { 'Content-Type': 'application/json' },
-                    body: isFormData ? body : JSON.stringify(body),
+                    headers: headers,
+                    body: body,
                 });
                 if (!response.ok) {
                     const error = await response.json().catch(() => ({ error: 'Failed to save data. Please try again.' }));
                     throw new Error(error.error);
                 }
-                await loadProfileData(); // Reload data to show saved state
+                await loadProfileData();
                 return await response.json();
             } catch (error) {
                 console.error('Error saving data:', error);
@@ -1088,7 +1069,6 @@
             }
         }
         
-        // --- Data Extractors from Forms ---
         const extractProfessionalDetails = () => Array.from(document.querySelectorAll('#professionalDetailsEntries .dynamic-section')).map(el => ({ companyName: el.querySelector('[id^=companyName]').value, companyLink: el.querySelector('[id^=companyLink]').value, fromDate: el.querySelector('[id^=fromDate]').value, toDate: el.querySelector('[id^=toDate]').value, roles: Array.from(el.querySelectorAll('.tag')).map(t => t.innerText.trim())}));
         const extractProjects = () => Array.from(document.querySelectorAll('#projectsEntries .dynamic-section')).map(el => ({ projectTitle: el.querySelector('[id^=projectTitle]').value, client: el.querySelector('[id^=client]').value, role: el.querySelector('[id^=projectRole]').value, teamSize: el.querySelector('[id^=teamSize]').value, description: el.querySelector('[id^=projectDescription]').value, skillsUsed: Array.from(el.querySelectorAll('.tag')).map(t => t.innerText.trim()), fromDate: el.querySelector('[id^=projectFromDate]').value, toDate: el.querySelector('[id^=projectToDate]').value }));
         const extractSkills = () => Array.from(document.querySelectorAll('#skillsEntries .dynamic-section')).map(el => ({ skillName: el.querySelector('[id^=skillName]').value, rating: el.querySelector('[id^=skillRating]').value }));
@@ -1096,7 +1076,6 @@
         const extractCertifications = () => Array.from(document.querySelectorAll('#certificationsEntries .dynamic-section')).map(el => ({ certificationName: el.querySelector('[id^=certificationName]').value, issuingOrganization: el.querySelector('[id^=issuingOrganization]').value, issueDate: el.querySelector('[id^=issueDate]').value, expiryDate: el.querySelector('[id^=expiryDate]').value, certificationLink: el.querySelector('[id^=certificationLink]').value }));
         const extractLanguages = () => Array.from(document.querySelectorAll('#languagesEntries .dynamic-section')).map(el => ({ languageName: el.querySelector('[id^=languageName]').value, proficiency: el.querySelector('[id^=proficiency]').value }));
 
-        // FIX: Assign functions to window object to make them accessible from inline 'onclick'
         window.saveProfessionalDetails = () => saveGenericSection('professionalDetails', extractProfessionalDetails);
         window.saveProjects = () => saveGenericSection('projects', extractProjects);
         window.saveSkills = () => saveGenericSection('skills', extractSkills);
@@ -1124,7 +1103,6 @@
             }
         }
         
-        // --- Dynamic Entry Add/Remove Functions (Attached to window) ---
         window.addProfessionalEntry = function(data = {}) {
             const id = nextEntryId++;
             const html = `
@@ -1229,7 +1207,6 @@
             document.getElementById('languagesEntries').insertAdjacentHTML('beforeend', html);
         }
 
-        // FIX: Create function to add resume input field dynamically
         window.addResumeEntry = function(data = {}) {
             const html = `
                 <div class="mb-3">
@@ -1241,9 +1218,8 @@
                     </div>
                 </div>`;
             const container = document.getElementById('resumeEntries');
-            container.innerHTML = html; // Replace content
+            container.innerHTML = html;
             
-            // Add event listener now that the element exists
             document.getElementById('resumeFile').addEventListener('change', e => {
                 const file = e.target.files[0];
                 if (file) {
@@ -1263,7 +1239,6 @@
             }
         }
         
-        // --- Password Update ---
         async function updatePassword() {
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
@@ -1275,7 +1250,6 @@
                 showToast("Passwords do not match.", "warning");
                 return;
             }
-            // FIX: Correct API path for updating password
             const result = await saveData('/api/user/update-password', { newPassword });
             if(result) {
                 showToast("Password updated successfully!", "success");
@@ -1283,10 +1257,9 @@
             }
         }
 
-        // --- Profile Completion ---
         function updateProfileCompletion() {
             let completedSections = 0;
-            const totalSections = 5; // personal, professional, projects, resume, skills
+            const totalSections = 5;
             
             if (profileData.personalDetails && profileData.personalDetails.fullName) completedSections++;
             if (profileData.professionalDetails && profileData.professionalDetails.length > 0) completedSections++;
@@ -1296,15 +1269,12 @@
             
             const percentage = Math.round((completedSections / totalSections) * 100);
             
-            // Update progress bar
             const progressBar = document.querySelector('.progress-bar');
             progressBar.style.width = percentage + '%';
             progressBar.setAttribute('aria-valuenow', percentage);
             
-            // Update percentage text
             document.querySelector('.completion-percentage').textContent = percentage + '%';
             
-            // Update section completion status
             const sections = document.querySelectorAll('.completion-section');
             sections[0].classList.toggle('completed', profileData.personalDetails && profileData.personalDetails.fullName);
             sections[1].classList.toggle('completed', profileData.professionalDetails && profileData.professionalDetails.length > 0);
@@ -1312,8 +1282,7 @@
             sections[3].classList.toggle('completed', profileData.resume);
             sections[4].classList.toggle('completed', profileData.skills && profileData.skills.length > 0);
             
-            // Update status icons
-            sections.forEach((section, index) => {
+            sections.forEach((section) => {
                 const statusIcon = section.querySelector('.section-status i');
                 if (section.classList.contains('completed')) {
                     statusIcon.className = 'fas fa-check';
@@ -1325,7 +1294,6 @@
             });
         }
 
-        // --- Utilities ---
         function showToast(message, type = 'info') {
             const toastContainer = document.querySelector('.toast-container');
             const toastId = 'toast-' + Date.now();
@@ -1350,3 +1318,4 @@
     </script>
 </body>
 </html>
+
