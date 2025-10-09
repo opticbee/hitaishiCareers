@@ -694,6 +694,8 @@
                             <a class="nav-link" href="#" data-section="certifications"><i class="bi bi-award me-2"></i>Certifications</a>
                             <a class="nav-link" href="#" data-section="languages"><i class="bi bi-translate me-2"></i>Languages</a>
                             <a class="nav-link" href="#" data-section="password"><i class="bi bi-shield-lock me-2"></i>Password</a>
+                            <!-- *** ADDED LOGOUT BUTTON *** -->
+                            <a class="nav-link" href="#" id="logoutButton"><i class="bi bi-box-arrow-right me-2"></i>Logout</a>
                         </nav>
                     </div>
                 </div>
@@ -716,10 +718,8 @@
                                 <button type="button" class="btn btn-outline-primary btn-sm edit-btn" onclick="toggleEdit('personalDetails', true)"><i class="bi bi-pencil me-1"></i> Edit</button>
                             </div>
                             <div id="personalDetailsView"></div>
-                            <!-- *** FIX: ADDED THE MISSING DIV HERE *** -->
                             <form id="personalDetailsForm" class="d-none">
                                 <div id="personalDetailsEntries">
-                                    <!-- This div is necessary for the toggleEdit function to work correctly -->
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
@@ -832,6 +832,9 @@
             document.querySelectorAll('#profileNav .nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
+                    // Don't do section toggling for logout button
+                    if(this.id === 'logoutButton') return;
+
                     document.querySelectorAll('#profileNav .nav-link').forEach(l => l.classList.remove('active'));
                     this.classList.add('active');
                     
@@ -851,6 +854,28 @@
                     reader.readAsDataURL(file);
                 }
             });
+
+            // *** ADDED LOGOUT EVENT LISTENER ***
+            document.getElementById('logoutButton').addEventListener('click', async (e) => {
+                e.preventDefault();
+                await logout();
+            });
+        }
+
+        // *** ADDED LOGOUT FUNCTION ***
+        async function logout() {
+            try {
+                const response = await fetch('/api/logout', { method: 'POST' });
+                if (response.ok) {
+                    sessionStorage.clear();
+                    window.location.href = 'login.html';
+                } else {
+                    showToast('Logout failed. Please try again.', 'danger');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                showToast('An error occurred during logout.', 'danger');
+            }
         }
 
         // --- Data Loading & Population ---
@@ -987,9 +1012,8 @@
                 const data = profileData[sectionId];
                 const entriesContainer = document.getElementById(`${sectionId}Entries`);
                 
-                // *** FIX: Check if entriesContainer exists before using it ***
                 if(entriesContainer) {
-                    entriesContainer.innerHTML = ''; // Clear previous entries
+                    entriesContainer.innerHTML = '';
                 }
                 
                 const addFnMap = {
@@ -1009,7 +1033,7 @@
                     data.forEach(item => addFn(item));
                 } else if (sectionId === 'resume' && data) {
                     addFn(data);
-                } else if (sectionId !== 'personalDetails') { // Personal details doesn't use the 'add' pattern
+                } else if (sectionId !== 'personalDetails') {
                     addFn();
                 }
             } else {
