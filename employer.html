@@ -173,8 +173,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const token = sessionStorage.getItem('authToken');
-            if (!token) {
+            const initialToken = sessionStorage.getItem('authToken');
+            if (!initialToken) {
                 window.location.href = 'employerlogin.html';
                 return;
             }
@@ -206,17 +206,35 @@
                 setTimeout(() => { toast.remove(); }, 5000);
             };
 
+            // FIX: Updated fetchData to always include the Authorization header
             const fetchData = async (url, options = {}) => {
                 try {
+                    const token = sessionStorage.getItem('authToken');
+                    if (!token) {
+                        showToast('Your session has expired. Please log in again.', 'error');
+                        window.location.href = 'employerlogin.html';
+                        return null; 
+                    }
+
                     const defaultHeaders = { 'Authorization': `Bearer ${token}` };
                     if (!(options.body instanceof FormData)) {
                         defaultHeaders['Content-Type'] = 'application/json';
                     }
+
                     const response = await fetch(url, { ...options, headers: { ...defaultHeaders, ...options.headers } });
+                    
+                    if (response.status === 401) {
+                        sessionStorage.removeItem('authToken');
+                        showToast('Unauthorized. Redirecting to login.', 'error');
+                        window.location.href = 'employerlogin.html';
+                        return null;
+                    }
+                    
                     if (!response.ok) {
                         const errorData = await response.json();
                         throw new Error(errorData.message || errorData.error || `Error: ${response.status}`);
                     }
+
                     const contentType = response.headers.get("content-type");
                     if (contentType && contentType.indexOf("application/json") !== -1) {
                          return await response.json();
@@ -225,6 +243,10 @@
                 } catch (error) {
                     console.error('API call failed:', error);
                     showToast(error.message, 'error');
+                    if (error.message.includes('Not authorized')) {
+                        sessionStorage.removeItem('authToken');
+                        window.location.href = 'employerlogin.html';
+                    }
                     return null;
                 }
             };

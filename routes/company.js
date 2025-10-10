@@ -7,7 +7,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const { query } = require('../db');
-const { protectRoute } = require('../middleware/authMiddleware');
+// FIX: Import the correct middleware for employer routes
+const { protectEmployerRoute } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
@@ -128,7 +129,8 @@ router.post('/register', async (req, res) => {
 // ===================================
 
 // GET /api/company/profile - Fetch company profile for dashboard
-router.get('/profile', protectRoute, async (req, res) => {
+// FIX: Use the correct middleware for employers
+router.get('/profile', protectEmployerRoute, async (req, res) => {
     try {
         const companyId = req.user.id;
         const rows = await query('SELECT id, user_email, company_name, website, contact_person, contact_phone, address, description, logo_url FROM companies WHERE id = ?', [companyId]);
@@ -144,7 +146,8 @@ router.get('/profile', protectRoute, async (req, res) => {
 });
 
 // PATCH /api/company/profile - Update company profile
-router.patch('/profile', protectRoute, upload.single('logo'), async (req, res) => {
+// FIX: Use the correct middleware for employers
+router.patch('/profile', protectEmployerRoute, upload.single('logo'), async (req, res) => {
     try {
         const companyId = req.user.id;
         const { company_name, website, contact_person, contact_phone, address, description } = req.body;

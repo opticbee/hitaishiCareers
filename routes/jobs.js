@@ -2,8 +2,8 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const { query } = require("../db");
-// Import the centralized authentication middleware
-const { protectRoute } = require('../middleware/authMiddleware');
+// FIX: Import the correct middleware for employer routes
+const { protectEmployerRoute } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -48,9 +48,10 @@ const router = express.Router();
 })();
 
 // Post a new job (Updated and Secured)
-router.post("/post", protectRoute, async (req, res) => {
+// FIX: Use the employer-specific middleware to protect this route
+router.post("/post", protectEmployerRoute, async (req, res) => {
   try {
-    // req.user is populated by the protectRoute middleware
+    // req.user is populated by the protectEmployerRoute middleware
     const company_id = req.user.id;
     const { 
         posted_by_name, posted_by_email, job_title, required_experience, 
@@ -154,7 +155,8 @@ router.get("/:id", async (req, res) => {
 
 
 // GET all jobs for a specific company (for the dashboard)
-router.get("/company/:companyId", protectRoute, async (req, res) => {
+// FIX: Use the employer-specific middleware to protect this route
+router.get("/company/:companyId", protectEmployerRoute, async (req, res) => {
     try {
         const { companyId } = req.params;
         // Security check: ensure the authenticated employer can only access their own jobs
