@@ -1,18 +1,10 @@
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const { query } = require("../db");
+// FIX: Import the correct middleware for both users and employers
+const { protectRoute, protectEmployerRoute } = require('../middleware/authMiddleware');
 
 const router = express.Router();
-
-// --- User Authentication Middleware (Session Based) ---
-const authenticateUser = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.id && req.session.user.email) {
-        req.user = req.session.user; // Attach user info from session
-        next();
-    } else {
-        res.status(401).json({ error: "User not authenticated. Please log in." });
-    }
-};
 
 // --- Database Table Initialization ---
 (async function initApplicationsTable() {
@@ -38,9 +30,11 @@ const authenticateUser = (req, res, next) => {
 })();
 
 // --- Route to apply for a job ---
-router.post("/apply", authenticateUser, async (req, res) => {
+// FIX: This route is now protected by 'protectRoute' which checks for a USER's login cookie.
+router.post("/apply", protectRoute, async (req, res) => {
     try {
         const { jobId } = req.body;
+        // The user's ID and email are now available from the JWT payload attached by the middleware
         const userId = req.user.id;
         const userEmail = req.user.email;
 
@@ -116,7 +110,8 @@ router.post("/apply", authenticateUser, async (req, res) => {
 });
 
 // --- Route to get all applications for a specific job ---
-router.get("/:jobId", async (req, res) => {
+// FIX: This route is now protected by 'protectEmployerRoute', which checks for an EMPLOYER's Bearer token.
+router.get("/:jobId", protectEmployerRoute, async (req, res) => {
     try {
         const { jobId } = req.params;
         const applications = await query(
@@ -124,9 +119,6 @@ router.get("/:jobId", async (req, res) => {
             [jobId]
         );
         
-        // FIX: The user_profile_snapshot is stored as a JSON string in the database.
-        // It must be parsed into an object before being sent to the frontend.
-        // This ensures the frontend can access properties like `professionalDetails.roles`.
         const applicants = applications
             .map(app => {
                 const snapshot = app.user_profile_snapshot;
@@ -138,7 +130,7 @@ router.get("/:jobId", async (req, res) => {
                         return null; 
                     }
                 }
-                return snapshot; // Already an object
+                return snapshot; 
             })
             .filter(Boolean); 
 
@@ -151,4 +143,3 @@ router.get("/:jobId", async (req, res) => {
 });
 
 module.exports = router;
-

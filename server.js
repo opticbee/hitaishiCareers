@@ -6,7 +6,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const cors = require('cors'); // <-- ADD THIS LINE
+const cors = require('cors'); 
 
 // Import API routes
 const registerRoute = require('./routes/register');
@@ -23,8 +23,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // --- Middleware Setup ---
-// Use CORS to ensure headers like 'Authorization' are not stripped by the browser
-app.use(cors()); // <-- AND THIS LINE
+app.use(cors()); 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -41,9 +40,13 @@ app.use('/api/auth', authRoute);
 // User-protected routes (cookie-based)
 app.use('/api/profile', protectRoute, profileRoute);
 
+// FIX: Removed the global employer protection from the /api/applicant route.
+// Authentication will now be handled specifically within the applicant.js file
+// to allow both users (for applying) and employers (for viewing) to use it.
+app.use('/api/applicant', applicantRoute);
+
 // Public and Employer-protected routes
 app.use('/api/jobs', jobsRoute);
-app.use('/api/applicant', protectEmployerRoute, applicantRoute);
 app.use('/api/company', companyRoute);
 
 
@@ -57,4 +60,3 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log(`✅ Server is running on http://localhost:${port}`);
 });
-

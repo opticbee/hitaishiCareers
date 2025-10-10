@@ -93,7 +93,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// POST /api/company/register - Employer Registration (for employerRegistration.html)
+// POST /api/company/register - Employer Registration
 router.post('/register', async (req, res) => {
     try {
         const { companyName, email, password } = req.body;
@@ -123,6 +123,19 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
+// NEW: Route to get all companies for the public employers page
+router.get('/all', async (req, res) => {
+    try {
+        const companies = await query(
+            'SELECT id, company_name, website, address, description, logo_url FROM companies ORDER BY company_name ASC'
+        );
+        res.json({ success: true, companies });
+    } catch (err) {
+        console.error("Failed to fetch all companies:", err);
+        res.status(500).json({ error: "Server error while fetching companies." });
+    }
+});
 
 // ===================================
 //         PROTECTED ROUTES
