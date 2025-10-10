@@ -137,9 +137,7 @@ router.get('/all', async (req, res) => {
     }
 });
 
-// ===================================
-//         PROTECTED ROUTES
-// ===================================
+
 
 // GET /api/company/profile - Fetch company profile for dashboard
 // FIX: Use the correct middleware for employers

@@ -1346,44 +1346,132 @@
     </div>
   </section>
 
-  <!-- Featured Companies Section -->
-  <section class="py-5 bg-light">
+<!-- Featured Companies Section -->
+<section class="py-5 bg-light">
     <div class="container">
-      <h2 class="section-heading">Featured Companies</h2>
-      <p class="text-center text-muted mb-5">Join thousands of job seekers who found their dream jobs at these top companies</p>
-      
-      <div class="marquee-container border-top border-bottom border-dark py-4">
-        <div class="d-flex company-logo-scroll">
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTPAWYqoR1E-YMPwd869I0X2WuToOjTrPXgQ&s" alt="Tata Consultancy" style="height: 40px;">
-          </div>
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://e7.pngegg.com/pngimages/26/116/png-clipart-netflix-logo-netflix-television-show-streaming-media-film-netflix-logo-television-text-thumbnail.png" alt="Netflix" style="height: 40px;">
-          </div>
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNP6_NeBNaCXMhAHRXpIspKXobbgeUqg0Bjw&s" alt="Synechron" style="height: 40px;">
-          </div>
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBVYmljDqiMRbhQWUeRKBP-4Ab1vGqvJiP1w&s" alt="Ultratech" style="height: 40px;">
-          </div>
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTPAWYqoR1E-YMPwd869I0X2WuToOjTrPXgQ&s" alt="Tata Consultancy" style="height: 40px;">
-          </div>
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://e7.pngegg.com/pngimages/26/116/png-clipart-netflix-logo-netflix-television-show-streaming-media-film-netflix-logo-television-text-thumbnail.png" alt="Netflix" style="height: 40px;">
-          </div>
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNP6_NeBNaCXMhAHRXpIspKXobbgeUqg0Bjw&s" alt="Synechron" style="height: 40px;">
-          </div>
-          <div class="mx-4 d-flex align-items-center">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBVYmljDqiMRbhQWUeRKBP-4Ab1vGqvJiP1w&s" alt="Ultratech" style="height: 40px;">
-          </div>
+        <h2 class="text-center fw-bold mb-3">Featured Companies</h2>
+        <p class="text-center text-muted mb-5">Join thousands of job seekers who found their dream jobs at these top companies</p>
+        
+        <!-- Marquee container for scrolling logos -->
+        <div class="marquee-container border-top border-bottom py-4">
+            <div class="company-logo-scroll d-flex align-items-center">
+                <!-- Company logos will be dynamically inserted here by JavaScript -->
+                <div class="text-center w-100">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </section>
+</section>
 
+<!-- CSS for the marquee animation -->
+<style>
+    .marquee-container {
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+    }
+    .company-logo-scroll {
+        display: flex;
+        width: fit-content; /* Let the container size itself to its content */
+        /* Animation will be applied by JS after loading */
+    }
+    /* Keyframe animation for the scroll effect */
+    @keyframes scroll {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%); /* Scroll until the duplicated content starts */
+        }
+    }
+    .company-logo-scroll:hover {
+        animation-play-state: paused; /* Pause the scroll on hover */
+    }
+    /* Styling for individual logo containers */
+    .logo-item {
+        flex-shrink: 0; /* Prevent logos from shrinking */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 40px; /* Spacing between logos */
+    }
+    .logo-item img {
+        height: 40px; 
+        max-width: 150px; 
+        object-fit: contain; /* Ensure logo is scaled correctly */
+        filter: grayscale(100%); /* Make logos grayscale for a uniform look */
+        opacity: 0.8;
+        transition: all 0.3s ease;
+    }
+    .logo-item img:hover {
+        filter: grayscale(0%); /* Colorize logo on hover */
+        opacity: 1;
+        transform: scale(1.1);
+    }
+</style>
 
+<!-- JavaScript to fetch and display company logos -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const logoContainer = document.querySelector('.company-logo-scroll');
+
+        const fetchCompanyLogos = async () => {
+            try {
+                const response = await fetch('/api/company/all');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Ensure we have companies and they are in an array
+                if (!data || !data.success || !Array.isArray(data.companies)) {
+                     throw new Error('Invalid data format received from server.');
+                }
+
+                // Filter out companies that do not have a logo_url
+                const companiesWithLogos = data.companies.filter(company => company.logo_url);
+
+                if (companiesWithLogos.length === 0) {
+                    logoContainer.innerHTML = '<p class="text-muted text-center w-100">No featured companies available at the moment.</p>';
+                    return;
+                }
+
+                // Clear the loading spinner
+                logoContainer.innerHTML = '';
+
+                // Create HTML elements for each company logo
+                const logoElements = companiesWithLogos.map(company => {
+                    const div = document.createElement('div');
+                    div.className = 'logo-item';
+                    div.innerHTML = `<img src="${company.logo_url}" alt="${company.company_name}" title="${company.company_name}">`;
+                    return div;
+                });
+
+                // For a seamless marquee effect, we duplicate the logos.
+                // This ensures that as the first set scrolls out, the second set is ready to scroll in.
+                const duplicatedLogoElements = logoElements.map(el => el.cloneNode(true));
+
+                // Append both the original and duplicated logos to the container
+                logoContainer.append(...logoElements, ...duplicatedLogoElements);
+                
+                // Apply the animation only after the content is loaded
+                const animationDuration = companiesWithLogos.length * 5; // Adjust speed based on number of logos
+                logoContainer.style.animation = `scroll ${animationDuration}s linear infinite`;
+
+            } catch (error) {
+                console.error('Error fetching company logos:', error);
+                // Display an error message to the user
+                logoContainer.innerHTML = '<p class="text-danger text-center w-100">Could not load company logos.</p>';
+            }
+        };
+
+        // Call the function to start the process
+        fetchCompanyLogos();
+    });
+</script>
 
 
   <!-- Testimonials Section -->
