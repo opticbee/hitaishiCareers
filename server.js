@@ -1,13 +1,14 @@
 // server.js
 require('dotenv').config();
 
-
+// NOTE: This application now uses the 'cors' package.
+// Please install it by running: npm install cors
 const express = require('express');
-const session = require('express-session');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const cors = require('cors'); // <-- ADD THIS LINE
 
-// Import API routes from the 'routes' folder
+// Import API routes
 const registerRoute = require('./routes/register');
 const authRoute = require('./routes/auth');
 const profileRoute = require('./routes/profile');
@@ -15,50 +16,38 @@ const jobsRoute = require('./routes/jobs');
 const applicantRoute = require('./routes/applicant');
 const companyRoute = require('./routes/company');
 
-const { protectRoute } = require('./middleware/authMiddleware');
-
-// Initialize Express app
+// Import the dual authentication middleware
+const { protectRoute, protectEmployerRoute } = require('./middleware/authMiddleware');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // --- Middleware Setup ---
+// Use CORS to ensure headers like 'Authorization' are not stripped by the browser
+app.use(cors()); // <-- AND THIS LINE
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// --- Session Middleware ---
-// app.use(
-//     session({
-//         secret: process.env.SESSION_SECRET ,
-//         resave: false,
-//         saveUninitialized: true,
-//         cookie: { 
-//             secure: process.env.NODE_ENV === 'production', // Use secure cookies in production (HTTPS)
-//             httpOnly: true,
-//             maxAge: 24 * 60 * 60 * 1000 // Session lasts 24 hours
-//         }
-//     })
-// );
-
-// --- Serve Static Files ---
+// --- Static Files ---
 app.use(express.static(path.join(__dirname)));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- API Routes ---
-// For manual login/register: /api/user/login, /api/user/register
-app.use('/api', registerRoute); 
-// For Google sign-in: /api/auth/google
+// Public user routes
+app.use('/api', registerRoute);
 app.use('/api/auth', authRoute);
 
-// Protected routes example: /api/jobs/..., /api/applicant/..., /api/company/...
-app.use('/api/profile', protectRoute, profileRoute); // Protect profile routes
-app.use('/api/jobs', protectRoute,jobsRoute); // For job postings: /api/jobs/...
-app.use('/api/applicant', protectRoute,applicantRoute); // For applicant actions: /api/applicant/...
-app.use('/api/company', protectRoute,companyRoute); // For company actions: /api/company/...
+// User-protected routes (cookie-based)
+app.use('/api/profile', protectRoute, profileRoute);
+
+// Public and Employer-protected routes
+app.use('/api/jobs', jobsRoute);
+app.use('/api/applicant', protectEmployerRoute, applicantRoute);
+app.use('/api/company', companyRoute);
 
 
-// --- Frontend Routes ---
+// --- Frontend Route ---
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
