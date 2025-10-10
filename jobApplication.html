@@ -132,8 +132,7 @@
             const getProfessionalSummary = (details) => {
                 if(!details || details.length === 0) return 'No professional details provided.';
                 const latest = details[0]; // Assuming the first is the most recent
-                const role = latest.roles ? latest.roles.join('/') : 'N/A';
-                return `${role} at ${latest.companyName || 'N/A'}.`;
+                return `${latest.designation} at ${latest.company} with ${details.totalExperience || 'N/A'} of experience.`;
             }
 
             // --- Page Rendering Function ---
@@ -225,8 +224,7 @@
                     const response = await fetch('/api/applicant/apply', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        // credentials: 'include' is crucial for sending the httpOnly cookie
-                        credentials: 'include', 
+                        credentials: 'include',
                         body: JSON.stringify({ jobId })
                     });
                     const result = await response.json();
@@ -260,17 +258,11 @@
             }
 
             try {
-                // FIX: Removed '?email=' from the profile fetch URL and added credentials:'include'
-                // The server will identify the user via their authentication cookie.
                 const [jobRes, userRes] = await Promise.all([
                     fetch(`/api/jobs/${jobId}`),
-                    fetch(`/api/profile/full`, { credentials: 'include' })
+                    fetch(`/api/profile/full?email=${encodeURIComponent(userEmail)}`)
                 ]);
 
-                if (userRes.status === 401) {
-                    throw new Error('Your session has expired. Please log in again to apply.');
-                }
-                
                 if (!jobRes.ok) throw new Error('Job not found or could not be loaded.');
                 if (!userRes.ok) throw new Error('Could not load your user profile.');
 
@@ -280,9 +272,100 @@
                 renderApplicationPage(job, user);
 
             } catch (error) {
-                renderError(error.message, error.message.includes('log in'));
+                renderError(error.message);
             }
         });
     </script>
+
+    <!-- Footer -->
+    <footer class="text-white py-5">
+        <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+            <div class="mb-4">
+                <img src="images/logo.png" alt="Hitaishi Careers Logo" height="40" class="me-2">
+                <span class="fw-bold fs-4">Hitaishi Careers</span>
+            </div>
+            <p class="mb-4">Connecting talented professionals with their dream jobs since 2022. Our mission is to make job searching efficient and effective for everyone.</p>
+            <div class="d-flex gap-3">
+                <a href="#" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+            </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-6">
+            <h5 class="mb-4">Quick Links</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="index.html" class="text-white-50">Home</a></li>
+                <li class="mb-2"><a href="jobs.html" class="text-white-50">Browse Jobs</a></li>
+                <li class="mb-2"><a href="employer.html" class="text-white-50">For Employers</a></li>
+                <li class="mb-2"><a href="about.html" class="text-white-50">About Us</a></li>
+                <li class="mb-2"><a href="contact.html" class="text-white-50">Contact</a></li>
+            </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+            <h5 class="mb-4">Job Seeker Resources</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2"><a href="resumebuild.html" class="text-white-50">Resume Builder</a></li>
+                <li class="mb-2"><a href="preparation.html" class="text-white-50">Interview Tips</a></li>
+                <li class="mb-2"><a href="careerbooster.html" class="text-white-50">Career Advice</a></li>
+                <li class="mb-2"><a href="featuredprofile.html" class="text-white-50">Featured Profile</a></li>
+                <li class="mb-2"><a href="tutu.html" class="text-white-50">Apply with AI</a></li>
+            </ul>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+            <h5 class="mb-4">Contact Us</h5>
+            <ul class="list-unstyled">
+                <li class="mb-3 d-flex align-items-start">
+                <i class="fas fa-map-marker-alt me-3 mt-1"></i>
+                <span class="text-white-50">985 pragathi nagar, Pragathi Nagar, Hyderabad, TS 500090</span>
+                </li>
+                <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-phone me-3"></i>
+                <a href="tel:+919876543210" class="text-white-50">+91 99087 93602</a>,  
+                <a href="tel:+919876543210" class="text-white-50">+91 87901 70525</a>
+                </li>
+                <li class="mb-3 d-flex align-items-center">
+                <i class="fas fa-envelope me-3"></i>
+                <a href="mailto:info@hitashicareers.com" class="text-white-50">info@hitashicareers.com</a>
+                </li>
+            </ul>
+            </div>
+        </div>
+        
+        <hr class="my-5">
+        
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+            <p class="mb-0">&copy; 2025 Hitaishi Careers. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+            <a href="PrivacyPolicy.html" class="text-white-50 me-3">Privacy Policy</a>
+            <a href="Terms-Conditions.html" class="text-white-50 me-3">Terms of Service</a>
+            <a href="cookiesPolicy.html" class="text-white-50">Cookie Policy</a>
+            </div>
+        </div>
+        </div>
+        <style>
+            footer {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        }
+        
+        footer a {
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: var(--secondary-color) !important;
+        }
+        </style>
+    </footer>
+    
 </body>
 </html>
+
