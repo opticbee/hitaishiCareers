@@ -46,7 +46,16 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } }); 
+// 🚨 UPDATED: Increased file size limit and added field limits for robustness 
+const upload = multer({ 
+    storage, 
+    fileFilter, 
+    limits: { 
+        fileSize: 10 * 1024 * 1024, // 10 MB limit for single file
+        files: 1, // Only 1 file upload per request (profilePhoto or resume)
+        fields: 50 // Plenty of fields for all the form data
+    } 
+}); 
 
 
 // Middleware
