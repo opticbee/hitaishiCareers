@@ -8,6 +8,16 @@ const jwt = require('jsonwebtoken'); // Import jsonwebtoken
 const { query } = require('../db');
 const router = express.Router();
 
+
+// Basic input sanitization to prevent stored XSS
+const sanitize = (str) => {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>\"'()]/g, ''); 
+};
+
+
+
+
 const saltRounds = 10;
 
 // ... (Multer setup and database setup code remains unchanged) ...
@@ -35,102 +45,145 @@ router.use(express.urlencoded({
     extended: true
 }));
 
-// --- Registration API Endpoint (remains mostly the same) ---
+// --- Secure Registration Route with Auto-Login ---
 router.post('/user/register', upload.single('profileImage'), async (req, res) => {
-    try {
-        const { fullName, email, mobileNumber, password } = req.body;
-        const profileImageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+  try {
+    // --- Sanitize and validate inputs ---
+    const fullName = sanitize(req.body.fullName);
+    const email = sanitize(req.body.email);
+    const mobileNumber = sanitize(req.body.mobileNumber);
+    const password = req.body.password; // Do NOT sanitize password
+    const profileImageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
-        if (!fullName || !email || !mobileNumber || !password) {
-            return res.status(400).json({ error: 'All fields except profile image are required.' });
-        }
-
-        const existingUser = await query('SELECT * FROM users WHERE email = ?', [email]);
-        if (existingUser.length > 0) {
-            if (existingUser[0].auth_provider === 'google') {
-                return res.status(409).json({ error: 'This email was used to sign up with Google. Please log in with Google.' });
-            }
-            return res.status(409).json({ error: 'This email address is already registered.' });
-        }
-
-        const passwordHash = await bcrypt.hash(password, saltRounds);
-        const insertUserQuery = `
-            INSERT INTO users (full_name, email, mobile_number, password_hash, profile_image_url, auth_provider)
-            VALUES (?, ?, ?, ?, ?, ?);
-        `;
-        const result = await query(insertUserQuery, [fullName, email, mobileNumber, passwordHash, profileImageUrl, 'local']);
-
-        console.log(`✅ User registered successfully with ID: ${result.insertId}`);
-        res.status(201).json({ message: 'User registered successfully!', userId: result.insertId });
-
-    } catch (error) {
-        console.error('❌ Error during registration:', error);
-        if (error.code === 'ER_DUP_ENTRY') {
-            return res.status(409).json({ error: 'This email address is already registered.' });
-        }
-        res.status(500).json({ error: 'An error occurred on the server.' });
+    if (!fullName || !email || !mobileNumber || !password) {
+      return res.status(400).json({ error: 'All fields except profile image are required.' });
     }
+
+    // --- Check if user already exists ---
+    const existingUser = await query('SELECT * FROM users WHERE email = ?', [email]);
+    if (existingUser.length > 0) {
+      if (existingUser[0].auth_provider === 'google') {
+        return res.status(409).json({ error: 'This email was used to sign up with Google. Please log in with Google.' });
+      }
+      return res.status(409).json({ error: 'This email address is already registered.' });
+    }
+
+    // --- Hash password securely ---
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    // --- Insert user into database ---
+    const insertUserQuery = `
+      INSERT INTO users (full_name, email, mobile_number, password_hash, profile_image_url, auth_provider)
+      VALUES (?, ?, ?, ?, ?, ?);
+    `;
+    const result = await query(insertUserQuery, [fullName, email, mobileNumber, passwordHash, profileImageUrl, 'local']);
+
+    console.log(`✅ User registered successfully with ID: ${result.insertId}`);
+
+    // --- Auto-login: Generate JWT ---
+    const payload = {
+      id: result.insertId,
+      email,
+      fullName
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    // --- Set secure, httpOnly cookie ---
+    res.cookie('token', token, {
+      httpOnly: true,                    // Protect from XSS
+      secure: process.env.NODE_ENV === 'production', // Use HTTPS-only in prod
+      sameSite: 'strict',                // Prevent CSRF
+      maxAge: 7 * 24 * 60 * 60 * 1000   // 7 days
+    });
+
+    // --- Send success response with token ---
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully!',
+      token, // Optional: frontend can store it in localStorage if needed
+      user: {
+        id: result.insertId,
+        fullName,
+        email,
+        profileImage: profileImageUrl || null
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error during registration:', error);
+    if (error.code === 'ER_DUP_ENTRY') {
+      return res.status(409).json({ error: 'This email address is already registered.' });
+    }
+    res.status(500).json({ error: 'An error occurred on the server.' });
+  }
 });
 
-// --- UPDATED Login Route ---
+// --- Secure Login Route ---
 router.post('/user/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
+  try {    
+    const email = sanitize(req.body.email);
+    const password = req.body.password; // do NOT sanitize password
 
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required.' });
-        }
-
-        const users = await query('SELECT * FROM users WHERE email = ?', [email]);
-        if (users.length === 0) {
-            return res.status(401).json({ error: 'Invalid email or password.' });
-        }
-
-        const user = users[0];
-        if (user.auth_provider === 'google') {
-            return res.status(403).json({ error: 'This account was registered with Google. Please use Google to log in.' });
-        }
-
-        const isPasswordValid = await bcrypt.compare(password, user.password_hash);
-        if (!isPasswordValid) {
-            return res.status(401).json({ error: 'Invalid email or password.' });
-        }
-
-        // --- JWT Generation and Cookie Setting ---
-        // 1. Create JWT payload
-        const payload = {
-            id: user.id,
-            email: user.email,
-            fullName: user.full_name
-        };
-
-        // 2. Sign the token
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {
-            expiresIn: '7d' // Token will expire in 7 days
-        });
-
-        // 3. Set the token in an HTTP-Only, Secure cookie
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-            sameSite: 'strict'
-        });
-
-        // 4. Send success response
-        res.status(200).json({
-            message: 'Login successful!',
-            user: {
-                id: user.id,
-                fullName: user.full_name,
-                email: user.email
-            }
-        });
-
-    } catch (error) {
-        console.error('❌ Error during login:', error);
-        res.status(500).json({ error: 'An error occurred on the server.' });
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required.' });
     }
+
+    // --- Check if user exists ---
+    const users = await query('SELECT * FROM users WHERE email = ?', [email]);
+    if (users.length === 0) {
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    const user = users[0];
+
+    // --- Prevent login if Google account ---
+    if (user.auth_provider === 'google') {
+      return res.status(403).json({
+        error: 'This account was registered with Google. Please use Google to log in.'
+      });
+    }
+
+    // --- Verify password ---
+    const isPasswordValid = await bcrypt.compare(password, user.password_hash);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    // --- Generate JWT ---
+    const payload = {
+      id: user.id,
+      email: user.email,
+      fullName: user.full_name
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    // --- Set JWT in secure cookie ---
+    res.cookie('token', token, {
+      httpOnly: true,                    // Prevent JS access (XSS safe)
+      secure: process.env.NODE_ENV === 'production', // Use HTTPS only in prod
+      maxAge: 7 * 24 * 60 * 60 * 1000,  // 7 days
+      sameSite: 'strict'                 // Prevent CSRF
+    });
+
+    // --- Send success response ---
+    res.status(200).json({
+      success: true,
+      message: 'Login successful!',
+      token, // Frontend can store in localStorage if needed
+      user: {
+        id: user.id,
+        fullName: user.full_name,
+        email: user.email,
+        profileImage: user.profile_image_url || null
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Error during login:', error);
+    res.status(500).json({ error: 'An error occurred on the server.' });
+  }
 });
 
 // ... (password update route remains unchanged, but now requires a valid JWT cookie to work via protectRoute middleware) ...

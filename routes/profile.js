@@ -3,12 +3,14 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const {
-    v4: uuidv4
-} = require('uuid');
-const {
-    query
-} = require('../db');
+const { v4: uuidv4} = require('uuid');
+const { query } = require('../db');
+
+const sanitize = (str) => {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[<>\"'()]/g, '');
+};
+
 
 const router = express.Router();
 
@@ -24,9 +26,26 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + unique + path.extname(file.originalname));
     }
 });
-const upload = multer({
-    storage
-});
+
+
+const fileFilter = (req, file, cb) => {
+  const allowedImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  const allowedDocTypes = ['application/pdf', 'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  
+  if (file.fieldname === 'profilePhoto' && !allowedImageTypes.includes(file.mimetype)) {
+    return cb(new Error('Only JPG, PNG images are allowed for profile photos!'), false);
+  }
+
+  if (file.fieldname === 'resume' && !allowedDocTypes.includes(file.mimetype)) {
+    return cb(new Error('Only PDF or Word documents are allowed for resume!'), false);
+  }
+
+  cb(null, true);
+};
+
+const upload = multer({ storage, fileFilter, limits: { fileSize: 5 * 1024 * 1024 } }); 
+
 
 // Middleware
 router.use(express.json());
@@ -117,12 +136,12 @@ router.post('/update', upload.single('profilePhoto'), async (req, res) => {
 
     // ... (rest of the update logic remains the same) ...
     const updates = {};
-    if (req.body.fullName) updates.full_name = req.body.fullName;
-    if (req.body.phone) updates.mobile_number = req.body.phone;
-    if (req.body.gender) updates.gender = req.body.gender;
-    if (req.body.experienceLevel) updates.experience_level = req.body.experienceLevel;
-    if (req.body.ctcExpected) updates.ctc_expected = req.body.ctcExpected;
-    if (req.body.noticePeriod) updates.notice_period = req.body.noticePeriod;
+    if (req.body.fullName) updates.full_name = sanitize(req.body.fullName);
+    if (req.body.phone) updates.mobile_number = sanitize(req.body.phone);
+    if (req.body.gender) updates.gender = sanitize(req.body.gender);
+    if (req.body.experienceLevel) updates.experience_level = sanitize(req.body.experienceLevel);
+    if (req.body.ctcExpected) updates.ctc_expected = sanitize(req.body.ctcExpected);
+    if (req.body.noticePeriod) updates.notice_period = sanitize(req.body.noticePeriod);
     const jsonFieldToString = (val) => {
       if (!val) return null;
       return typeof val === 'string' ? val : JSON.stringify(val);
@@ -143,7 +162,7 @@ router.post('/update', upload.single('profilePhoto'), async (req, res) => {
       const values = [...Object.values(updates), email];
       await query(`UPDATE users SET ${fields} WHERE email = ?`, values);
     }
-    res.json({ message: 'Profile updated successfully' });
+    res.json({ success: true, message: 'Profile updated successfully' });
   } catch (err) {
     console.error('❌ Error updating profile:', err);
     res.status(500).json({ error: 'Server error while updating profile' });
@@ -164,7 +183,7 @@ router.post('/upload-resume', upload.single('resume'), async (req, res) => {
         const resumeUrl = `/uploads/${req.file.filename}`;
         await query('UPDATE users SET resume_url=?, profile_uuid=? WHERE email=?', [resumeUrl, uuidv4(), userEmail]);
 
-        res.json({ message: 'Resume uploaded successfully', url: resumeUrl });
+        res.json({ success: true, message: 'Resume uploaded successfully', url: resumeUrl });
     } catch (err) {
         console.error("❌ Resume upload error:", err);
         res.status(500).json({ error: 'Error uploading resume' });
