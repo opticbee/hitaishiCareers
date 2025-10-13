@@ -119,20 +119,35 @@
             };
 
             const formatSkills = (skills, title) => {
+                 // Check if skills is a string, if so, parse it
                  const skillArray = skills && typeof skills === 'string' ? JSON.parse(skills) : skills;
+                 
                 if (!Array.isArray(skillArray) || skillArray.length === 0) return '';
+                // Ensure array elements are strings before mapping (prevents error if data structure is slightly off)
+                const safeSkillArray = skillArray.map(s => typeof s === 'object' && s !== null ? s.name : s).filter(Boolean);
+
                 return `
                     <h3 class="section-title mt-4">${title}</h3>
                     <div>
-                        ${skillArray.map(skill => `<span class="badge bg-secondary skill-badge me-1 mb-1">${skill}</span>`).join('')}
+                        ${safeSkillArray.map(skill => `<span class="badge bg-secondary skill-badge me-1 mb-1">${skill}</span>`).join('')}
                     </div>
                 `;
             };
 
             const getProfessionalSummary = (details) => {
                 if(!details || details.length === 0) return 'No professional details provided.';
-                const latest = details[0]; // Assuming the first is the most recent
-                return `${latest.designation} at ${latest.company} with ${details.totalExperience || 'N/A'} of experience.`;
+                
+                // Assuming professionalDetails is an array of objects
+                const latest = details[0]; 
+                
+                // Check for job title field names (it might be `title` or `designation` depending on profile page structure)
+                const jobTitle = latest.title || latest.designation;
+                
+                if (jobTitle && latest.company) {
+                     return `${jobTitle} at ${latest.company}`;
+                }
+
+                return 'Professional details available.';
             }
 
             // --- Page Rendering Function ---
@@ -221,6 +236,7 @@
                 applyBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Applying...`;
                 
                 try {
+                    // This POST request relies on the HttpOnly cookie for authentication!
                     const response = await fetch('/api/applicant/apply', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -228,6 +244,11 @@
                         body: JSON.stringify({ jobId })
                     });
                     const result = await response.json();
+
+                    if (response.status === 401 || response.status === 403) {
+                        // Handle unauthenticated/forbidden response directly
+                         throw new Error("Application failed: Your session has expired. Please log in again.");
+                    }
                     if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
 
                     document.getElementById('apply-section').innerHTML = `
@@ -244,26 +265,30 @@
             }
 
             // --- Initial Page Load Logic ---
-            const userEmail = sessionStorage.getItem('email');
-            if (!userEmail) {
-                renderError("Please login to continue.", true);
-                return;
-            }
-
             const urlParams = new URLSearchParams(window.location.search);
             const jobId = urlParams.get('jobId');
+            
             if (!jobId) {
                 renderError("No job specified. Go back and select a job.");
                 return;
             }
 
             try {
+                // 🚨 FIX: We now rely purely on the HttpOnly cookie for authentication.
+                // Requesting the profile using 'credentials: include' will fail with 401 if not logged in.
                 const [jobRes, userRes] = await Promise.all([
                     fetch(`/api/jobs/${jobId}`),
-                    fetch(`/api/profile/full?email=${encodeURIComponent(userEmail)}`)
+                    fetch(`/api/profile/full`, { credentials: 'include' }) // Fetch profile using cookie
                 ]);
 
                 if (!jobRes.ok) throw new Error('Job not found or could not be loaded.');
+                
+                if (userRes.status === 401) {
+                    // Redirect if the profile fetch fails due to missing/expired cookie
+                    renderError("Your session has expired or you are not logged in.", true);
+                    return;
+                }
+                
                 if (!userRes.ok) throw new Error('Could not load your user profile.');
 
                 const { job } = await jobRes.json();
@@ -368,4 +393,3 @@
     
 </body>
 </html>
-

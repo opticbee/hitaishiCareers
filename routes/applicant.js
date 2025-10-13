@@ -4,15 +4,17 @@ const { query } = require("../db");
 
 const router = express.Router();
 
+const {protectRoute} = require("../middleware/authMiddleware");
+
 // --- User Authentication Middleware (Session Based) ---
-const authenticateUser = (req, res, next) => {
-    if (req.session && req.session.user && req.session.user.id && req.session.user.email) {
-        req.user = req.session.user; // Attach user info from session
-        next();
-    } else {
-        res.status(401).json({ error: "User not authenticated. Please log in." });
-    }
-};
+// const authenticateUser = (req, res, next) => {
+//     if (req.session && req.session.user && req.session.user.id && req.session.user.email) {
+//         req.user = req.session.user; // Attach user info from session
+//         next();
+//     } else {
+//         res.status(401).json({ error: "User not authenticated. Please log in." });
+//     }
+// };
 
 // --- Database Table Initialization ---
 (async function initApplicationsTable() {
@@ -38,7 +40,7 @@ const authenticateUser = (req, res, next) => {
 })();
 
 // --- Route to apply for a job ---
-router.post("/apply", authenticateUser, async (req, res) => {
+router.post("/apply", protectRoute, async (req, res) => {
     try {
         const { jobId } = req.body;
         const userId = req.user.id;
