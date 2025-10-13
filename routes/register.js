@@ -12,15 +12,13 @@ const router = express.Router();
 // Basic input sanitization to prevent stored XSS
 const sanitize = (str) => {
   if (typeof str !== 'string') return '';
+  // Removes common HTML/scripting characters
   return str.replace(/[<>\"'()]/g, ''); 
 };
 
 
-
-
 const saltRounds = 10;
 
-// ... (Multer setup and database setup code remains unchanged) ...
 // --- Ensure 'uploads' directory exists ---
 const uploadDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadDir)) {
@@ -89,7 +87,7 @@ router.post('/user/register', upload.single('profileImage'), async (req, res) =>
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    // --- Set secure, httpOnly cookie ---
+    // --- Set secure, httpOnly cookie (Primary security) ---
     res.cookie('token', token, {
       httpOnly: true,                    // Protect from XSS
       secure: process.env.NODE_ENV === 'production', // Use HTTPS-only in prod
@@ -101,7 +99,7 @@ router.post('/user/register', upload.single('profileImage'), async (req, res) =>
     res.status(201).json({
       success: true,
       message: 'User registered successfully!',
-      token, // Optional: frontend can store it in localStorage if needed
+      token, // Included for client to store in localStorage (as requested)
       user: {
         id: result.insertId,
         fullName,
@@ -119,7 +117,7 @@ router.post('/user/register', upload.single('profileImage'), async (req, res) =>
   }
 });
 
-// --- Secure Login Route ---
+// --- Secure Login Route (Redundant, but kept if used separately from /api/auth/login) ---
 router.post('/user/login', async (req, res) => {
   try {    
     const email = sanitize(req.body.email);
@@ -159,7 +157,7 @@ router.post('/user/login', async (req, res) => {
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    // --- Set JWT in secure cookie ---
+    // --- Set JWT in secure HttpOnly cookie (Primary security) ---
     res.cookie('token', token, {
       httpOnly: true,                    // Prevent JS access (XSS safe)
       secure: process.env.NODE_ENV === 'production', // Use HTTPS only in prod
@@ -171,7 +169,7 @@ router.post('/user/login', async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Login successful!',
-      token, // Frontend can store in localStorage if needed
+      token, // Included for client to store in localStorage (as requested)
       user: {
         id: user.id,
         fullName: user.full_name,
@@ -186,7 +184,7 @@ router.post('/user/login', async (req, res) => {
   }
 });
 
-// ... (password update route remains unchanged, but now requires a valid JWT cookie to work via protectRoute middleware) ...
+// ... (password update route remains unchanged, requires separate protectRoute middleware) ...
 router.post('/user/update-password', async (req, res) => {
   try {
     // Note: protectRoute middleware should be applied to this route in server.js
@@ -217,7 +215,7 @@ router.post('/user/update-password', async (req, res) => {
 
 // --- UPDATED Logout Route ---
 router.post('/logout', (req, res) => {
-    // To log out, we clear the JWT cookie.
+    // To log out, we clear the JWT HttpOnly cookie.
     res.cookie('token', '', {
         httpOnly: true,
         expires: new Date(0), // Set expiry date to the past

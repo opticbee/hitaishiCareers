@@ -6,7 +6,7 @@ const { OAuth2Client } = require('google-auth-library');
 const { query } = require('../db');
 const router = express.Router();
 
-// --- Security: Basic sanitization ---
+// --- Security: Basic sanitization (prevents stored XSS in DB for some fields) ---
 const sanitize = (str) => (typeof str === 'string' ? str.replace(/[<>\"'()]/g, '') : '');
 
 // --- Google OAuth Setup ---
@@ -14,13 +14,16 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 const saltRounds = 10;
 
-/** Helper to generate token & send response safely */
+/** * Helper to generate token & send response safely.
+ * NOTE: The token is returned in the JSON body (for localStorage) AND
+ * set in an HttpOnly cookie (for security against XSS token theft).
+ */
 const generateToken = (user, res, message = 'Authenticated successfully!') => {
   const payload = { id: user.id, email: user.email, fullName: user.full_name };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-  // Store token in HttpOnly cookie (for safety)
+  // Store token in HttpOnly cookie (Primary security measure against XSS token theft)
   res.cookie('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -31,7 +34,7 @@ const generateToken = (user, res, message = 'Authenticated successfully!') => {
   return res.status(200).json({
     success: true,
     message,
-    token, // frontend can store in localStorage if desired
+    token, // Token included in body for client-side storage (e.g., localStorage)
     user: {
       id: user.id,
       fullName: user.full_name,
@@ -43,6 +46,7 @@ const generateToken = (user, res, message = 'Authenticated successfully!') => {
 
 /** -------------------------
  * LOCAL REGISTER
+ * NOTE: This is kept separate from the one in register.js for modularity.
  --------------------------*/
 router.post('/register', async (req, res) => {
   try {
@@ -50,7 +54,8 @@ router.post('/register', async (req, res) => {
     if (!fullName || !email || !mobileNumber || !password)
       return res.status(400).json({ error: 'All fields are required.' });
 
-    const existing = await query('SELECT * FROM users WHERE email = ?', [email]);
+    // Inputs are sanitized before DB insertion
+    const existing = await query('SELECT * FROM users WHERE email = ?', [sanitize(email)]);
     if (existing.length > 0)
       return res.status(409).json({ error: 'Email already registered. Please log in.' });
 
@@ -62,6 +67,7 @@ router.post('/register', async (req, res) => {
 
     const newUser = { id: result.insertId, email, full_name: fullName };
     console.log(`✅ User registered: ${email}`);
+    // Auto-login after registration and generate token
     generateToken(newUser, res, 'Registration successful!');
   } catch (err) {
     console.error('❌ Registration error:', err);
@@ -75,10 +81,13 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email || !password)
+    // Only sanitize email, not password (it's hashed later)
+    const sanitizedEmail = sanitize(email); 
+
+    if (!sanitizedEmail || !password)
       return res.status(400).json({ error: 'Email and password required.' });
 
-    const users = await query('SELECT * FROM users WHERE email = ?', [email]);
+    const users = await query('SELECT * FROM users WHERE email = ?', [sanitizedEmail]);
     if (!users.length) return res.status(401).json({ error: 'Invalid email or password.' });
 
     const user = users[0];
@@ -88,7 +97,7 @@ router.post('/login', async (req, res) => {
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials.' });
 
-    console.log(`✅ Local login: ${email}`);
+    console.log(`✅ Local login: ${sanitizedEmail}`);
     generateToken(user, res, 'Login successful!');
   } catch (err) {
     console.error('❌ Login error:', err);
@@ -111,6 +120,7 @@ router.post('/google', async (req, res) => {
     const payload = ticket.getPayload();
     if (!payload) return res.status(401).json({ error: 'Invalid Google token.' });
 
+    // Sanitize data retrieved from Google payload before insertion
     const google_id = sanitize(payload.sub);
     const email = sanitize(payload.email);
     const full_name = sanitize(payload.name);
@@ -146,6 +156,7 @@ router.post('/google', async (req, res) => {
  * LOGOUT
  --------------------------*/
 router.post('/logout', (req, res) => {
+  // Clear the HttpOnly cookie for logout
   res.cookie('token', '', {
     httpOnly: true,
     expires: new Date(0),

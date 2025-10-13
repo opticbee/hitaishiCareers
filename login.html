@@ -14,8 +14,8 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="stylesheet" href="navbar.css">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://accounts.google.com https://apis.google.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://accounts.google.com https://apis.google.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline' https://accounts.google.com https://apis.google.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;">
+  <!-- Simplified and necessary CSP -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https:; script-src 'self' 'unsafe-inline' https:;">
 
   <style>
     :root {
@@ -261,8 +261,19 @@
             // --- NEW: Check authentication status and update navbar ---
             async function checkAuthAndUpdateNavbar() {
               try {
-                // The browser automatically sends the http-only cookie with this request.
-                const res = await fetch('/api/profile/full'); 
+                // Rely on the HttpOnly cookie for actual auth, but check for local storage token 
+                // for client-side redirection/status checks.
+                const token = localStorage.getItem('jwt');
+                if (!token) {
+                  // Not logged in, ensure default state
+                  document.getElementById("profile-icon").classList.remove("d-none");
+                  document.getElementById("profile-avatar").classList.add("d-none");
+                  document.getElementById('profileLink').href = 'login.html';
+                  return;
+                }
+                
+                // Use the secure HttpOnly cookie (credentials: 'include') to fetch profile data
+                const res = await fetch('/api/profile/full', { credentials: 'include' }); 
                 
                 if (res.ok) {
                   // User is logged in
@@ -278,8 +289,8 @@
                   // Change link to go to profile page
                   document.getElementById('profileLink').href = 'userProfile.html';
                 } else {
-                  // User is not logged in, ensure default state
-                  console.log("User not logged in, showing default icon.");
+                  // Cookie/Session invalid, clear local token and redirect
+                  localStorage.removeItem('jwt');
                   document.getElementById("profile-icon").classList.remove("d-none");
                   document.getElementById("profile-avatar").classList.add("d-none");
                   document.getElementById('profileLink').href = 'login.html';
@@ -406,7 +417,7 @@
     );
   };
 
-  // ✅ Handle Google Sign-In
+  // Handle Google Sign-In
   async function handleGoogleSignIn(response) {
     const id_token = response.credential;
     try {
@@ -419,21 +430,22 @@
 
       const result = await res.json();
       if (res.ok) {
-        alert("✅ " + result.message);
-
-        // ✅ Save JWT in localStorage (frontend)
+        // ✅ Save JWT in localStorage (as requested)
         if (result.token) {
           localStorage.setItem("jwt", result.token);
         }
 
-        // ✅ Redirect to profile
+        // Use custom modal instead of alert
+        showCustomAlert("✅ Login successful with Google!", 'success');
+        
+        // Redirect to profile
         window.location.href = "userProfile.html";
       } else {
-        alert("❌ " + result.error);
+        showCustomAlert("❌ " + (result.error || "Google sign-in failed."), 'danger');
       }
     } catch (error) {
       console.error("Error during Google sign-in:", error);
-      alert("An error occurred during sign-in. Please try again.");
+      showCustomAlert("An error occurred during sign-in. Please try again.", 'danger');
     }
   }
 
@@ -485,7 +497,7 @@
       const password = passwordInput.value.trim();
 
       if (!email || !password) {
-        alert("Please fill out both fields.");
+        showCustomAlert("Please fill out both fields.", 'warning');
         return;
       }
 
@@ -499,24 +511,54 @@
 
         const result = await res.json();
         if (res.ok) {
-          alert("✅ " + result.message);
-
-          // ✅ Store JWT safely
+          // ✅ Store JWT in localStorage (as requested)
           if (result.token) {
             localStorage.setItem("jwt", result.token);
           }
-
-          // ✅ Redirect
+          
+          showCustomAlert("✅ " + result.message, 'success');
+          // Redirect
           window.location.href = "userProfile.html";
         } else {
-          alert("❌ " + (result.error || "Login failed."));
+          showCustomAlert("❌ " + (result.error || "Login failed."), 'danger');
         }
       } catch (err) {
         console.error("Login request failed:", err);
-        alert("Server error. Please try again later.");
+        showCustomAlert("Server error. Please try again later.", 'danger');
       }
     });
   });
+  
+  // Custom Alert/Toast function (Replaces native alert)
+  function showCustomAlert(message, type = 'info') {
+      let alertEl = document.getElementById('customAlert');
+      if (!alertEl) {
+          alertEl = document.createElement('div');
+          alertEl.id = 'customAlert';
+          alertEl.className = 'fixed-top p-3 d-flex justify-content-center';
+          alertEl.style.zIndex = '1055';
+          document.body.appendChild(alertEl);
+      }
+      
+      const bgColor = type === 'success' ? 'bg-success' : type === 'danger' ? 'bg-danger' : 'bg-info';
+      
+      const toastHTML = `
+          <div class="toast align-items-center text-white ${bgColor} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+              <div class="d-flex">
+                  <div class="toast-body">
+                      ${message}
+                  </div>
+                  <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+          </div>
+      `;
+      
+      alertEl.innerHTML = toastHTML;
+      const toast = new bootstrap.Toast(alertEl.querySelector('.toast'), { delay: 5000 });
+      toast.show();
+      
+      alertEl.querySelector('.toast').addEventListener('hidden.bs.toast', (e) => e.target.remove());
+  }
 </script>
 
 

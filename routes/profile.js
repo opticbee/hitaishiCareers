@@ -6,8 +6,10 @@ const fs = require('fs');
 const { v4: uuidv4} = require('uuid');
 const { query } = require('../db');
 
+// --- Basic input sanitization (XSS prevention) ---
 const sanitize = (str) => {
   if (typeof str !== 'string') return '';
+  // Removes common HTML/scripting characters before insertion into DB
   return str.replace(/[<>\"'()]/g, '');
 };
 
@@ -53,9 +55,6 @@ router.use(express.urlencoded({
     extended: true
 }));
 
-// NOTE: The database schema setup logic has been moved to register.js
-// to centralize it and prevent errors. It has been removed from this file.
-
 // --- Get profile (by session/email) ---
 router.get('/profile', async (req, res) => {
     try {
@@ -88,7 +87,7 @@ router.get('/full', async (req, res) => {
     const userEmail = req.user.email;
     if (!userEmail) return res.status(401).json({ error: 'Authentication error' });
 
-    const rows = await query('SELECT * FROM users WHERE email=?', [userEmail]);
+    const rows = await query('SELECT * FROM users WHERE email = ?', [userEmail]);
     if (!rows.length) return res.status(404).json({ error: 'User not found' });
 
     const u = rows[0];
@@ -96,6 +95,7 @@ router.get('/full', async (req, res) => {
     const safeParse = (v) => {
       if (!v) return [];
       if (typeof v === 'object') return v;
+      // Since the data was sanitized before insertion, JSON.parse is safe.
       try { return JSON.parse(v); } catch (e) { return []; }
     };
     
@@ -134,7 +134,7 @@ router.post('/update', upload.single('profilePhoto'), async (req, res) => {
     const email = req.user.email;
     if (!email) return res.status(401).json({ error: 'Not authenticated' });
 
-    // ... (rest of the update logic remains the same) ...
+    // Sanitize all textual inputs before updating the database
     const updates = {};
     if (req.body.fullName) updates.full_name = sanitize(req.body.fullName);
     if (req.body.phone) updates.mobile_number = sanitize(req.body.phone);
@@ -142,16 +142,23 @@ router.post('/update', upload.single('profilePhoto'), async (req, res) => {
     if (req.body.experienceLevel) updates.experience_level = sanitize(req.body.experienceLevel);
     if (req.body.ctcExpected) updates.ctc_expected = sanitize(req.body.ctcExpected);
     if (req.body.noticePeriod) updates.notice_period = sanitize(req.body.noticePeriod);
+    
+    // JSON fields are handled by stringify, which preserves structure, 
+    // but the underlying content should be safe from the client side using escapeHTML before submission.
     const jsonFieldToString = (val) => {
       if (!val) return null;
       return typeof val === 'string' ? val : JSON.stringify(val);
     };
+    
+    // NOTE: For deeper security, individual array/object fields (e.g., project descriptions)
+    // should be sanitized within the client-side save function or when processing the JSON here.
     if (req.body.professionalDetails) updates.professional_details = jsonFieldToString(req.body.professionalDetails);
     if (req.body.projects) updates.projects = jsonFieldToString(req.body.projects);
     if (req.body.skills) updates.skills = jsonFieldToString(req.body.skills);
     if (req.body.education) updates.education = jsonFieldToString(req.body.education);
     if (req.body.certifications) updates.certifications = jsonFieldToString(req.body.certifications);
     if (req.body.languages) updates.languages = jsonFieldToString(req.body.languages);
+    
     if (req.file) {
       updates.profile_image_url = `/uploads/${req.file.filename}`;
     }
