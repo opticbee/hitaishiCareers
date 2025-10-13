@@ -297,8 +297,10 @@
             z-index: 1055;
         }
         
+        /* UPDATED: Skill Tags */
         .tag {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 6px 12px;
@@ -307,6 +309,7 @@
             font-size: 0.875rem;
             border: none;
             transition: all 0.3s ease;
+            white-space: nowrap;
         }
         
         .tag:hover {
@@ -314,15 +317,44 @@
             box-shadow: 0 5px 10px rgba(106, 13, 173, 0.3);
         }
         
-        .tag .bi-x {
+        .tag-remove {
             cursor: pointer;
             margin-left: 8px;
             font-weight: bold;
             transition: all 0.3s ease;
+            opacity: 0.8;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.2);
         }
         
-        .tag .bi-x:hover {
-            transform: scale(1.2);
+        .tag-remove:hover {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Skill Input Styling */
+        #skillInputGroup {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        #skillInput {
+            border-radius: 12px 0 0 12px !important;
+        }
+        #addSkillBtn {
+            border-radius: 0 12px 12px 0 !important;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            transition: background 0.3s ease;
+        }
+        #addSkillBtn:hover {
+            background: #5a0a9d;
         }
         
         .action-buttons {
@@ -1016,7 +1048,9 @@
     // Renders the section content (view mode)
     function renderDynamicSection(id, title, data, renderViewFn, addFn, saveFn, populateFormFn) {
         const container = document.getElementById(id);
+        // Special case for skills: Render view directly inside the container
         const itemsHTML = data?.length ? data.map(renderViewFn).join('') : '<p class="text-muted">No information added yet.</p>';
+        
         container.innerHTML = `
             <div class="section-header">
                 <h2 class="h5 mb-0">${title}</h2>
@@ -1027,9 +1061,11 @@
             <div id="${id}View">${itemsHTML}</div>
             <form id="${id}Form" class="d-none" onsubmit="event.preventDefault(); ${saveFn}();">
                 <div id="${id}Entries"></div>
-                <button type="button" class="btn btn-outline-primary mb-3" onclick="${addFn}()">
-                    <i class="bi bi-plus"></i> Add Entry
-                </button>
+                ${id !== 'skills' ? `
+                    <button type="button" class="btn btn-outline-primary mb-3" onclick="${addFn}()">
+                        <i class="bi bi-plus"></i> Add Entry
+                    </button>
+                ` : ''}
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-outline-secondary" onclick="toggleEdit('${id}', false)">Cancel</button>
@@ -1051,11 +1087,8 @@
             if (editBtn) editBtn.classList.add('d-none');
             
             // Populate form content only when entering edit mode
-            if (id !== 'personalDetails') { 
-                const populateFnName = 'populate' + id.charAt(0).toUpperCase() + id.slice(1) + 'Form';
-                if (typeof window[populateFnName] === 'function') {
-                    window[populateFnName]();
-                }
+            if (typeof window['populate' + id.charAt(0).toUpperCase() + id.slice(1) + 'Form'] === 'function') {
+                window['populate' + id.charAt(0).toUpperCase() + id.slice(1) + 'Form']();
             }
         } else {
             view.classList.remove('d-none');
@@ -1192,6 +1225,7 @@
     // ---------------------------------------------
     // --- 1. PROFESSIONAL DETAILS IMPLEMENTATION ---
     // ---------------------------------------------
+    // ... (Professional Details functions remain unchanged) ...
 
     function renderProfessionalView(item) {
         const safeItem = sanitizeDataForSubmission(item);
@@ -1294,8 +1328,7 @@
 
     // -------------------------------------
     // --- 2. PROJECTS IMPLEMENTATION ---
-    // -------------------------------------
-    // ... (Similar structure for Projects, Education, Certifications, Languages, Skills) ...
+    // ... (Projects functions remain unchanged) ...
 
     function renderProjectView(item) {
         const safeItem = sanitizeDataForSubmission(item);
@@ -1372,7 +1405,7 @@
     
     // -------------------------------------
     // --- 3. EDUCATION IMPLEMENTATION ---
-    // -------------------------------------
+    // ... (Education functions remain unchanged) ...
 
     function renderEducationView(item) {
         const safeItem = sanitizeDataForSubmission(item);
@@ -1464,7 +1497,7 @@
 
     // ------------------------------------------
     // --- 4. CERTIFICATIONS IMPLEMENTATION ---
-    // ------------------------------------------
+    // ... (Certifications functions remain unchanged) ...
 
     function renderCertificationView(item) {
         const safeItem = sanitizeDataForSubmission(item);
@@ -1544,7 +1577,7 @@
 
     // ------------------------------------
     // --- 5. LANGUAGES IMPLEMENTATION ---
-    // ------------------------------------
+    // ... (Languages functions remain unchanged) ...
 
     function renderLanguageView(item) {
         const safeItem = sanitizeDataForSubmission(item);
@@ -1629,45 +1662,107 @@
     // ---------------------------------
     // --- 6. SKILLS IMPLEMENTATION ---
     // ---------------------------------
-    // Using a simpler approach for skills, treating them as a list of tags in view and a text input in edit.
 
     function renderSkillView(item) {
         const safeItem = sanitizeDataForSubmission(item);
-        // Skills are now rendered in the dynamic section block by populateAllSections
+        // Render each skill as a clickable tag
         return `<span class="tag">${safeItem.name}</span>`;
     }
-
+    
+    // Renders the interactive tag input area
     function populateSkillsForm() {
         const entriesContainer = document.getElementById('skillsEntries');
-        const skillNames = profileData.skills.map(s => s.name || s).join(', '); // Handle old/new format
         entriesContainer.innerHTML = `
             <div class="mb-3">
-                <label class="form-label">Enter Skills (comma separated)</label>
-                <textarea class="form-control" id="skillInput" rows="3">${escapeHTML(skillNames)}</textarea>
-                <div class="form-text">Example: JavaScript, React, Tailwind CSS, MySQL</div>
+                <label class="form-label">Skills</label>
+                <div id="skillTagsContainer" class="d-flex flex-wrap p-2 border rounded-3 mb-3">
+                    <!-- Existing skills will be added here -->
+                </div>
+                <div class="input-group" id="skillInputGroup">
+                    <input type="text" class="form-control" id="skillInput" placeholder="Enter a skill and press Enter or +">
+                    <button type="button" class="btn btn-primary" id="addSkillBtn">
+                        <i class="bi bi-plus-lg"></i>
+                    </button>
+                </div>
             </div>
         `;
+        
+        const tagsContainer = document.getElementById('skillTagsContainer');
+        
+        // Populate existing skills
+        profileData.skills.forEach(skill => {
+            if (skill.name) {
+                tagsContainer.insertAdjacentHTML('beforeend', createSkillTagHtml(skill.name));
+            }
+        });
+
+        const inputEl = document.getElementById('skillInput');
+        
+        // Add event listeners for the new elements
+        document.getElementById('addSkillBtn').addEventListener('click', () => addSkillTag(inputEl));
+        
+        inputEl.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submission
+                addSkillTag(inputEl);
+            }
+        });
     }
 
-    function addSkillEntry() {
-        // Not used for this format, skills are managed in one textarea.
+    // Helper to create the HTML for a single skill tag
+    function createSkillTagHtml(name) {
+        const safeName = escapeHTML(name);
+        return `
+            <span class="tag" data-skill="${safeName}">
+                ${safeName}
+                <span class="tag-remove" onclick="removeSkillTag(this)"><i class="fas fa-times"></i></span>
+            </span>
+        `;
+    }
+    
+    // Function to add a new skill tag
+    function addSkillTag(inputEl) {
+        const skillName = inputEl.value.trim();
+        const tagsContainer = document.getElementById('skillTagsContainer');
+        
+        if (skillName) {
+            const existingTags = Array.from(tagsContainer.querySelectorAll('.tag')).map(tag => tag.dataset.skill.toLowerCase());
+            
+            if (!existingTags.includes(skillName.toLowerCase())) {
+                tagsContainer.insertAdjacentHTML('beforeend', createSkillTagHtml(skillName));
+            } else {
+                showToast(`Skill "${skillName}" is already listed.`, 'warning');
+            }
+            inputEl.value = ''; // Clear input field
+        }
+    }
+    
+    // Function to remove a skill tag
+    function removeSkillTag(buttonElement) {
+        buttonElement.closest('.tag').remove();
     }
 
+    // Not used for this format
+    function addSkillEntry() {} 
+
+    // Collects all current tags from the container
     function getSkillDataFromForm() {
-        const input = document.getElementById('skillInput').value.trim();
-        if (!input) return [];
-
-        // Split by comma, trim whitespace, filter empty strings, and map to {name: string} structure
-        return input.split(',')
-                    .map(skill => skill.trim())
-                    .filter(skill => skill.length > 0)
-                    .map(skill => ({ name: skill }));
+        const tagsContainer = document.getElementById('skillTagsContainer');
+        const tags = tagsContainer ? tagsContainer.querySelectorAll('.tag') : [];
+        const data = [];
+        tags.forEach(tag => {
+            const skillName = tag.dataset.skill.trim();
+            if (skillName) {
+                // The database expects an array of objects: [{name: 'Skill1'}, {name: 'Skill2'}]
+                data.push({ name: skillName });
+            }
+        });
+        return data;
     }
 
     async function saveSkills() {
         const data = getSkillDataFromForm();
         const safeData = sanitizeDataForSubmission(data);
-        // Note: The database stores skills as an array of {name, rating}. Assuming simple names for now.
         const res = await saveData('/api/profile/update', { skills: safeData }); 
         if (res) {
             showToast('Skills updated!', 'success');
@@ -1678,7 +1773,8 @@
 
     // ---------------------------------
     // --- 7. RESUME IMPLEMENTATION ---
-    // ---------------------------------
+    // ... (Resume functions remain unchanged) ...
+
     function renderResumeSection() {
         const container = document.getElementById('resume');
         const resume = profileData.resume;
@@ -1741,7 +1837,7 @@
 
     // -----------------------------------
     // --- 8. PASSWORD IMPLEMENTATION ---
-    // -----------------------------------
+    // ... (Password functions remain unchanged) ...
 
     async function updatePassword() {
         const newPassword = document.getElementById('newPassword').value;
@@ -1782,7 +1878,7 @@
 
     // ------------------------------------
     // --- 9. GENERIC UTILITY FUNCTIONS ---
-    // ------------------------------------
+    // ... (Utility functions remain unchanged) ...
 
     // Helper to remove an entry from a dynamic form section
     function removeEntry(buttonElement) {
