@@ -35,8 +35,13 @@ const storage = multer.diskStorage({
         cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
     }
 });
+
+// 🚨 UPDATED: Set file size limit to 20MB for registration image
 const upload = multer({
-    storage: storage
+    storage: storage,
+    limits: { 
+        fileSize: 20 * 1024 * 1024, // 20 MB limit
+    }
 });
 router.use(express.json());
 router.use(express.urlencoded({
@@ -95,11 +100,10 @@ router.post('/user/register', upload.single('profileImage'), async (req, res) =>
       maxAge: 7 * 24 * 60 * 60 * 1000   // 7 days
     });
 
-    // --- Send success response with token ---
+    // --- Send success response without including the token in the body ---
     res.status(201).json({
       success: true,
       message: 'User registered successfully!',
-      token, // Included for client to store in localStorage (as requested)
       user: {
         id: result.insertId,
         fullName,
@@ -165,11 +169,10 @@ router.post('/user/login', async (req, res) => {
       sameSite: 'strict'                 // Prevent CSRF
     });
 
-    // --- Send success response ---
+    // --- Send success response without including the token in the body ---
     res.status(200).json({
       success: true,
       message: 'Login successful!',
-      token, // Included for client to store in localStorage (as requested)
       user: {
         id: user.id,
         fullName: user.full_name,

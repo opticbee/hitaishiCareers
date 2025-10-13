@@ -480,10 +480,7 @@
 
             const result = await res.json();
             if (res.ok) {
-                // ✅ Store JWT in localStorage (as requested)
-                if (result.token) {
-                    localStorage.setItem('jwt', result.token);
-                }
+         
 
                 showCustomAlert('✅ ' + result.message, 'success');
                 window.location.href = 'userProfile.html'; // Redirect to profile
@@ -566,10 +563,6 @@
 
                 const result = await response.json();
                 if (response.ok) {
-                    // ✅ Store JWT in localStorage (as requested)
-                    if (result.token) {
-                        localStorage.setItem('jwt', result.token);
-                    }
 
                     showCustomAlert('✅ ' + result.message, 'success');
                     window.location.href = 'userProfile.html'; // Redirect to profile since the user is auto-logged in

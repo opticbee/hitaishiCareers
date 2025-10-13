@@ -430,10 +430,7 @@
 
       const result = await res.json();
       if (res.ok) {
-        // ✅ Save JWT in localStorage (as requested)
-        if (result.token) {
-          localStorage.setItem("jwt", result.token);
-        }
+      
 
         // Use custom modal instead of alert
         showCustomAlert("✅ Login successful with Google!", 'success');
@@ -511,10 +508,6 @@
 
         const result = await res.json();
         if (res.ok) {
-          // ✅ Store JWT in localStorage (as requested)
-          if (result.token) {
-            localStorage.setItem("jwt", result.token);
-          }
           
           showCustomAlert("✅ " + result.message, 'success');
           // Redirect

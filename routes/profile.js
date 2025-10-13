@@ -46,12 +46,12 @@ const fileFilter = (req, file, cb) => {
   cb(null, true);
 };
 
-// 🚨 UPDATED: Increased file size limit and added field limits for robustness 
+// 🚨 UPDATED: Increased file size limit to 20MB for larger uploads
 const upload = multer({ 
     storage, 
     fileFilter, 
     limits: { 
-        fileSize: 10 * 1024 * 1024, // 10 MB limit for single file
+        fileSize: 20 * 1024 * 1024, // 20 MB limit for single file
         files: 1, // Only 1 file upload per request (profilePhoto or resume)
         fields: 50 // Plenty of fields for all the form data
     } 
@@ -156,6 +156,7 @@ router.post('/update', upload.single('profilePhoto'), async (req, res) => {
     // but the underlying content should be safe from the client side using escapeHTML before submission.
     const jsonFieldToString = (val) => {
       if (!val) return null;
+      // Check if it's already a string before stringifying, as Express body-parser may convert it.
       return typeof val === 'string' ? val : JSON.stringify(val);
     };
     

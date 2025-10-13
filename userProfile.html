@@ -617,20 +617,20 @@
     <script>
       async function checkAuthAndUpdateNavbar() {
         try {
-          // --- SECURITY IMPROVEMENT: Rely entirely on HttpOnly cookie ---
+          // --- SECURITY: Rely entirely on HttpOnly cookie ---
           // Use the secure HttpOnly cookie for the actual profile data fetch
           const res = await fetch('/api/profile/full', { credentials: 'include' }); 
           if (!res.ok) {
             // If the HttpOnly cookie is invalid/missing, clear client-side token (if it exists) and redirect
-            localStorage.removeItem('jwt'); // Clean up redundant local storage token
-            sessionStorage.clear(); // Clear session data
+            localStorage.removeItem('jwt'); // Clean up redundant local storage token (if user somehow has one)
+            sessionStorage.clear(); // Clear session data (only email is currently stored here)
             if (window.location.pathname.includes('userProfile.html')) {
                  window.location.href = 'login.html';
             }
             return;
           }
           const data = await res.json();
-          // XSS Safety: Store email safely for later use (convenience only)
+          // Store email in sessionStorage for client-side display convenience only.
           sessionStorage.setItem("email", data.personalDetails.email); 
           
           const profilePhoto = data.personalDetails?.profilePhoto;
@@ -911,8 +911,8 @@
                 credentials: 'include'
             });
             
-            // Always clear client-side storage
-            localStorage.removeItem('jwt'); // Clean up redundant token copy
+            // Always clear client-side storage (Cleanup)
+            localStorage.removeItem('jwt'); // No longer used, but good practice to clear just in case
             sessionStorage.clear();
 
             if (response.ok) {
@@ -925,7 +925,7 @@
         } catch (error) {
             console.error('Error during logout:', error);
             // On network error, clear client state and redirect anyway
-            localStorage.removeItem('jwt'); // Clean up redundant token copy
+            localStorage.removeItem('jwt'); 
             sessionStorage.clear();
             showToast('An error occurred during logout. Redirecting...', 'danger');
             setTimeout(() => { window.location.href = 'login.html'; }, 1000);
@@ -1117,11 +1117,11 @@
             }
             if (!response.ok) {
                  // Throwing the error here will catch the 413 error message from the proxy.
-                 // We specifically catch the 413 and give a helpful message.
                  if (response.status === 413) {
-                    throw new Error("File too large. Please select a smaller profile image (under 1MB) or contact support.");
+                    throw new Error("File upload failed. The maximum allowed file size is 20MB. Please check your file size.");
                  }
-                 throw new Error('Failed to save data. Check server logs.');
+                 const errorBody = await response.json();
+                 throw new Error(errorBody.error || 'Failed to save data. Check server logs.');
             }
 
             const data = await response.json();
@@ -1154,7 +1154,7 @@
         return data;
     }
 
-    // === PERSONAL DETAILS SAVE (UPDATED for 413 workaround) ===
+    // === PERSONAL DETAILS SAVE (UPDATED: Removed client-side size check) ===
     async function savePersonalDetails() {
         const formData = new FormData();
         const photoInput = document.getElementById('profilePhoto');
@@ -1162,20 +1162,10 @@
         
         let shouldClearFileInput = false;
 
-        // --- 🚨 CRITICAL FIX for 413: Only append the photo if a NEW one is selected ---
+        // --- Now relies completely on server-side Multer limit (20MB) ---
         if (photo) {
-            // Optional client-side size check (1MB) before attempting upload
-            // 💡 FIX: Lowering the file size limit to 500KB to ensure Nginx doesn't reject it.
-            const MAX_SIZE_BYTES = 500 * 1024; 
-            if (photo.size > MAX_SIZE_BYTES) {
-                 showToast('Image is too large. Max allowed size is 500KB.', 'danger');
-                 // Do not send request, exit early
-                 return;
-            }
             formData.append('profilePhoto', photo);
             shouldClearFileInput = true;
-        } else {
-            // If no new photo is selected, we avoid sending the file data entirely.
         }
 
         // Always append textual fields
@@ -1191,11 +1181,9 @@
             showToast('Personal details updated!', 'success');
             toggleEdit('personalDetails', false);
             
-            // 💡 NEW: Clear the file input reference after a successful save
-            // This prevents old, large file data from hanging around, which can trigger a 413 even if 'photo' is null later.
+            // Clear the file input reference after a successful save
             if (shouldClearFileInput) {
                 photoInput.value = null;
-                // Also reset the preview to indicate a clean slate if needed
                 document.getElementById('profilePhotoPreview').src = profileData.personalDetails.profilePhoto || 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Photo';
             }
         }

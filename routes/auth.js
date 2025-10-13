@@ -15,8 +15,7 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 const saltRounds = 10;
 
 /** * Helper to generate token & send response safely.
- * NOTE: The token is returned in the JSON body (for localStorage) AND
- * set in an HttpOnly cookie (for security against XSS token theft).
+ * NOTE: The token is only set in an HttpOnly cookie (for security against XSS token theft).
  */
 const generateToken = (user, res, message = 'Authenticated successfully!') => {
   const payload = { id: user.id, email: user.email, fullName: user.full_name };
@@ -34,7 +33,7 @@ const generateToken = (user, res, message = 'Authenticated successfully!') => {
   return res.status(200).json({
     success: true,
     message,
-    token, // Token included in body for client-side storage (e.g., localStorage)
+    // 🚨 REMOVED: token is no longer returned in the body
     user: {
       id: user.id,
       fullName: user.full_name,
