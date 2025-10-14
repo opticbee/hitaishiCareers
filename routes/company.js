@@ -107,7 +107,7 @@ router.get("/all", async (_req, res) => {
 
 
 // GET /api/company/profile
-router.get("/profile", protectEmployerRoute, async (req, res) => {
+router.get("/profile", async (req, res) => {
     try {
         const { id } = req.company; // req.company is added by the middleware
         const rows = await query(`SELECT id, user_email, company_name, website, description, logo_url, contact_person, contact_phone, address FROM companies WHERE id = ?`, [id]);
@@ -120,7 +120,7 @@ router.get("/profile", protectEmployerRoute, async (req, res) => {
 });
 
 // PATCH /api/company/profile
-router.patch("/profile", protectEmployerRoute, upload, async (req, res) => {
+router.patch("/profile", upload, async (req, res) => {
     try {
         const { id } = req.company;
         const { company_name, website, description, contact_person, contact_phone, address } = req.body;
