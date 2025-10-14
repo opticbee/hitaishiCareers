@@ -13,7 +13,7 @@ const profileRoute = require('./routes/profile');
 const jobsRoute = require('./routes/jobs');
 const applicantRoute = require('./routes/applicant');
 const companyRoute = require('./routes/company');
-const { protectRoute } = require('./middleware/authMiddleware');
+const { protectRoute, protectEmployerRoute } = require('./middleware/authMiddleware');
 
 const app = express();
 // Ensure the application uses the port provided by the environment (e.g., Nginx/PM2) or defaults to 3000.
@@ -46,7 +46,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/profile', protectRoute, profileRoute);
 app.use('/api/jobs', protectRoute, jobsRoute);
 app.use('/api/applicant', protectRoute, applicantRoute);
-app.use('/api/company', protectRoute, companyRoute);
+app.use('/api/company', protectEmployerRoute, companyRoute);
 
 // --- Frontend Routes ---\
 app.get('/', (req, res) => {

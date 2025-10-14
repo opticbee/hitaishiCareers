@@ -151,7 +151,7 @@
                             </ul>
                         </li>
                         <li class="nav-item"><a class="nav-link active" href="employerlogin.html">Post Jobs</a></li>
-                        <li class="nav-item"><a class="nav-link" href="employers.html">Employes</a></li>
+                        <li class="nav-item"><a class="nav-link" href="employers.html">Employers</a></li>
                         <li class="nav-item"><a class="nav-link" href="#" id="uploadResumeLink">Upload Resume</a></li>
                         <li class="nav-item"><a class="nav-link" href="tutu.html">Apply with AI</a></li>
                     </ul>
@@ -259,6 +259,7 @@
             submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging in...';
 
             try {
+                // The /api/company/login endpoint must be UNPROTECTED in routes/company.js
                 const response = await fetch('/api/company/login', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -267,8 +268,9 @@
 
                 const result = await response.json();
 
-                if (response.ok && result.success) {
-                    sessionStorage.setItem('authToken', result.token);
+                if (response.ok && result.success && result.token) {
+                    // Store the JWT in sessionStorage for subsequent authorized requests
+                    sessionStorage.setItem('authToken', result.token); 
                     window.location.href = 'employer.html';
                 } else {
                     showMessage(result.error || `Error ${response.status}: Login failed.`);
@@ -380,4 +382,3 @@
 
 </body>
 </html>
-
