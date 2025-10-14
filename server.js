@@ -43,9 +43,16 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // --- API Routes ---
 app.use('/api', registerRoute);
 app.use('/api/auth', authRoute);
+
+// Candidate/User Protected Routes
 app.use('/api/profile', protectRoute, profileRoute);
-app.use('/api/jobs', protectRoute, jobsRoute);
-app.use('/api/applicant', protectRoute, applicantRoute);
+// Candidate/User Jobs (only used for job application, which is protected in applicant.js)
+// We will modify jobsRoute to only handle public and employer-specific protected routes
+app.use('/api/jobs', jobsRoute); 
+app.use('/api/applicant', applicantRoute);
+
+// Employer/Company Routes (Protected)
+// All routes in company.js (except register/login) will be protected by this middleware.
 app.use('/api/company', companyRoute);
 
 // --- Frontend Routes ---\

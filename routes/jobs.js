@@ -3,27 +3,13 @@ const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const { query } = require("../db");
+const { protectEmployerRoute } = require("../middleware/authMiddleware"); // Import employer protection
 
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
-// --- Authentication Middleware ---
-const authenticateToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) {
-        return res.status(401).json({ error: "No token provided." });
-    }
-
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err) {
-            return res.status(403).json({ error: "Invalid or expired token." });
-        }
-        req.user = user;
-        next();
-    });
-};
+// NOTE: authenticateToken is removed. We will rely on protectEmployerRoute for employer-specific API calls,
+// which is applied either directly here or in server.js. The general routes like /active and /:id remain public.
 
 
 // --- Database Table Initialization with Migrations ---
@@ -127,10 +113,11 @@ const authenticateToken = (req, res, next) => {
   }
 })();
 
-// Post a new job (Updated and Secured)
-router.post("/post", authenticateToken, async (req, res) => {
+// Post a new job (PROTECTED by protectEmployerRoute)
+router.post("/post", protectEmployerRoute, async (req, res) => {
   try {
-    const company_id = req.user.id;
+    // req.company is set by protectEmployerRoute
+    const company_id = req.company.id; 
     const { 
         posted_by_name, posted_by_email, job_title, required_experience, 
         job_description, required_skills, additional_skills, country, 
@@ -165,7 +152,7 @@ router.post("/post", authenticateToken, async (req, res) => {
   }
 });
 
-// Get all active jobs (for public job boards)
+// Get all active jobs (for public job boards) (UNPROTECTED)
 router.get("/active", async (_req, res) => {
   try {
     const rows = await query(`SELECT j.*, c.company_name, c.logo_url FROM jobs j JOIN companies c ON j.company_id = c.id WHERE j.status='active' ORDER BY j.created_at DESC`);
@@ -177,7 +164,7 @@ router.get("/active", async (_req, res) => {
 });
 
 
-// NEW: Endpoint to get data for browse filters
+// NEW: Endpoint to get data for browse filters (UNPROTECTED)
 router.get("/browse-data", async (_req, res) => {
   try {
     // Get Skills
@@ -216,7 +203,7 @@ router.get("/browse-data", async (_req, res) => {
 });
 
 
-// Get a single job by ID (for application page)
+// Get a single job by ID (for application page) (UNPROTECTED)
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -239,11 +226,13 @@ router.get("/:id", async (req, res) => {
 });
 
 
-// GET all jobs for a specific company (for the dashboard)
-router.get("/company/:companyId", authenticateToken, async (req, res) => {
+// GET all jobs for a specific company (for the dashboard) (PROTECTED by protectEmployerRoute)
+router.get("/company/:companyId", protectEmployerRoute, async (req, res) => {
     try {
         const { companyId } = req.params;
-        if (req.user.id !== companyId) {
+        // req.company is set by protectEmployerRoute
+        if (req.company.id !== companyId) {
+            // Added check to ensure the company ID in the token matches the requested companyId
             return res.status(403).json({ error: "Forbidden: You can only view your own company's jobs." });
         }
         const rows = await query(
@@ -257,7 +246,7 @@ router.get("/company/:companyId", authenticateToken, async (req, res) => {
     }
 });
 
-// GET all ACTIVE jobs for a specific company (for public employers page)
+// GET all ACTIVE jobs for a specific company (for public employers page) (UNPROTECTED)
 router.get("/by-company/:companyId", async (req, res) => {
     try {
         const { companyId } = req.params;
@@ -274,4 +263,3 @@ router.get("/by-company/:companyId", async (req, res) => {
 
 
 module.exports = router;
-

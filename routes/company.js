@@ -39,7 +39,7 @@ const upload = multer({ storage: storage, limits: { fileSize: 2000000 } }).singl
     }
 })();
 
-// POST /api/company/register
+// POST /api/company/register (UNPROTECTED)
 router.post("/register", (req, res) => {
     upload(req, res, async (err) => {
         if (err) return res.status(400).json({ success: false, error: err.message });
@@ -62,7 +62,7 @@ router.post("/register", (req, res) => {
     });
 });
 
-// POST /api/company/login
+// POST /api/company/login (UNPROTECTED)
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -92,7 +92,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// GET all companies (for public employers page)
+// GET all companies (for public employers page) (UNPROTECTED)
 router.get("/all", async (_req, res) => {
     try {
         const companies = await query(
@@ -106,10 +106,11 @@ router.get("/all", async (_req, res) => {
 });
 
 
-// GET /api/company/profile
-router.get("/profile", async (req, res) => {
+// GET /api/company/profile (PROTECTED by protectEmployerRoute in server.js)
+router.get("/profile", protectEmployerRoute, async (req, res) => {
     try {
-        const { id } = req.company; // req.company is added by the middleware
+        // req.company is set by protectEmployerRoute
+        const { id } = req.company; 
         const rows = await query(`SELECT id, user_email, company_name, website, description, logo_url, contact_person, contact_phone, address FROM companies WHERE id = ?`, [id]);
         if (!rows.length) return res.status(404).json({ error: "Company profile not found." });
         res.json(rows[0]);
@@ -119,9 +120,10 @@ router.get("/profile", async (req, res) => {
     }
 });
 
-// PATCH /api/company/profile
-router.patch("/profile", upload, async (req, res) => {
+// PATCH /api/company/profile (PROTECTED by protectEmployerRoute in server.js)
+router.patch("/profile", protectEmployerRoute, upload, async (req, res) => {
     try {
+        // req.company is set by protectEmployerRoute
         const { id } = req.company;
         const { company_name, website, description, contact_person, contact_phone, address } = req.body;
         

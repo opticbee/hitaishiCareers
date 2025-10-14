@@ -4,17 +4,7 @@ const { query } = require("../db");
 
 const router = express.Router();
 
-const {protectRoute} = require("../middleware/authMiddleware");
-
-// --- User Authentication Middleware (Session Based) ---
-// const authenticateUser = (req, res, next) => {
-//     if (req.session && req.session.user && req.session.user.id && req.session.user.email) {
-//         req.user = req.session.user; // Attach user info from session
-//         next();
-//     } else {
-//         res.status(401).json({ error: "User not authenticated. Please log in." });
-//     }
-// };
+const {protectRoute, protectEmployerRoute} = require("../middleware/authMiddleware");
 
 // --- Database Table Initialization ---
 (async function initApplicationsTable() {
@@ -39,11 +29,12 @@ const {protectRoute} = require("../middleware/authMiddleware");
   }
 })();
 
-// --- Route to apply for a job ---
+// --- Route to apply for a job (Candidate/User only) ---
 router.post("/apply", protectRoute, async (req, res) => {
     try {
         const { jobId } = req.body;
-        const userId = req.user.id;
+        // req.user is set by protectRoute
+        const userId = req.user.id; 
         const userEmail = req.user.email;
 
         if (!jobId) {
@@ -117,10 +108,19 @@ router.post("/apply", protectRoute, async (req, res) => {
     }
 });
 
-// --- Route to get all applications for a specific job ---
-router.get("/:jobId", async (req, res) => {
+// --- Route to get all applications for a specific job (Employer only) ---
+router.get("/:jobId", protectEmployerRoute, async (req, res) => {
     try {
         const { jobId } = req.params;
+        // req.company is set by protectEmployerRoute. We must ensure the job belongs to this company.
+        const companyIdFromToken = req.company.id;
+
+        const [job] = await query(`SELECT company_id FROM jobs WHERE id = ?`, [jobId]);
+
+        if (!job || job.company_id !== companyIdFromToken) {
+            return res.status(403).json({ error: "Forbidden: You are not authorized to view applications for this job." });
+        }
+
         const applications = await query(
             `SELECT user_profile_snapshot FROM job_applications WHERE job_id = ?`,
             [jobId]
@@ -128,7 +128,6 @@ router.get("/:jobId", async (req, res) => {
         
         // FIX: The user_profile_snapshot is stored as a JSON string in the database.
         // It must be parsed into an object before being sent to the frontend.
-        // This ensures the frontend can access properties like `professionalDetails.roles`.
         const applicants = applications
             .map(app => {
                 const snapshot = app.user_profile_snapshot;
@@ -153,4 +152,3 @@ router.get("/:jobId", async (req, res) => {
 });
 
 module.exports = router;
-
