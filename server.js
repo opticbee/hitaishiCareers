@@ -46,7 +46,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/profile', protectRoute, profileRoute);
 app.use('/api/jobs', protectRoute, jobsRoute);
 app.use('/api/applicant', protectRoute, applicantRoute);
-app.use('/api/company', protectEmployerRoute, companyRoute);
+app.use('/api/company', companyRoute);
 
 // --- Frontend Routes ---\
 app.get('/', (req, res) => {
