@@ -395,7 +395,7 @@
                 }).join('');
             };
 
-            // --- Applicant Details Rendering ---
+            // --- Applicant Details Rendering (FINAL FIXES) ---
             const renderApplicants = (applicants) => {
                 const container = document.getElementById('applicantsContainer');
                 if (!applicants || applicants.length === 0) {
@@ -404,7 +404,12 @@
                 }
 
                 const createDetailSection = (title, content) => {
-                    if (!content || (Array.isArray(content) && content.length === 0) || (typeof content === 'string' && content.trim() === '')) {
+                    // Check if content is non-empty before rendering section
+                    const hasContent = content && (
+                        (Array.isArray(content) && content.length > 0) || 
+                        (typeof content === 'string' && content.trim() !== '' && content.trim() !== 'Not specified' && content.trim().toLowerCase() !== 'n/a')
+                    );
+                    if (!hasContent) {
                         return '';
                     }
                     return `
@@ -414,31 +419,87 @@
                         </div>`;
                 };
                 
-                // Helper to safely format array data
+                // Helper to safely format array data - UPDATED TO FILTER OUT NULL/EMPTY OBJECTS
                 const formatArrayData = (arr, renderFn) => {
-                    if (!arr || arr.length === 0) return '<span class="text-muted">Not specified.</span>';
-                    return arr.map(renderFn).join('');
+                    let safeArr = arr;
+                    if (typeof arr === 'string') {
+                         try { safeArr = JSON.parse(arr); } catch (e) { safeArr = []; }
+                    }
+                    
+                    // Filter out nulls, undefineds, and empty objects/strings
+                    if (Array.isArray(safeArr)) {
+                        safeArr = safeArr.filter(item => {
+                            if (item === null || typeof item === 'undefined') return false;
+                            if (typeof item === 'string' && item.trim() === '') return false;
+                            if (typeof item === 'object' && Object.keys(item).length === 0) return false;
+                            return true;
+                        });
+                    }
+
+                    if (!Array.isArray(safeArr) || safeArr.length === 0) {
+                        return '<span class="text-muted">Not specified.</span>';
+                    }
+                    return safeArr.map(renderFn).join('');
                 };
 
-                container.innerHTML = applicants.map((profile, index) => {
+                container.innerHTML = applicants.map((application, index) => {
+                    // Assuming application contains the full profile data, possibly under 'user_profile_snapshot' as a string
+                    let profile = application.user_profile_snapshot;
+                    
+                    if (typeof profile === 'string') {
+                         try {
+                            profile = JSON.parse(profile);
+                         } catch (e) {
+                            console.error("Failed to parse user_profile_snapshot:", e);
+                            profile = application;
+                         }
+                    } else if (typeof profile !== 'object' || profile === null || !profile.education) {
+                        profile = application; // Fallback to the application object itself
+                    }
+
                     if (!profile) return '';
 
                     const personal = profile.personalDetails || {};
                     const ctc = profile.ctc || {};
-                    const resumeUrl = profile.resumeUrl;
+                    const resumeUrl = personal.resumeUrl || profile.resumeUrl; // Check both locations
                     const uniqueId = `applicant-details-${index}`;
                     
+                    // --- Fix 1: Experience Level ---
+                    let experienceDisplay = personal.experienceLevel;
+                    // Try to find a meaningful number first
+                    const totalYears = profile.total_experience || personal.total_experience;
+                    if (totalYears && typeof totalYears === 'number' && totalYears > 0) {
+                         experienceDisplay = `${totalYears} Years`;
+                    } else if (personal.experienceLevel && personal.experienceLevel.toLowerCase() !== 'experienced') {
+                         experienceDisplay = personal.experienceLevel;
+                    } else {
+                        experienceDisplay = 'Not specified';
+                    }
+
+                    
                     const skillsHtml = formatArrayData(profile.skills, skill => {
+                        // Use skillName or name
                         const name = skill.skillName || skill.name || skill;
                         return `<span class="badge bg-primary bg-opacity-10 text-primary fw-normal me-1 mb-1">${name}</span>`;
                     });
 
-                    const professionalHtml = formatArrayData(profile.professionalDetails, job => `
-                        <div class="mb-3">
-                            <div class="fw-bold">${job.role || job.title || 'N/A'}</div>
-                            <div>${job.companyName || job.company || 'N/A'}</div>
-                            <div class="text-muted">${job.startDate || job.fromDate || ''} to ${job.endDate || job.toDate || 'Present'}</div>
-                        </div>`);
+                    // Check for multiple date/role/company keys
+                    const professionalHtml = formatArrayData(profile.professionalDetails, job => {
+                        const role = job.roles || job.title || 'N/A';
+                        const company = job.companyName || job.company || 'N/A';
+                        const startDate = job.startDate || job.fromDate || '';
+                        const endDate = job.endDate || job.toDate || 'Present';
+                        
+                        // Check if this specific work experience item is empty
+                        if (role === 'N/A' && company === 'N/A') return ''; 
+
+                        return `
+                            <div class="mb-3">
+                                <div class="fw-bold">${role}</div>
+                                <div>${company}</div>
+                                <div class="text-muted">${startDate} to ${endDate}</div>
+                            </div>`;
+                    });
 
                     const educationHtml = formatArrayData(profile.education, edu => `
                         <div class="mb-3">
@@ -447,22 +508,56 @@
                             <div class="text-muted">${edu.startDate || ''} - ${edu.endDate || 'Present'}</div>
                         </div>`);
                         
-                    const projectsHtml = formatArrayData(profile.projects, proj => `
-                        <div class="mb-3">
-                            <div class="fw-bold">${proj.name || 'N/A'}</div>
-                            <p class="mb-0 small">${proj.description || ''}</p>
-                        </div>`);
+                    // Check for multiple name/description keys
+                    const projectsHtml = formatArrayData(profile.projects, proj => {
+                        const name = proj.projectTitle || proj.projectName || 'N/A';
+                        const description = proj.description || proj.projectDescription || '';
 
-                    const certificationsHtml = formatArrayData(profile.certifications, cert => `
-                        <div class="mb-3">
-                            <div class="fw-bold">${cert.name}</div>
-                            <div>${cert.issuer}</div>
-                        </div>`);
+                        // Check if this specific project item is empty
+                        if (name === 'N/A' && description.trim() === '') return '';
 
-                    const languagesHtml = formatArrayData(profile.languages, lang => 
-                        `<span class="d-inline-block me-4">${lang.name} <span class="text-muted">(${lang.proficiency})</span></span>`
-                    );
+                        return `
+                            <div class="mb-3">
+                                <div class="fw-bold">${name}</div>
+                                <p class="mb-0 small">${description}</p>
+                            </div>`;
+                    });
 
+                    // Fix Certifications Issuer
+                    const certificationsHtml = formatArrayData(profile.certifications, cert => {
+                         const certName = cert.certificationName || cert.name || 'N/A';
+                         // Added extra key checks for issuer
+                         const certIssuer = cert.certificationInstitution || cert.issuer || cert.issuingOrganization || 'N/A';
+                         const certUrl = cert.certificationLink || cert.certUrl;
+
+                         // Check if this specific certification item is empty
+                         if (certName === 'N/A' && certIssuer === 'N/A') return '';
+                         
+                         let certContent = `<div>${certIssuer}</div>`;
+                         
+                         // Only link if a URL is present
+                         if (certUrl && certUrl !== 'N/A') {
+                             certContent = `<div><a href="${certUrl}" target="_blank" class="text-decoration-underline">${certIssuer}</a></div>`;
+                         }
+                         
+                         return `<div class="mb-3"><div class="fw-bold">${certName}</div>${certContent}</div>`;
+                    });
+
+                    // Fix language name
+                    const languagesHtml = formatArrayData(profile.languages, lang => {
+                        const langName = lang.languageName || lang.name || 'N/A';
+                        const proficiency = lang.proficiency || 'Not specified';
+                        return `<span class="d-inline-block me-4">${langName} <span class="text-muted">(${proficiency})</span></span>`;
+                    });
+
+                    // Fix Expected CTC Format
+                    let expectedCtcText = 'Not specified';
+                    if (ctc.expected && !isNaN(parseFloat(ctc.expected))) {
+                        // Assuming INR is the default currency if none is specified, or using the stored currency if available.
+                        const currency = ctc.currency || 'INR'; 
+                        expectedCtcText = parseFloat(ctc.expected).toLocaleString('en-IN', { style: 'currency', currency: currency, minimumFractionDigits: 0, maximumFractionDigits: 0 }); // Removed decimal places for large numbers
+                    }
+                    
                     return `
                     <div class="card mb-2 shadow-sm">
                         <div class="card-header bg-white p-3" style="cursor: pointer;" data-bs-toggle="collapse" data-bs-target="#${uniqueId}" aria-expanded="false" aria-controls="${uniqueId}">
@@ -472,7 +567,7 @@
                                     <div>
                                         <h6 class="mb-0">${personal.fullName || 'N/A'}</h6>
                                         <small class="text-muted">
-                                            <i class="fas fa-briefcase fa-fw me-1"></i> ${personal.experienceLevel || 'Not specified'}
+                                            <i class="fas fa-briefcase fa-fw me-1"></i> ${experienceDisplay}
                                         </small>
                                     </div>
                                 </div>
@@ -493,7 +588,7 @@
                                             <p class="mb-0"><i class="fas fa-phone fa-fw me-2 text-muted"></i>${personal.phone || 'N/A'}</p>
                                         `)}
                                         ${createDetailSection('Salary & Availability', `
-                                            <p class="mb-1"><strong>Expected CTC:</strong> ${ctc.expected ? ctc.expected.toLocaleString('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }) : 'Not specified'}</p>
+                                            <p class="mb-1"><strong>Expected CTC:</strong> ${expectedCtcText}</p>
                                             <p class="mb-0"><strong>Notice Period:</strong> ${profile.noticePeriod || 'Not specified'}</p>
                                         `)}
                                         ${createDetailSection('Skills', skillsHtml)}
