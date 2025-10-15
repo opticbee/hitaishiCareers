@@ -242,6 +242,11 @@
             gap: 20px;
         }
         
+        /* Utility class to hide elements */
+        .d-none-conditional {
+            display: none !important;
+        }
+        
         /* Mobile Responsive */
         @media (max-width: 1200px) {
             .companies-grid {
@@ -382,6 +387,8 @@
         <div class="main-container">
             <!-- Left side: Filters -->
             <div class="filters-container">
+                
+                <!-- Posted Date Filter -->
                 <div class="filter-card">
                     <div class="filter-header">
                         <h6>Posted Date</h6>
@@ -406,6 +413,7 @@
                     </div>
                 </div>
 
+                <!-- Job Type Filter -->
                 <div class="filter-card">
                     <div class="filter-header">
                         <h6>Job Type</h6>
@@ -430,6 +438,7 @@
                     </div>
                 </div>
 
+                <!-- Industry Filter -->
                 <div class="filter-card">
                     <div class="filter-header">
                         <h6>Industry</h6>
@@ -443,21 +452,47 @@
                         </div>
                     </div>
                 </div>
-
+                
+                <!-- CASCADING LOCATION FILTERS in one card -->
                 <div class="filter-card">
-                    <div class="filter-header">
-                        <h6>Country</h6>
-                    </div>
+                    <div class="filter-header"><h6>Location</h6></div>
                     <div class="filter-body">
-                        <div class="input-group mb-2">
-                            <input type="text" id="countrySearch" class="form-control form-control-sm" placeholder="Search country...">
+                        <!-- Country Select -->
+                        <div class="mb-3">
+                            <label for="countrySelect" class="form-label small text-muted mb-1">Country</label>
+                            <select id="countrySelect" class="form-select form-select-sm">
+                                <option value="">Select Country</option>
+                            </select>
                         </div>
-                        <div id="countryList" style="max-height: 200px; overflow-y: auto;">
-                            <!-- Countries will be loaded dynamically -->
+
+                        <!-- State Select (Initially Hidden) -->
+                        <div id="stateContainer" class="mb-3 d-none-conditional">
+                            <label for="stateSelect" class="form-label small text-muted mb-1">State</label>
+                            <select id="stateSelect" class="form-select form-select-sm">
+                                <option value="">Select State</option>
+                            </select>
+                        </div>
+
+                        <!-- City Select (Initially Hidden) -->
+                        <div id="cityContainer" class="mb-3 d-none-conditional">
+                            <label for="citySelect" class="form-label small text-muted mb-1">City</label>
+                            <select id="citySelect" class="form-select form-select-sm">
+                                <option value="">Select City</option>
+                            </select>
+                        </div>
+
+                        <!-- Zip Code Select (Initially Hidden) -->
+                        <div id="zipCodeContainer" class="mb-0 d-none-conditional">
+                            <label for="zipCodeSelect" class="form-label small text-muted mb-1">Zip Code</label>
+                            <select id="zipCodeSelect" class="form-select form-select-sm">
+                                <option value="">Select Zip Code</option>
+                            </select>
                         </div>
                     </div>
                 </div>
+                <!-- END CASCADING LOCATION FILTERS -->
 
+                <!-- Experience Filter -->
                 <div class="filter-card">
                     <div class="filter-header">
                         <h6>Experience</h6>
@@ -550,8 +585,19 @@
             const noResults = document.getElementById('no-results');
             const applyFiltersBtn = document.getElementById('applyFilters');
             const resetFiltersBtn = document.getElementById('resetFilters');
-            const countrySearch = document.getElementById('countrySearch');
-            const countryList = document.getElementById('countryList');
+            
+            // Location Selectors
+            const countrySelect = document.getElementById('countrySelect');
+            const stateSelect = document.getElementById('stateSelect');
+            const citySelect = document.getElementById('citySelect');
+            const zipCodeSelect = document.getElementById('zipCodeSelect');
+            
+            // Location Containers (for show/hide logic)
+            const stateContainer = document.getElementById('stateContainer');
+            const cityContainer = document.getElementById('cityContainer');
+            const zipCodeContainer = document.getElementById('zipCodeContainer');
+            
+            // Industry Elements
             const industrySearch = document.getElementById('industrySearch');
             const industryList = document.getElementById('industryList');
             
@@ -561,13 +607,16 @@
             let allJobs = [];
             let selectedCompany = null;
             
-            // Filter state
+            // Filter state - Location filters are now single string values
             const filters = {
                 postedDate: 'anytime',
                 jobType: [],
-                countries: [],
                 experience: [],
-                industry: []
+                industry: [],
+                country: '', 
+                state: '', 
+                city: '', 
+                zipCode: '' 
             };
 
             // Initialize the page
@@ -604,17 +653,121 @@
                     if (!response.ok) throw new Error('Failed to load jobs');
                     const data = await response.json();
                     allJobs = data.jobs || [];
-                    extractCountries();
+                    
+                    // Initial population of top-level filters
+                    populateCountries();
                     extractIndustries();
                 } catch (error) {
                     console.error('Error loading jobs:', error);
                 }
             };
 
-            // Extract unique countries from jobs for filter
-            const extractCountries = () => {
+            // Helper function to render options in a select element
+            const renderSelectOptions = (selectElement, options, currentValue) => {
+                // Clear existing options
+                selectElement.innerHTML = '';
+                
+                // Add default option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = `Select ${selectElement.id.replace('Select', '').replace('zipCode', 'Zip Code')}`;
+                selectElement.appendChild(defaultOption);
+
+                if (options && options.length > 0) {
+                    options.sort().forEach(optionValue => {
+                        const option = document.createElement('option');
+                        option.value = optionValue;
+                        option.textContent = optionValue;
+                        if (optionValue === currentValue) {
+                            option.selected = true;
+                        }
+                        selectElement.appendChild(option);
+                    });
+                }
+            };
+
+            // Populate Country filter
+            const populateCountries = () => {
                 const countries = [...new Set(allJobs.map(job => job.country).filter(Boolean))];
-                renderCountryFilter(countries);
+                renderSelectOptions(countrySelect, countries, filters.country);
+                // All containers start hidden, Country is always visible in its container in the HTML
+                stateContainer.classList.add('d-none-conditional');
+                cityContainer.classList.add('d-none-conditional');
+                zipCodeContainer.classList.add('d-none-conditional');
+            };
+
+            // Populate State filter based on selected country
+            const populateStates = () => {
+                const currentCountry = filters.country;
+                
+                // Reset lower level filters
+                filters.state = '';
+                filters.city = '';
+                filters.zipCode = '';
+                cityContainer.classList.add('d-none-conditional');
+                zipCodeContainer.classList.add('d-none-conditional');
+                
+                if (currentCountry) {
+                    const matchingJobs = allJobs.filter(job => job.country === currentCountry);
+                    const states = [...new Set(matchingJobs.map(job => job.state).filter(Boolean))];
+
+                    renderSelectOptions(stateSelect, states, filters.state);
+                    stateContainer.classList.remove('d-none-conditional');
+                } else {
+                    renderSelectOptions(stateSelect, [], filters.state);
+                    stateContainer.classList.add('d-none-conditional');
+                }
+            };
+
+            // Populate City filter based on selected country and state
+            const populateCities = () => {
+                const currentCountry = filters.country;
+                const currentState = filters.state;
+
+                // Reset lower level filter
+                filters.city = '';
+                filters.zipCode = '';
+                zipCodeContainer.classList.add('d-none-conditional');
+
+                if (currentCountry && currentState) {
+                    let matchingJobs = allJobs.filter(job => 
+                        job.country === currentCountry && job.state === currentState
+                    );
+                    
+                    const cities = [...new Set(matchingJobs.map(job => job.city).filter(Boolean))];
+                    
+                    renderSelectOptions(citySelect, cities, filters.city);
+                    cityContainer.classList.remove('d-none-conditional');
+                } else {
+                    renderSelectOptions(citySelect, [], filters.city);
+                    cityContainer.classList.add('d-none-conditional');
+                }
+            };
+
+            // Populate Zip Code filter based on selected country, state, and city
+            const populateZipCodes = () => {
+                const currentCountry = filters.country;
+                const currentState = filters.state;
+                const currentCity = filters.city;
+
+                // Reset lowest level filter
+                filters.zipCode = '';
+
+                if (currentCountry && currentState && currentCity) {
+                    let matchingJobs = allJobs.filter(job => 
+                        job.country === currentCountry && 
+                        job.state === currentState &&
+                        job.city === currentCity
+                    );
+
+                    const zipCodes = [...new Set(matchingJobs.map(job => job.zip_code).filter(Boolean))];
+                    
+                    renderSelectOptions(zipCodeSelect, zipCodes, filters.zipCode);
+                    zipCodeContainer.classList.remove('d-none-conditional');
+                } else {
+                    renderSelectOptions(zipCodeSelect, [], filters.zipCode);
+                    zipCodeContainer.classList.add('d-none-conditional');
+                }
             };
 
             // Extract unique industries from jobs for filter
@@ -622,36 +775,8 @@
                 const industries = [...new Set(allJobs.map(job => job.industry).filter(Boolean))];
                 renderIndustryFilter(industries);
             };
-
-            // Render country filter options
-            const renderCountryFilter = (countries) => {
-                countryList.innerHTML = '';
-                
-                if (!countries || countries.length === 0) {
-                    countryList.innerHTML = '<div class="text-muted small">No countries found</div>';
-                    return;
-                }
-                
-                countries.sort().forEach(country => {
-                    const option = document.createElement('div');
-                    option.className = 'filter-option';
-                    option.innerHTML = `
-                        <input type="checkbox" id="country-${country.replace(/\s+/g, '-')}" name="country" value="${country}" class="me-2">
-                        <label for="country-${country.replace(/\s+/g, '-')}">${country}</label>
-                    `;
-                    countryList.appendChild(option);
-                    
-                    option.querySelector('input').addEventListener('change', (e) => {
-                        if (e.target.checked) {
-                            filters.countries.push(e.target.value);
-                        } else {
-                            filters.countries = filters.countries.filter(c => c !== e.target.value);
-                        }
-                    });
-                });
-            };
             
-            // Render industry filter options
+            // Render industry filter options (checkboxes remain)
             const renderIndustryFilter = (industries) => {
                 industryList.innerHTML = '';
                 
@@ -679,44 +804,36 @@
                 });
             };
 
-            // Initialize filters
+            // Initialize filters and their event listeners
             const initFilters = () => {
-                // Posted Date filter
-                document.querySelectorAll('input[name="postedDate"]').forEach(radio => {
-                    radio.addEventListener('change', (e) => {
-                        filters.postedDate = e.target.value;
-                    });
+                // --- Location Cascading Logic ---
+                countrySelect.addEventListener('change', (e) => {
+                    filters.country = e.target.value;
+                    populateStates();
+                    applyFilters(); // Apply filters on change
                 });
 
-                // Job Type filter
-                document.querySelectorAll('input[name="jobType"]').forEach(checkbox => {
-                    checkbox.addEventListener('change', (e) => {
-                        if (e.target.checked) {
-                            filters.jobType.push(e.target.value);
-                        } else {
-                            filters.jobType = filters.jobType.filter(type => type !== e.target.value);
-                        }
-                    });
+                stateSelect.addEventListener('change', (e) => {
+                    filters.state = e.target.value;
+                    populateCities();
+                    applyFilters(); // Apply filters on change
                 });
 
-                // Experience filter
-                document.querySelectorAll('input[name="experience"]').forEach(checkbox => {
-                    checkbox.addEventListener('change', (e) => {
-                        if (e.target.checked) {
-                            filters.experience.push(e.target.value);
-                        } else {
-                            filters.experience = filters.experience.filter(exp => exp !== e.target.value);
-                        }
-                    });
+                citySelect.addEventListener('change', (e) => {
+                    filters.city = e.target.value;
+                    populateZipCodes();
+                    applyFilters(); // Apply filters on change
                 });
 
-                // Country search
-                countrySearch.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    countryList.querySelectorAll('.filter-option').forEach(option => {
-                        const label = option.querySelector('label');
-                        option.style.display = label.textContent.toLowerCase().includes(searchTerm) ? 'flex' : 'none';
-                    });
+                zipCodeSelect.addEventListener('change', (e) => {
+                    filters.zipCode = e.target.value;
+                    applyFilters(); // Apply filters on change
+                });
+                
+                // --- Other Filters ---
+                // Posted Date, Job Type, and Experience filters should also trigger applyFilters on change
+                document.querySelectorAll('input[name="postedDate"], input[name="jobType"], input[name="experience"], input[name="industry"]').forEach(input => {
+                    input.addEventListener('change', applyFilters);
                 });
 
                 // Industry search
@@ -729,7 +846,7 @@
                 });
             };
 
-            // Initialize event listeners
+            // Initialize general event listeners
             const initEventListeners = () => {
                 applyFiltersBtn.addEventListener('click', applyFilters);
                 resetFiltersBtn.addEventListener('click', resetFilters);
@@ -746,6 +863,7 @@
 
             // Apply filters
             const applyFilters = () => {
+                // Logic remains the same, filters use the updated state
                 const companyIdsWithMatchingJobs = new Set(
                     allJobs.filter(job => jobMatchesFilters(job)).map(job => job.company_id)
                 );
@@ -766,6 +884,13 @@
 
             // Check if a job matches current filters
             const jobMatchesFilters = (job) => {
+                // --- Location Filters ---
+                if (filters.country && job.country !== filters.country) return false;
+                if (filters.state && job.state !== filters.state) return false;
+                if (filters.city && job.city !== filters.city) return false;
+                if (filters.zipCode && job.zip_code !== filters.zipCode) return false;
+                
+                // --- Posted Date Filter ---
                 if (filters.postedDate !== 'anytime') {
                     const jobDate = new Date(job.created_at);
                     const today = new Date();
@@ -777,18 +902,17 @@
                     }
                 }
                 
+                // --- Job Type Filter ---
                 if (filters.jobType.length > 0 && !filters.jobType.includes(job.job_type)) {
                     return false;
                 }
 
+                // --- Industry Filter (checkboxes) ---
                 if (filters.industry.length > 0 && !filters.industry.includes(job.industry)) {
                     return false;
                 }
                 
-                if (filters.countries.length > 0 && !filters.countries.includes(job.country)) {
-                    return false;
-                }
-                
+                // --- Experience Filter ---
                 if (filters.experience.length > 0) {
                     const jobExp = job.required_experience || '';
                     const matchesExperience = filters.experience.some(expRange => {
@@ -805,40 +929,51 @@
 
             // Reset filters
             const resetFilters = () => {
+                // Reset primary filters
                 filters.postedDate = 'anytime';
                 filters.jobType = [];
-                filters.countries = [];
                 filters.experience = [];
                 filters.industry = [];
                 
+                // Reset location filters
+                filters.country = '';
+                filters.state = '';
+                filters.city = '';
+                filters.zipCode = '';
+
+                // Reset DOM elements
                 document.querySelector('input[name="postedDate"][value="anytime"]').checked = true;
                 document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
                 
-                countrySearch.value = '';
+                // Reset location select boxes and containers
+                countrySelect.value = '';
+                populateCountries(); // This also resets visibility for state/city/zip
+                
                 industrySearch.value = '';
                 companySearch.value = '';
                 
-                countryList.querySelectorAll('.filter-option').forEach(o => o.style.display = 'flex');
                 industryList.querySelectorAll('.filter-option').forEach(o => o.style.display = 'flex');
                 
                 filteredCompanies = [...allCompanies];
                 renderCompanies();
             };
 
-            // Search companies
+            // Search companies (Logic remains same)
             const searchCompanies = () => {
                 const searchTerm = companySearch.value.trim().toLowerCase();
+                
                 if (searchTerm) {
                     filteredCompanies = allCompanies.filter(company => 
                         company.company_name.toLowerCase().includes(searchTerm)
                     );
                 } else {
-                    filteredCompanies = [...allCompanies];
+                    applyFilters();
+                    return;
                 }
                 renderCompanies();
             };
 
-            // Render companies list
+            // Render companies list (Logic remains same)
             const renderCompanies = () => {
                 companiesList.innerHTML = '';
                 companyCount.textContent = `${filteredCompanies.length} companies found`;
@@ -876,7 +1011,7 @@
                 }
             };
 
-            // Generate star rating HTML
+            // Generate star rating HTML (Logic remains same)
             const generateStarRating = (rating) => {
                 let stars = '';
                 for (let i = 1; i <= 5; i++) {
@@ -887,7 +1022,7 @@
                 return stars;
             };
 
-            // Generate company type (for demo purposes)
+            // Generate company type (for demo purposes) (Logic remains same)
             const generateCompanyType = (companyName) => {
                 const types = ['Foreign MNC / IT Services & Consulting', 'Corporate / Analytics / KPO / Research', 'Startup / Unicorn'];
                 let hash = 0;
@@ -895,7 +1030,7 @@
                 return types[Math.abs(hash) % types.length];
             };
 
-            // Select a company and show its jobs
+            // Select a company and show its jobs (Logic remains same)
             const selectCompany = async (company) => {
                 selectedCompany = company;
                 companiesView.classList.add('d-none');
@@ -907,6 +1042,7 @@
                     const response = await fetch(`/api/jobs/by-company/${company.id}`);
                     if (!response.ok) throw new Error('Failed to load jobs');
                     const data = await response.json();
+                    
                     const filteredJobs = data.jobs.filter(job => jobMatchesFilters(job));
                     renderJobs(filteredJobs);
                 } catch (error) {
@@ -915,7 +1051,7 @@
                 }
             };
 
-            // Render jobs list
+            // Render jobs list (Logic remains same)
             const renderJobs = (jobs) => {
                 jobsList.innerHTML = '';
                 if (jobs.length === 0) {
@@ -934,7 +1070,10 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <h5 class="job-title">${job.job_title}</h5>
-                                <p class="text-muted small mb-2"><i class="fas fa-map-marker-alt me-1"></i>${job.city || 'N/A'}, ${job.country || ''}</p>
+                                <p class="text-muted small mb-2">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    ${job.city || 'N/A'}, ${job.state || ''} ${job.zip_code ? `(${job.zip_code})` : ''}, ${job.country || ''}
+                                </p>
                             </div>
                             <button class="btn btn-primary apply-now-btn" data-job-id="${job.id}">Apply Now</button>
                         </div>
@@ -949,12 +1088,12 @@
                 });
             };
 
-            // Apply for a job
+            // Apply for a job (Logic remains same)
             const applyForJob = (jobId) => {
                 if (sessionStorage.getItem('email')) {
                     window.location.href = `jobApplication.html?jobId=${jobId}`;
                 } else {
-                    alert('Please login to apply for this job.');
+                    console.warn('User not logged in. Redirecting to login.');
                     window.location.href = 'login.html';
                 }
             };
