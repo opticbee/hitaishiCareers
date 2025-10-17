@@ -15,14 +15,14 @@ const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 const saltRounds = 10;
 
 /** * Helper to generate token & send response safely.
- * NOTE: The token is only set in an HttpOnly cookie (for security against XSS token theft).
+ * MODIFIED: Now returns the JWT in the response body AND sets the HttpOnly cookie.
  */
 const generateToken = (user, res, message = 'Authenticated successfully!') => {
   const payload = { id: user.id, email: user.email, fullName: user.full_name };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-  // Store token in HttpOnly cookie (Primary security measure against XSS token theft)
+  // Store token in HttpOnly cookie (Primary security measure for WEBSITE)
   res.cookie('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -33,7 +33,8 @@ const generateToken = (user, res, message = 'Authenticated successfully!') => {
   return res.status(200).json({
     success: true,
     message,
-    // 🚨 REMOVED: token is no longer returned in the body
+    // 💡 ADDED: Return token in body for mobile app to store in localStorage
+    token: token, 
     user: {
       id: user.id,
       fullName: user.full_name,
@@ -153,15 +154,17 @@ router.post('/google', async (req, res) => {
 
 /** -------------------------
  * LOGOUT
+ * MODIFIED: Clears HttpOnly cookie (for web) but no token in body.
  --------------------------*/
 router.post('/logout', (req, res) => {
-  // Clear the HttpOnly cookie for logout
+  // Clear the HttpOnly cookie for logout (for web security)
   res.cookie('token', '', {
     httpOnly: true,
     expires: new Date(0),
     sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production',
   });
+  // Mobile app must clear localStorage client-side
   res.status(200).json({ message: 'Logged out successfully.' });
 });
 

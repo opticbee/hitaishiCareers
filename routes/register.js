@@ -92,7 +92,7 @@ router.post('/user/register', upload.single('profileImage'), async (req, res) =>
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    // --- Set secure, httpOnly cookie (Primary security) ---
+    // --- Set secure, httpOnly cookie (Primary security for WEBSITE) ---
     res.cookie('token', token, {
       httpOnly: true,                    
       secure: process.env.NODE_ENV === 'production', 
@@ -100,10 +100,11 @@ router.post('/user/register', upload.single('profileImage'), async (req, res) =>
       maxAge: 7 * 24 * 60 * 60 * 1000   
     });
 
-    // --- Send success response without including the token in the body ---
+    // --- MODIFIED: Include token in body for mobile app to save in localStorage ---
     res.status(201).json({
       success: true,
       message: 'User registered successfully!',
+      token: token, // 💡 ADDED
       user: {
         id: result.insertId,
         fullName,
@@ -121,7 +122,7 @@ router.post('/user/register', upload.single('profileImage'), async (req, res) =>
   }
 });
 
-// --- Secure Login Route (Redundant, but kept if used separately from /api/auth/login) ---
+// --- Secure Login Route (Redundant, but updated for consistency) ---
 router.post('/user/login', async (req, res) => {
   try {    
     const email = sanitize(req.body.email);
@@ -161,7 +162,7 @@ router.post('/user/login', async (req, res) => {
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-    // --- Set JWT in secure HttpOnly cookie (Primary security) ---
+    // --- Set JWT in secure HttpOnly cookie (Primary security for WEBSITE) ---
     res.cookie('token', token, {
       httpOnly: true,                    // Prevent JS access (XSS safe)
       secure: process.env.NODE_ENV === 'production', // Use HTTPS only in prod
@@ -169,10 +170,11 @@ router.post('/user/login', async (req, res) => {
       sameSite: 'strict'                 // Prevent CSRF
     });
 
-    // --- Send success response without including the token in the body ---
+    // --- MODIFIED: Include token in body for mobile app to save in localStorage ---
     res.status(200).json({
       success: true,
       message: 'Login successful!',
+      token: token, // 💡 ADDED
       user: {
         id: user.id,
         fullName: user.full_name,
@@ -187,7 +189,7 @@ router.post('/user/login', async (req, res) => {
   }
 });
 
-// --- Secure Password Update Route ---
+// --- Secure Password Update Route (No change required here, relies on middleware) ---
 router.post('/user/update-password', async (req, res) => {
   try {
     // Note: protectRoute middleware should be applied to this route in server.js
@@ -229,3 +231,4 @@ router.post('/logout', (req, res) => {
 });
 
 module.exports = router;
+  
