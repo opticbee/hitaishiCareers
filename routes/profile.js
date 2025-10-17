@@ -9,7 +9,6 @@ const { query } = require('../db');
 // --- Basic input sanitization (XSS prevention) ---
 const sanitize = (str) => {
   if (typeof str !== 'string') return '';
-  // Removes common HTML/scripting characters before insertion into DB
   return str.replace(/[<>\"'()]/g, '');
 };
 
