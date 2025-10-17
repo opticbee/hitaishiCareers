@@ -9,7 +9,7 @@ const protectRoute = (req, res, next) => {
     let token;
     const authHeader = req.headers.authorization;
     
-    // 1. Check for token in Authorization: Bearer header (Mobile/API flow)
+    // 1. Check for token in Authorization: Bearer header (Mobile/API flow - PRIORITY)
     if (authHeader && authHeader.startsWith('Bearer')) {
         token = authHeader.split(' ')[1];
     } 
