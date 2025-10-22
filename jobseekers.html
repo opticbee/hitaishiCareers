@@ -43,7 +43,7 @@
             </h1>
             
             <div id="auth-status" class="mb-6 text-sm text-gray-600">
-                <p>Status: <span id="user-status" class="font-semibold text-red-500">Initializing...</span></p>
+                <p>Status: <span id="user-status" class="font-semibold text-green-600">Public Access</span></p>
             </div>
 
             <div class="space-y-8">
@@ -119,19 +119,9 @@
         </div>
     </div>
     
-    <!-- Firebase SDKs (Only for Auth setup now) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        
-        // --- Configuration Check (CRITICAL FIX) ---
-        // Ensure firebaseConfig is defined correctly using the provided global variable
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        const BASE_URL = 'https://www.winjob.in'; // Assuming the base URL for asset resolution
-        
-        let app, auth;
-        let userId = null;
+        // Base URL for API calls
+        const BASE_URL = 'https://www.winjob.in'; 
         
         // --- Application State ---
         let state = {
@@ -141,7 +131,7 @@
                 skills: '',
                 experience: 0
             },
-            isAuthReady: false
+            isAuthReady: true // Set to true as no auth is required
         };
 
         // --- DOM Elements ---
@@ -153,70 +143,22 @@
         const experienceFilterInput = document.getElementById('experience-filter');
         const experienceValueSpan = document.getElementById('experience-value');
         const clearFiltersButton = document.getElementById('clear-filters');
-        const userStatusSpan = document.getElementById('user-status');
         const userDetailModal = document.getElementById('userDetailModal');
         const userDetailContent = document.getElementById('user-detail-content');
-
-        /**
-         * Initializes Firebase and handles authentication.
-         */
-        async function setupFirebase() {
-            if (!firebaseConfig) {
-                // If config is genuinely missing, stop here but set auth ready to continue app flow
-                console.error("Firebase configuration is missing. Cannot proceed with data fetch.");
-                userStatusSpan.textContent = 'Auth Failed (No Config)';
-                state.isAuthReady = true;
-                loadingDiv.classList.add('hidden');
-                fetchUserData(); // Attempt to fetch data even without full Firebase auth, just relying on API (less secure, but makes app function in dev)
-                return;
-            }
-
-            try {
-                app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-
-                // Authentication with token or anonymously
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                
-                onAuthStateChanged(auth, (user) => {
-                    userId = user ? user.uid : 'anonymous';
-                    state.isAuthReady = true;
-                    userStatusSpan.textContent = user ? `Authenticated (ID: ${userId.substring(0, 8)}...)` : 'Anonymous';
-                    userStatusSpan.classList.remove('text-red-500');
-                    userStatusSpan.classList.add('text-green-600');
-                    console.log("Authentication ready. User ID:", userId);
-                    fetchUserData(); // Start fetching data after auth is confirmed
-                });
-
-            } catch (error) {
-                console.error("Firebase setup failed:", error);
-                state.isAuthReady = true;
-                loadingDiv.classList.add('hidden');
-            }
-        }
 
         /**
          * Fetches user data from the dedicated backend API endpoint: /api/profile/jobseekers.
          */
         async function fetchUserData() {
-            if (!state.isAuthReady) return;
-            
             loadingDiv.classList.remove('hidden');
             
             try {
-                // IMPORTANT: Using the new backend API endpoint
+                // IMPORTANT: Since this is now a public page, the backend MUST allow 
+                // UNPROTECTED access to this specific endpoint.
                 const response = await fetch(`${BASE_URL}/api/profile/jobseekers`);
                 
                 if (!response.ok) {
-                    // Check for 404 specifically for clearer debug feedback
-                    if (response.status === 404) {
-                         throw new Error(`Endpoint not found (404). Check if /api/profile/jobseekers is implemented in profile.js.`);
-                    }
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`HTTP error! Status: ${response.status}. The backend API endpoint must be unprotected for public access.`);
                 }
                 
                 const data = await response.json();
@@ -237,8 +179,10 @@
                 // Display user-friendly error
                 userCardsContainer.innerHTML = `<div class="p-6 bg-red-100 border border-red-300 text-red-700 rounded-lg text-center mt-8">
                     <i data-lucide="alert-triangle" class="w-6 h-6 inline-block mr-2"></i>
-                    Failed to load profiles. Please verify the backend API is running and the ${error.message}.
+                    Failed to load profiles. Please ensure the backend route \`/api/profile/jobseekers\` is accessible without authentication. Error: ${error.message}
                 </div>`;
+                // Note: The previous error indicated the backend endpoint requires auth (401). 
+                // This message now explicitly guides the user to check their backend security policy.
                 lucide.createIcons();
             } finally {
                 loadingDiv.classList.add('hidden');
@@ -516,7 +460,7 @@
         // Initialize the application on load
         window.onload = () => {
             lucide.createIcons(); // Initialize icons on static HTML
-            setupFirebase();
+            fetchUserData(); // Start fetching immediately
         };
 
     </script>
