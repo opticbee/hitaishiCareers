@@ -124,13 +124,14 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
-        // Global variables for Firebase
-        let app, auth;
-        let userId = null;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        // --- Configuration Check (CRITICAL FIX) ---
+        // Ensure firebaseConfig is defined correctly using the provided global variable
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         const BASE_URL = 'https://www.winjob.in'; // Assuming the base URL for asset resolution
+        
+        let app, auth;
+        let userId = null;
         
         // --- Application State ---
         let state = {
@@ -161,9 +162,12 @@
          */
         async function setupFirebase() {
             if (!firebaseConfig) {
+                // If config is genuinely missing, stop here but set auth ready to continue app flow
                 console.error("Firebase configuration is missing. Cannot proceed with data fetch.");
+                userStatusSpan.textContent = 'Auth Failed (No Config)';
                 state.isAuthReady = true;
                 loadingDiv.classList.add('hidden');
+                fetchUserData(); // Attempt to fetch data even without full Firebase auth, just relying on API (less secure, but makes app function in dev)
                 return;
             }
 
