@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Directory | Filterable Profiles</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom scrollbar for better aesthetics */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #A78BFA;
+            border-radius: 4px;
+        }
+        body::-webkit-scrollbar-track {
+            background-color: #f3f4f6;
+        }
+        /* Custom styles for the filter box shadow */
+        .filter-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Style for the modal backdrop */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans antialiased text-gray-800">
+
+    <!-- Main Application Container -->
+    <div id="app" class="flex flex-col lg:flex-row min-h-screen">
+        
+        <!-- Filter Sidebar -->
+        <aside id="sidebar" class="w-full lg:w-80 bg-white border-b lg:border-r border-gray-200 p-6 lg:p-8 shrink-0 filter-shadow">
+            <h1 class="text-3xl font-extrabold text-indigo-600 mb-6 flex items-center">
+                Talent Hub
+            </h1>
+            
+            <div id="auth-status" class="mb-6 text-sm text-gray-600">
+                <p>Status: <span id="user-status" class="font-semibold text-red-500">Initializing...</span></p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- Skills Filter -->
+                <div>
+                    <label for="skills-filter" class="block text-sm font-bold text-gray-700 mb-2">Filter by Skills</label>
+                    <div class="relative">
+                        <input type="text" id="skills-filter" placeholder="e.g., React, Node.js, Design" 
+                               class="w-full pl-10 pr-4 py-2 border border-indigo-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                            <i data-lucide="search" class="w-5 h-5"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Experience Filter -->
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label for="experience-filter" class="block text-sm font-bold text-gray-700">Minimum Experience (Years)</label>
+                        <span id="experience-value" class="text-indigo-600 font-extrabold text-lg">0+</span>
+                    </div>
+                    <input type="range" id="experience-filter" min="0" max="20" value="0" step="1"
+                           class="w-full h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer range-lg transition duration-150">
+                </div>
+
+                <!-- Clear Filters Button -->
+                <button id="clear-filters" class="w-full flex items-center justify-center bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition duration-300 font-medium">
+                    <i data-lucide="refresh-cw" class="w-4 h-4 mr-2"></i>
+                    Clear Filters
+                </button>
+            </div>
+        </aside>
+
+        <!-- Profile Results Area -->
+        <main class="flex-grow p-6 lg:p-10">
+            <h2 class="text-2xl lg:text-3xl font-bold text-gray-700 mb-8">
+                Found <span id="results-count" class="text-indigo-600">0</span> Profiles
+            </h2>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="flex justify-center items-center h-48">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
+                <p class="ml-4 text-indigo-500">Loading profiles from backend...</p>
+            </div>
+
+            <!-- User Cards Grid -->
+            <div id="user-cards-container" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Profile Cards will be injected here -->
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-results" class="hidden text-center p-10 bg-white rounded-xl border border-gray-200 mt-8">
+                <p class="text-xl font-semibold text-gray-500">No matching profiles found.</p>
+                <p class="text-gray-400 mt-2">Try adjusting your skill or experience filters.</p>
+            </div>
+        </main>
+    </div>
+    
+    <!-- User Detail Modal -->
+    <div id="userDetailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-backdrop overflow-y-auto" onclick="closeUserDetailModal(event)">
+        <div class="bg-white rounded-2xl w-full max-w-4xl m-4 lg:m-8 max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all" onclick="event.stopPropagation()">
+            <div class="p-8">
+                <div id="user-detail-content">
+                    <!-- Detailed profile content injected here by JS -->
+                    <div class="flex justify-center items-center h-48">
+                        <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
+                    </div>
+                </div>
+                <div class="mt-4 text-right">
+                    <button onclick="closeUserDetailModal()" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-medium transition duration-150">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Firebase SDKs (Only for Auth setup now) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // Global variables for Firebase
+        let app, auth;
+        let userId = null;
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        const BASE_URL = 'https://www.winjob.in'; // Assuming the base URL for asset resolution
+        
+        // --- Application State ---
+        let state = {
+            allUsers: [],
+            filteredUsers: [],
+            filters: {
+                skills: '',
+                experience: 0
+            },
+            isAuthReady: false
+        };
+
+        // --- DOM Elements ---
+        const userCardsContainer = document.getElementById('user-cards-container');
+        const resultsCountSpan = document.getElementById('results-count');
+        const loadingDiv = document.getElementById('loading');
+        const noResultsDiv = document.getElementById('no-results');
+        const skillsFilterInput = document.getElementById('skills-filter');
+        const experienceFilterInput = document.getElementById('experience-filter');
+        const experienceValueSpan = document.getElementById('experience-value');
+        const clearFiltersButton = document.getElementById('clear-filters');
+        const userStatusSpan = document.getElementById('user-status');
+        const userDetailModal = document.getElementById('userDetailModal');
+        const userDetailContent = document.getElementById('user-detail-content');
+
+        /**
+         * Initializes Firebase and handles authentication.
+         */
+        async function setupFirebase() {
+            if (!firebaseConfig) {
+                console.error("Firebase configuration is missing. Cannot proceed with data fetch.");
+                state.isAuthReady = true;
+                loadingDiv.classList.add('hidden');
+                return;
+            }
+
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+
+                // Authentication with token or anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                
+                onAuthStateChanged(auth, (user) => {
+                    userId = user ? user.uid : 'anonymous';
+                    state.isAuthReady = true;
+                    userStatusSpan.textContent = user ? `Authenticated (ID: ${userId.substring(0, 8)}...)` : 'Anonymous';
+                    userStatusSpan.classList.remove('text-red-500');
+                    userStatusSpan.classList.add('text-green-600');
+                    console.log("Authentication ready. User ID:", userId);
+                    fetchUserData(); // Start fetching data after auth is confirmed
+                });
+
+            } catch (error) {
+                console.error("Firebase setup failed:", error);
+                state.isAuthReady = true;
+                loadingDiv.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Fetches user data from the dedicated backend API endpoint: /api/profile/jobseekers.
+         */
+        async function fetchUserData() {
+            if (!state.isAuthReady) return;
+            
+            loadingDiv.classList.remove('hidden');
+            
+            try {
+                // IMPORTANT: Using the new backend API endpoint
+                const response = await fetch(`${BASE_URL}/api/profile/jobseekers`);
+                
+                if (!response.ok) {
+                    // Check for 404 specifically for clearer debug feedback
+                    if (response.status === 404) {
+                         throw new Error(`Endpoint not found (404). Check if /api/profile/jobseekers is implemented in profile.js.`);
+                    }
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                const fetchedUsers = data.jobseekers.map(user => ({
+                    ...user,
+                    // Ensure experience is a number for filtering
+                    experience: parseInt(user.experience || 0, 10), 
+                    // Skills is guaranteed to be an array from the backend processing
+                    skills: Array.isArray(user.skills) ? user.skills : [] 
+                }));
+                
+                state.allUsers = fetchedUsers;
+                applyFilters(); // Apply current filters to the new data
+
+            } catch (error) {
+                console.error("Error fetching data from API:", error);
+                // Display user-friendly error
+                userCardsContainer.innerHTML = `<div class="p-6 bg-red-100 border border-red-300 text-red-700 rounded-lg text-center mt-8">
+                    <i data-lucide="alert-triangle" class="w-6 h-6 inline-block mr-2"></i>
+                    Failed to load profiles. Please verify the backend API is running and the ${error.message}.
+                </div>`;
+                lucide.createIcons();
+            } finally {
+                loadingDiv.classList.add('hidden');
+            }
+        }
+        
+        /**
+         * Renders the user cards in the container.
+         */
+        function renderUsers() {
+            userCardsContainer.innerHTML = '';
+            resultsCountSpan.textContent = state.filteredUsers.length;
+
+            if (state.filteredUsers.length === 0) {
+                noResultsDiv.classList.remove('hidden');
+                return;
+            }
+            noResultsDiv.classList.add('hidden');
+
+            state.filteredUsers.forEach(user => {
+                const card = document.createElement('div');
+                // Make card clickable
+                card.onclick = () => openUserDetailModal(user);
+                card.className = 'bg-white p-6 rounded-xl border border-gray-100 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.01] cursor-pointer';
+                
+                const profilePhotoUrl = user.profileImageUrl && user.profileImageUrl.startsWith('/') ? `${BASE_URL}${user.profileImageUrl}` : user.profileImageUrl || 'https://placehold.co/100x100/6366F1/ffffff?text=User';
+
+                card.innerHTML = `
+                    <div class="flex items-start space-x-4 mb-4">
+                        <img src="${profilePhotoUrl}" 
+                             onerror="this.onerror=null;this.src='https://placehold.co/100x100/6366F1/ffffff?text=User';"
+                             alt="${user.fullName}" class="w-16 h-16 rounded-full object-cover border-4 border-indigo-500 shadow-md">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">${user.fullName || 'Jobseeker'}</h3>
+                            <p class="text-sm font-semibold text-indigo-600 mt-0.5">${user.experience || '0'}+ Years Experience</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="text-xs font-semibold uppercase text-gray-500 mb-2">Top Skills</p>
+                        <div class="flex flex-wrap gap-2">
+                            ${(user.skills || []).slice(0, 5).map(skill => 
+                                `<span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-medium rounded-full">${skill}</span>`
+                            ).join('')}
+                            ${(user.skills || []).length > 5 ? `<span class="text-xs text-gray-500">and ${user.skills.length - 5} more...</span>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+                        <div class="flex items-center text-gray-600">
+                            <i data-lucide="folder-open" class="w-4 h-4 mr-2 text-indigo-500"></i>
+                            Projects: <span class="ml-1 font-semibold">${(user.projects || []).length}</span>
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i data-lucide="map-pin" class="w-4 h-4 mr-2 text-indigo-500"></i>
+                            Location: <span class="ml-1 font-semibold">N/A</span>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full inline-flex justify-center items-center px-4 py-2 mt-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition duration-150">
+                        <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
+                        View Full Profile
+                    </button>
+                `;
+                userCardsContainer.appendChild(card);
+            });
+            // Re-initialize Lucide icons for the new content
+            lucide.createIcons();
+        }
+
+        /**
+         * Applies the current filters to the allUsers array.
+         */
+        function applyFilters() {
+            const skillQuery = state.filters.skills.toLowerCase().trim();
+            const minExperience = state.filters.experience;
+
+            state.filteredUsers = state.allUsers.filter(user => {
+                // Check if user.skills is an array before using .some()
+                const passesSkillFilter = skillQuery === '' || (Array.isArray(user.skills) && user.skills.some(skill => 
+                    skill.toLowerCase().includes(skillQuery)
+                ));
+                
+                // Ensure user.experience is a number for comparison
+                const passesExperienceFilter = (user.experience || 0) >= minExperience;
+
+                return passesSkillFilter && passesExperienceFilter;
+            });
+
+            renderUsers();
+        }
+        
+        // --- Modal Functions ---
+
+        /**
+         * Safely parses and formats complex array data (e.g., education, experience).
+         * @param {Array<Object>} arr The array data (pre-parsed by the backend).
+         */
+        const formatArrayData = (arr, renderFn) => {
+            let safeArr = Array.isArray(arr) ? arr : [];
+
+            safeArr = safeArr.filter(item => {
+                if (item === null || typeof item === 'undefined') return false;
+                if (typeof item === 'string' && item.trim() === '') return false;
+                return true;
+            });
+
+            if (safeArr.length === 0) {
+                return '<span class="text-gray-400 italic text-sm">Not specified.</span>';
+            }
+            return safeArr.map(renderFn).join('');
+        };
+        
+        /**
+         * Creates a structured detailed section for the modal.
+         */
+        const createDetailSection = (title, content) => {
+            if (content.includes('Not specified')) return '';
+            
+            return `
+                <div class="mb-6">
+                    <h4 class="text-lg font-semibold text-indigo-700 border-b pb-1 mb-3">${title}</h4>
+                    <div class="space-y-3 text-sm">${content}</div>
+                </div>`;
+        };
+        
+        /**
+         * Populates and opens the user detail modal.
+         * @param {Object} user The full user profile object from the API.
+         */
+        window.openUserDetailModal = (user) => {
+            userDetailContent.innerHTML = `
+                <div class="flex justify-center items-center h-48">
+                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-500"></div>
+                </div>
+            `;
+            
+            const actualUser = user;
+            
+            const educationItems = formatArrayData(actualUser.education, (edu) => {
+                if (!edu || (!edu.degree && !edu.fieldOfStudy && !edu.institution)) return '';
+                return `<div class="p-3 bg-gray-50 rounded-lg">
+                    <strong>${edu.degree || 'Degree not specified'}</strong> in ${edu.fieldOfStudy || 'Field not specified'}<br>
+                    <span class="text-gray-600">${edu.institution || 'Institution not specified'}</span>
+                    ${edu.yearOfCompletion ? `<br><small class="text-indigo-500">${edu.yearOfCompletion}</small>` : ''}
+                </div>`;
+            });
+
+            const experienceItems = formatArrayData(actualUser.professionalDetails, (exp) => {
+                if (!exp || (!exp.company && !exp.position && !exp.duration)) return '';
+                return `<div class="p-3 bg-gray-50 rounded-lg">
+                    <strong>${exp.position || 'Position not specified'}</strong> at ${exp.company || 'Company not specified'}<br>
+                    <span class="text-gray-600">${exp.duration || 'Duration not specified'}</span>
+                    ${exp.description ? `<br><small class="text-gray-500">${exp.description.substring(0, 100)}...</small>` : ''}
+                </div>`;
+            });
+            
+            const projectsItems = formatArrayData(actualUser.projects, (project) => {
+                if (!project || (!project.title && !project.description)) return '';
+                return `<div class="p-3 bg-gray-50 rounded-lg">
+                    <strong>${project.title || 'Untitled Project'}</strong>
+                    ${project.description ? `<br><small class="text-gray-500">${project.description.substring(0, 100)}...</small>` : ''}
+                </div>`;
+            });
+
+            const skillsItems = formatArrayData(actualUser.skills, (skill) => {
+                if (!skill || (typeof skill === 'string' && skill.trim() === '')) return '';
+                return `<span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-medium rounded-full">${skill}</span>`;
+            });
+            
+            const profilePhotoBaseUrl = actualUser.profileImageUrl && actualUser.profileImageUrl.startsWith('/') ? `${BASE_URL}${actualUser.profileImageUrl}` : actualUser.profileImageUrl || 'https://placehold.co/100x100/6366F1/ffffff?text=User';
+            const resumeUrl = actualUser.resumeUrl && actualUser.resumeUrl.startsWith('/') ? `${BASE_URL}${actualUser.resumeUrl}` : actualUser.resumeUrl || '#';
+
+            let expectedCtcText = 'Not specified';
+            const ctcExpected = actualUser.ctcExpected; 
+            if (ctcExpected && !isNaN(parseFloat(ctcExpected))) {
+                expectedCtcText = parseFloat(ctcExpected).toLocaleString('en-IN', { style: 'currency', currency: actualUser.ctcCurrency || 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+            
+            let experienceDisplay = `${actualUser.experience || 0}+ Years`;
+
+            userDetailContent.innerHTML = `
+                <!-- Header -->
+                <div class="flex items-center space-x-6 pb-6 border-b border-gray-100 mb-6">
+                    <img src="${profilePhotoBaseUrl}" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/100x100/6366F1/ffffff?text=User';"
+                         alt="${actualUser.fullName}" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-500 shadow-xl">
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-gray-900">${actualUser.fullName || 'Jobseeker'}</h3>
+                        <p class="text-md font-semibold text-indigo-600 mt-1">${actualUser.experienceLevel || 'Professional'} (${experienceDisplay})</p>
+                    </div>
+                </div>
+
+                <!-- Contact & Summary Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm mb-8 p-4 bg-indigo-50 rounded-xl">
+                    <div class="flex items-center text-gray-700">
+                        <i data-lucide="mail" class="w-4 h-4 mr-3 text-indigo-600"></i>
+                        <span class="font-medium">Email:</span> ${actualUser.email || 'N/A'}
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <i data-lucide="phone" class="w-4 h-4 mr-3 text-indigo-600"></i>
+                        <span class="font-medium">Mobile:</span> ${actualUser.mobileNumber || 'N/A'}
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <i data-lucide="wallet" class="w-4 h-4 mr-3 text-indigo-600"></i>
+                        <span class="font-medium">Expected CTC:</span> ${expectedCtcText}
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <i data-lucide="clock" class="w-4 h-4 mr-3 text-indigo-600"></i>
+                        <span class="font-medium">Notice Period:</span> ${actualUser.noticePeriod || 'Immediate'}
+                    </div>
+                </div>
+                
+                <!-- Detailed Sections -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        ${createDetailSection('Key Skills', `<div class="flex flex-wrap gap-2">${skillsItems}</div>`)}
+                        ${createDetailSection('Work Experience', experienceItems)}
+                        ${createDetailSection('Projects', projectsItems)}
+                    </div>
+                    <div class="lg:col-span-1">
+                        ${createDetailSection('Education', educationItems)}
+                        ${createDetailSection('Certifications', formatArrayData(actualUser.certifications, (cert) => `<div class="p-2 bg-gray-50 rounded-lg">${cert}</div>`))}
+                        ${createDetailSection('Languages', `<div class="flex flex-wrap gap-2">${formatArrayData(actualUser.languages, (lang) => `<span class="px-3 py-1 bg-gray-200 text-gray-700 text-xs font-medium rounded-full">${lang}</span>`)}</div>`)}
+                    </div>
+                </div>
+                
+                <!-- Resume Link -->
+                <div class="mt-8 pt-6 border-t border-gray-100 text-center">
+                    <a href="${resumeUrl}" target="_blank" 
+                       class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl shadow-lg text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 disabled:opacity-50"
+                       ${actualUser.resumeUrl ? '' : 'disabled'}>
+                        <i data-lucide="download" class="w-5 h-5 mr-3"></i>
+                        Download Resume
+                    </a>
+                </div>
+            `;
+
+            // Re-initialize Lucide icons for the new modal content
+            lucide.createIcons();
+            userDetailModal.classList.remove('hidden');
+        }
+
+        /**
+         * Closes the modal.
+         */
+        window.closeUserDetailModal = (event) => {
+            // Only close if event target is the backdrop or the close button
+            if (event && event.target !== userDetailModal) return;
+            userDetailModal.classList.add('hidden');
+        }
+        
+        // --- Event Listeners ---
+
+        skillsFilterInput.addEventListener('input', (e) => {
+            state.filters.skills = e.target.value;
+            applyFilters();
+        });
+
+        experienceFilterInput.addEventListener('input', (e) => {
+            state.filters.experience = parseInt(e.target.value, 10);
+            experienceValueSpan.textContent = `${e.target.value}+`;
+            applyFilters();
+        });
+
+        clearFiltersButton.addEventListener('click', () => {
+            state.filters.skills = '';
+            state.filters.experience = 0;
+            skillsFilterInput.value = '';
+            experienceFilterInput.value = 0;
+            experienceValueSpan.textContent = '0+';
+            applyFilters();
+        });
+        
+        // Initialize the application on load
+        window.onload = () => {
+            lucide.createIcons(); // Initialize icons on static HTML
+            setupFirebase();
+        };
+
+    </script>
+</body>
+</html>

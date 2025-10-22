@@ -19,40 +19,48 @@ const PORT = process.env.PORT || 3000;
 
 // --- CRITICAL CORS CONFIGURATION FOR PRODUCTION ---
 const allowedOrigins = [
-  // Your live website domain
+  // production web
+  'https://www.winjob.in',
   'https://winjob.in',
-  // Local development for your desktop environment
+
+  // common dev origins (browsers / ionic dev server)
   'http://localhost:3000',
-  
-  // Capacitor Default Production Origins:
-  // Android Webview (most common default)
-  'http://localhost', 
-  // Capacitor 6+ Android Webview / for secure setups
-  'https://localhost', 
-  // iOS Webview
-  'capacitor://localhost', 
+  'http://localhost:8100',
+  'http://localhost:8080',
+  'http://127.0.0.1:8000',
+
+  // Capacitor / Ionic / WebView origins (add these — app often uses one of them)
+  'capacitor://localhost',
+  'ionic://localhost',
+  'http://localhost',       // include plain localhost
+  'https://localhost',      // some WebViews use https://localhost
+  'file://', 
 ];
 
 // Configure CORS using a dynamic origin check
 app.use(cors({
-  origin: (origin, callback) => {
-    // 1. Allow requests with no origin (e.g., Postman, native apps/plugins, same-origin)
-    if (!origin) return callback(null, true); 
-    
-    // 2. Check if the requesting origin is in our allowed list
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-      // In production, reject unauthorized origins
-      return callback(new Error(msg), false);
+  origin: function(origin, callback) {
+    // Allow requests with no origin (curl, Postman, native mobile contexts)
+    if (!origin) return callback(null, true);
+
+    // If origin exactly matches an allowed origin, allow it
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
     }
-    // Allow the origin
-    return callback(null, true);
+
+    // Otherwise reject the origin — this will surface as a CORS error in the browser.
+    const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+    return callback(new Error(msg), false);
   },
-  // CRITICAL: Must be true to allow cookies/tokens/sessions for your protected routes
-  credentials: true, 
-  // To handle preflight requests (OPTIONS method) which happen for non-simple requests (like PUT/DELETE or requests with custom headers)
+
+  // Allow cookies (only if you actually use cookies for auth). If you don't use cookies, you can set false.
+  credentials: true,
+
+  // Allowed HTTP methods
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+
+  // Allowed headers clients may send
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 // --- END CORS CONFIGURATION ---
 

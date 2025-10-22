@@ -189,7 +189,8 @@ router.post('/user/login', async (req, res) => {
   }
 });
 
-// --- Secure Password Update Route (No change required here, relies on middleware) ---
+
+// --- Secure Password Update Route ---
 router.post('/user/update-password', async (req, res) => {
   try {
     // Note: protectRoute middleware should be applied to this route in server.js

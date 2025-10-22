@@ -63,6 +63,81 @@ router.use(express.urlencoded({
     extended: true
 }));
 
+
+
+
+// --- NEW: GET all jobseeker profiles for the directory ---
+// This endpoint is generally UNPROTECTED so employers can browse, 
+// but it is designed to run in a secure, authenticated environment (Canvas).
+router.get('/jobseekers', async (req, res) => {
+    try {
+        // Only fetch users who have completed essential profile details (e.g., have a profile_uuid)
+        const rows = await query(`
+            SELECT 
+                full_name AS fullName, 
+                email, 
+                mobile_number AS mobileNumber,
+                profile_image_url AS profileImageUrl, 
+                resume_url AS resumeUrl,
+                experience_level AS experienceLevel, 
+                ctc_expected AS ctcExpected,
+                notice_period AS noticePeriod,
+                education, 
+                professional_details AS professionalDetails, 
+                projects, 
+                skills,
+                certifications,
+                languages
+            FROM users
+            WHERE profile_uuid IS NOT NULL
+            ORDER BY created_at DESC
+        `);
+
+        // Safely convert JSON strings in the results back to objects/arrays
+        const jobseekers = rows.map(user => {
+            const safeParse = (val) => {
+                if (!val) return [];
+                try { return JSON.parse(val); } catch (e) { return val; }
+            };
+            
+            // Calculate total years of experience from professionalDetails if possible
+            let totalExperience = 0;
+            const details = safeParse(user.professionalDetails);
+            if (Array.isArray(details) && details.length > 0) {
+                // Simplified estimate: count entries
+                totalExperience = details.length; 
+            }
+            // Use experienceLevel as fallback, converting "X years" to a number
+            const expMatch = (user.experienceLevel || '').match(/(\d+)/);
+            totalExperience = expMatch ? parseInt(expMatch[1], 10) : totalExperience;
+
+            return {
+                ...user,
+                education: safeParse(user.education),
+                professionalDetails: details,
+                projects: safeParse(user.projects),
+                skills: safeParse(user.skills),
+                certifications: safeParse(user.certifications),
+                languages: safeParse(user.languages),
+                experience: totalExperience > 0 ? totalExperience : 0,
+                // Ensure array fields are arrays, even if JSON.parse failed to ensure client consistency
+                skills: Array.isArray(safeParse(user.skills)) ? safeParse(user.skills) : [],
+                education: Array.isArray(safeParse(user.education)) ? safeParse(user.education) : [],
+                projects: Array.isArray(safeParse(user.projects)) ? safeParse(user.projects) : [],
+                certifications: Array.isArray(safeParse(user.certifications)) ? safeParse(user.certifications) : [],
+                languages: Array.isArray(safeParse(user.languages)) ? safeParse(user.languages) : [],
+            };
+        });
+
+        res.json({ jobseekers });
+    } catch (err) {
+        console.error("❌ Error fetching jobseekers list:", err);
+        res.status(500).json({ error: 'Server error while fetching jobseekers list' });
+    }
+});
+
+
+
 // --- Get profile (by session/email) ---
 router.get('/profile', async (req, res) => {
     try {
