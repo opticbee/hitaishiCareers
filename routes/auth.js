@@ -10,11 +10,10 @@ const router = express.Router();
 const sanitize = (str) => (typeof str === 'string' ? str.replace(/[<>\"'()]/g, '') : '');
 
 // --- Google OAuth Setup ---
-// These must be set in your server's .env file:
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID; // Your Web Client ID
-const GOOGLE_ANDROID_CLIENT_ID = process.env.GOOGLE_ANDROID_CLIENT_ID; // Your Android Client ID
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID; // Web Client ID
+const GOOGLE_ANDROID_CLIENT_ID = process.env.GOOGLE_ANDROID_CLIENT_ID; // Android Client ID
 
-// Initialize OAuth2Client using the Web Client ID
+// Initialize OAuth2Client using the Web Client ID (needed for the library setup)
 const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 const saltRounds = 10;
 
@@ -109,22 +108,21 @@ router.post('/login', async (req, res) => {
   }
 });
 
-/** -------------------------
+/** ------------------------------------------------
  * GOOGLE LOGIN / REGISTER (Multi-Platform Support)
- --------------------------*/
+ * CRITICAL FIX: The audience array now includes both IDs.
+ ------------------------------------------------*/
 router.post('/google', async (req, res) => {
   const { token } = req.body;
   if (!token) return res.status(400).json({ error: 'Google token required.' });
 
   try {
-    // 💡 CRITICAL FIX CONFIRMED: Build the list of valid audiences (Web and Android Client IDs).
+    // CRITICAL FIX: Build the list of valid audiences (Web and Android Client IDs).
     const VALID_AUDIENCES = [GOOGLE_CLIENT_ID]; 
-
     if (GOOGLE_ANDROID_CLIENT_ID) {
       VALID_AUDIENCES.push(GOOGLE_ANDROID_CLIENT_ID);
-      console.log('Verifying Google token against multiple audiences:', VALID_AUDIENCES);
+      console.log('Verifying Google token against audiences:', VALID_AUDIENCES.join(', '));
     } else {
-        // This is a warning, as it may be missing from the dev .env file
         console.warn('WARNING: GOOGLE_ANDROID_CLIENT_ID is missing in .env. Native app logins may fail.');
     }
     
@@ -166,9 +164,8 @@ router.post('/google', async (req, res) => {
     generateToken(newUser, res, 'Account created successfully with Google!');
   } catch (err) {
     console.error('❌ Google Auth error:', err);
-    // Specifically log if the audience mismatch failed the verification
     if (err.message.includes('Token used in the wrong audience')) {
-        console.error('CRITICAL: Token audience mismatch. Check GOOGLE_CLIENT_ID and GOOGLE_ANDROID_CLIENT_ID in .env.');
+        console.error('CRITICAL: Token audience mismatch. Ensure all Client IDs are correct in .env and the project.');
     }
     res.status(500).json({ error: 'Server error during Google authentication.' });
   }

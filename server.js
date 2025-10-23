@@ -40,7 +40,7 @@ const allowedOrigins = [
 // Configure CORS using a dynamic origin check
 app.use(cors({
   origin: function(origin, callback) {
-    // 💡 FIX 1: Allow requests with NO origin (null) from native apps or tools like curl/Postman.
+    // 💡 Allow requests with NO origin (null) from native apps or tools like curl/Postman.
     if (!origin) {
         console.log('CORS: Allowing request with null origin (Native App or Tool).');
         return callback(null, true);
@@ -52,13 +52,12 @@ app.use(cors({
       return callback(null, true);
     }
 
-    // 💡 FIX 2: Gracefully reject forbidden origins without throwing an error.
+    // Gracefully reject forbidden origins without throwing an error.
     console.warn(`CORS: Rejecting forbidden origin: ${origin}`);
-    // Passing (null, false) instructs the cors middleware to reject the request gracefully.
     return callback(null, false); 
   },
 
-  credentials: true,
+  credentials: true, // IMPORTANT: Allows cookies (HttpOnly JWT) to be sent for web flow
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
