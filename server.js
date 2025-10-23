@@ -29,37 +29,37 @@ const allowedOrigins = [
   'http://localhost:8080',
   'http://127.0.0.1:8000',
 
-  // Capacitor / Ionic / WebView origins (add these — app often uses one of them)
+  // Capacitor / Ionic / WebView origins (CRITICAL for mobile)
   'capacitor://localhost',
   'ionic://localhost',
-  'http://localhost',       // include plain localhost
-  'https://localhost',      // some WebViews use https://localhost
+  'http://localhost',       
+  'https://localhost',      
   'file://', 
 ];
 
 // Configure CORS using a dynamic origin check
 app.use(cors({
   origin: function(origin, callback) {
-    // Allow requests with no origin (curl, Postman, native mobile contexts)
-    if (!origin) return callback(null, true);
+    // 💡 FIX 1: Allow requests with NO origin (null) from native apps or tools like curl/Postman.
+    if (!origin) {
+        console.log('CORS: Allowing request with null origin (Native App or Tool).');
+        return callback(null, true);
+    }
 
     // If origin exactly matches an allowed origin, allow it
     if (allowedOrigins.includes(origin)) {
+      console.log(`CORS: Allowing origin ${origin}`);
       return callback(null, true);
     }
 
-    // Otherwise reject the origin — this will surface as a CORS error in the browser.
-    const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-    return callback(new Error(msg), false);
+    // 💡 FIX 2: Gracefully reject forbidden origins without throwing an error.
+    console.warn(`CORS: Rejecting forbidden origin: ${origin}`);
+    // Passing (null, false) instructs the cors middleware to reject the request gracefully.
+    return callback(null, false); 
   },
 
-  // Allow cookies (only if you actually use cookies for auth). If you don't use cookies, you can set false.
   credentials: true,
-
-  // Allowed HTTP methods
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
-
-  // Allowed headers clients may send
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 // --- END CORS CONFIGURATION ---
@@ -75,7 +75,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname)));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// --- API Routes ---
+// --- API Routes ---\
 app.use('/api', registerRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/profile', protectRoute, profileRoute);
