@@ -32,9 +32,9 @@ const allowedOrigins = [
   // Capacitor / Ionic / WebView origins (CRITICAL for mobile)
   'capacitor://localhost',
   'ionic://localhost',
-  'http://localhost',       
-  'https://localhost',      
-  'file://', 
+  'http://localhost',      
+  'https://localhost',     
+  'file://',
 ];
 
 // Configure CORS using a dynamic origin check
@@ -52,9 +52,10 @@ app.use(cors({
       return callback(null, true);
     }
 
-    // Gracefully reject forbidden origins without throwing an error.
+    // NEW: Pass an Error object to the callback. This stops the request and 
+    // prevents the 'Unhandled Error' from being thrown from deep inside a router function.
     console.warn(`CORS: Rejecting forbidden origin: ${origin}`);
-    return callback(null, false); 
+    callback(new Error(`The CORS policy for this site does not allow access from the specified Origin: ${origin}`), false);
   },
 
   credentials: true, // IMPORTANT: Allows cookies (HttpOnly JWT) to be sent for web flow
